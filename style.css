@@ -931,6 +931,80 @@ p.mb-0 { margin-bottom: 0; }
     }
 }
 
+/* Flipbook action bar */
+.flipbook-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+}
+
+.flipbook-btn-download {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #e63e3e 0%, #c0392b 100%);
+    color: #fff;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 13px 28px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(192, 57, 43, 0.35);
+    letter-spacing: 0.02em;
+}
+
+.flipbook-btn-download i {
+    font-size: 1.15rem;
+}
+
+.flipbook-btn-download:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(192, 57, 43, 0.55);
+    color: #fff;
+    filter: brightness(1.1);
+}
+
+.flipbook-btn-download:active {
+    transform: translateY(-1px);
+}
+
+.flipbook-btn-fullscreen {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 1px solid rgba(42, 208, 122, 0.5);
+    color: var(--cor-verde);
+    font-family: 'Raleway', sans-serif;
+    font-weight: 600;
+    font-size: 0.88rem;
+    padding: 12px 22px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.flipbook-btn-fullscreen:hover {
+    background: var(--cor-verde);
+    color: var(--cor-escuro);
+    border-color: var(--cor-verde);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(42, 208, 122, 0.3);
+}
+
+@media (max-width: 480px) {
+    .flipbook-btn-download,
+    .flipbook-btn-fullscreen {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
 /* ============================================================
    SECTION: COTAÇÕES LME
    ============================================================ */
