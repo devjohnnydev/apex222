@@ -1,0 +1,14 @@
+{
+  "name": "apex-tech-metais",
+  "version": "1.0.0",
+  "description": "Landing page and admin panel for Apex Tech Metais, with Node.js Express proxy server",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "dotenv": "^16.4.5"
+  }
+}

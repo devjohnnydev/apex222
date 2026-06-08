@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Admin - Apex Tech</title>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;800&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Login Overlay -->
+    <div id="login-overlay" class="login-overlay">
+        <div class="login-box">
+            <h2 style="color: var(--cor-verde); margin-bottom: 20px; font-family: 'Raleway', sans-serif;"><i class="fa-solid fa-lock"></i> Acesso Restrito</h2>
+            <form id="admin-login-form">
+                <div class="form-group">
+                    <label for="login-user">Usuário</label>
+                    <input type="text" id="login-user" required placeholder="Digite o usuário">
+                </div>
+                <div class="form-group">
+                    <label for="login-pass">Senha</label>
+                    <input type="password" id="login-pass" required placeholder="Digite a senha">
+                </div>
+                <button type="submit" class="btn-primary">Entrar</button>
+                <p id="login-error" style="color: #ff4d4d; font-size: 0.85rem; margin-top: 10px; display: none;">Credenciais incorretas.</p>
+            </form>
+            <a href="index.html" style="display: block; margin-top: 15px; color: #888; text-decoration: none; font-size: 0.85rem;"><i class="fa-solid fa-arrow-left"></i> Voltar ao site</a>
+        </div>
+    </div>
+
+    <div class="admin-container" id="admin-dashboard-container" style="display: none;">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>APEX TECH</h2>
+                <p>Painel Admin</p>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-target="dashboard"><i class="fa-solid fa-chart-pie"></i> LME Dashboard</a>
+                <a href="#" class="nav-item" data-target="materiais"><i class="fa-solid fa-box-open"></i> Meus Materiais</a>
+                <a href="#" class="nav-item" data-target="noticias"><i class="fa-solid fa-newspaper"></i> Notícias</a>
+                <a href="/" class="nav-item return-site"><i class="fa-solid fa-arrow-left"></i> Voltar ao Site</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard View -->
+            <section id="dashboard" class="view-section active">
+                <header class="section-header">
+                    <h1>Dashboard de Análises LME</h1>
+                    <p>Acompanhe as cotações e tendências dos metais.</p>
+                </header>
+                
+                <div class="dashboard-cards">
+                    <div class="dash-card">
+                        <div class="dash-icon"><i class="fa-solid fa-coins"></i></div>
+                        <div class="dash-info">
+                            <h3>Cobre (Copper)</h3>
+                            <p class="price">US$ 8.450/t</p>
+                            <span class="trend up"><i class="fa-solid fa-arrow-up"></i> +1.5%</span>
+                        </div>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-icon"><i class="fa-solid fa-ring"></i></div>
+                        <div class="dash-info">
+                            <h3>Alumínio (Aluminium)</h3>
+                            <p class="price">US$ 2.230/t</p>
+                            <span class="trend down"><i class="fa-solid fa-arrow-down"></i> -0.8%</span>
+                        </div>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-icon"><i class="fa-solid fa-gem"></i></div>
+                        <div class="dash-info">
+                            <h3>Platina (Platinum)</h3>
+                            <p class="price">US$ 1.891/oz</p>
+                            <span class="trend up"><i class="fa-solid fa-arrow-up"></i> +2.1%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <h3>Tendência de Preços (30 dias)</h3>
+                        <canvas id="lmeChartLine"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Volume Negociado</h3>
+                        <canvas id="lmeChartBar"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Materiais View -->
+            <section id="materiais" class="view-section">
+                <header class="section-header">
+                    <h1>Gerenciar Materiais</h1>
+                    <p>Adicione novos materiais que a empresa compra. O Chatbot será atualizado automaticamente.</p>
+                </header>
+
+                <div class="materiais-layout">
+                    <!-- Formulário -->
+                    <div class="form-container">
+                        <h3>Adicionar Novo Material</h3>
+                        <form id="form-material">
+                            <div class="form-group">
+                                <label for="mat-name">Nome do Material</label>
+                                <input type="text" id="mat-name" required placeholder="Ex: Induzidos">
+                            </div>
+                            <div class="form-group">
+                                <label for="mat-image">URL da Imagem do Produto *</label>
+                                <input type="url" id="mat-image" required placeholder="https://exemplo.com/imagem-do-produto.jpg">
+                                <small style="color:#888; font-size:0.78rem; display:block; margin-top:4px;">Insira um link direto para uma imagem (.jpg, .png, .webp, etc.)</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="mat-desc">Descrição Geral (Aparece na aba)</label>
+                                <textarea id="mat-desc" rows="3" required placeholder="Ex: Motores elétricos e induzidos são componentes vitais..."></textarea>
+                            </div>
+                            
+                            <hr style="border-color: var(--borda); margin: 20px 0;">
+                            <h4 style="margin-bottom: 10px; color: #fff;">Locais de Coleta (Cards)</h4>
+                            <p style="font-size: 0.8rem; color: #888; margin-bottom: 15px;">Adicione os locais onde este material é encontrado para criar os cards dinâmicos.</p>
+                            
+                            <div id="locations-wrapper">
+                                <!-- Locais serão adicionados aqui -->
+                            </div>
+
+                            <button type="button" id="btn-add-location" class="btn-secondary" style="margin-bottom: 20px;"><i class="fa-solid fa-plus"></i> Adicionar Local</button>
+
+                            <button type="submit" class="btn-primary"><i class="fa-solid fa-save"></i> Salvar Material</button>
+                        </form>
+                    </div>
+
+                    <!-- Lista -->
+                    <div class="list-container">
+                        <h3>Materiais Cadastrados</h3>
+                        <div class="materiais-grid" id="materiais-list">
+                            <!-- Items via JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Notícias View -->
+            <section id="noticias" class="view-section">
+                <header class="section-header">
+                    <h1>Gerenciar Notícias</h1>
+                    <p>Adicione notícias e links de outros sites. Elas aparecerão na seção "Notícias do Mercado" do site.</p>
+                </header>
+
+                <div class="materiais-layout">
+                    <!-- Formulário -->
+                    <div class="form-container">
+                        <h3>Publicar Nova Notícia</h3>
+                        <form id="form-noticia">
+                            <div class="form-group">
+                                <label for="not-titulo">Título da Notícia *</label>
+                                <input type="text" id="not-titulo" required placeholder="Ex: Preço do Cobre cai 3% na LME">
+                            </div>
+                            <div class="form-group">
+                                <label for="not-url">Link da Matéria (URL) *</label>
+                                <input type="url" id="not-url" required placeholder="https://www.exemplo.com.br/noticia">
+                            </div>
+                            <div class="form-group">
+                                <label for="not-resumo">Resumo / Descrição</label>
+                                <textarea id="not-resumo" rows="3" placeholder="Escreva um breve resumo da notícia..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="not-data">Data de Publicação</label>
+                                <input type="date" id="not-data">
+                            </div>
+                            <div class="form-group">
+                                <label for="not-categoria">Categoria</label>
+                                <select id="not-categoria">
+                                    <option value="">-- Sem categoria --</option>
+                                    <option value="Mercado">Mercado</option>
+                                    <option value="LME">LME</option>
+                                    <option value="Reciclagem">Reciclagem</option>
+                                    <option value="Metais">Metais</option>
+                                    <option value="Sustentabilidade">Sustentabilidade</option>
+                                    <option value="Economia">Economia</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn-primary"><i class="fa-solid fa-paper-plane"></i> Publicar no Site</button>
+                        </form>
+                    </div>
+
+                    <!-- Lista de notícias -->
+                    <div class="list-container">
+                        <h3>Notícias Publicadas</h3>
+                        <div id="noticias-admin-list">
+                            <!-- Itens via JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="admin.js"></script>
+</body>
+</html>

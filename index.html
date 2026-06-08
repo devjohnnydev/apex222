@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Home - Apex Tech Metais</title>
+    <meta name="description" content="Home - Apex Tech Metais - Uma referência no mercado de resíduos, baseada em princípios de honestidade, fidelidade e parcerias sólidas.">
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="https://apextechmetais.com.br/wp-content/uploads/2024/07/logo-apextech.svg">
+    <link rel="shortcut icon" href="https://apextechmetais.com.br/wp-content/uploads/2024/07/logo-apextech.svg">
+    <link rel="apple-touch-icon" href="https://apextechmetais.com.br/wp-content/uploads/2024/07/logo-apextech.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header-desktop">
+    <div class="fundo-header">
+        <div class="container-fluid">
+            <div class="header-row">
+                <!-- Mobile menu button -->
+                <div class="mobile-menu-btn-wrap">
+                    <button class="btn-open-menu-desktop" id="btn-open-menu" aria-label="Abrir menu">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                </div>
+
+                <!-- Logo -->
+                <div class="logo-wrap">
+                    <a href="/" class="link_logo">
+                        <img src="https://apextechmetais.com.br/wp-content/uploads/2024/07/logo-apextech.svg"
+                             alt="Apex Tech Metais" title="Apex Tech Metais" class="img-logo-desktop">
+                    </a>
+                </div>
+
+                <!-- Nav desktop -->
+                <nav class="menu_desktop" id="menu-desktop">
+                    <ul class="menu-desktop">
+                        <li class="current"><a href="/">Home</a></li>
+                        <li><a href="#sobre">Sobre</a></li>
+                        <li><a href="#solucoes">Soluções</a></li>
+                        <li><a href="#catalogo">Catálogo</a></li>
+                        <li><a href="#onde-encontramos">Onde Encontramos</a></li>
+                        <li><a href="#cotacoes">Cotações LME</a></li>
+                        <li><a href="#noticias">Notícias</a></li>
+                        <li><a href="#contato">Atendimento</a></li>
+                    </ul>
+                </nav>
+
+                <!-- Contact info -->
+                <div class="header-contact">
+                    <div class="telefone_header">
+                        <h2 class="atendimento-title">Atendimento</h2>
+                        <div class="dados_de_atendimento">
+                            <a href="tel:+551156105564" target="_blank" class="dados_item">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clipPhone)"><path d="M4.56614 1.65964C4.49234 1.56471 4.3992 1.48658 4.29289 1.43042C4.18658 1.37426 4.06953 1.34136 3.94953 1.33391C3.82953 1.32647 3.70932 1.34464 3.59688 1.38722C3.48444 1.4298 3.38235 1.49582 3.29739 1.58089L2.00489 2.87464C1.40114 3.47964 1.17864 4.33589 1.44239 5.08714C2.5383 8.19602 4.31883 11.0189 6.65239 13.3471C8.98063 15.6807 11.8035 17.4612 14.9124 18.5571C15.6636 18.8209 16.5199 18.5984 17.1249 17.9946L18.4174 16.7021C18.5025 16.6172 18.5685 16.5151 18.6111 16.4026C18.6536 16.2902 18.6718 16.17 18.6644 16.05C18.6569 15.93 18.624 15.8129 18.5679 15.7066C18.5117 15.6003 18.4336 15.5072 18.3386 15.4334L15.4549 13.1909C15.3534 13.1124 15.2354 13.0579 15.1099 13.0315C14.9843 13.0051 14.8544 13.0074 14.7299 13.0384L11.9924 13.7221C11.627 13.8128 11.2443 13.8077 10.8814 13.7072C10.5186 13.6067 10.1878 13.4142 9.92114 13.1484L6.85114 10.0771C6.58511 9.81059 6.39241 9.47987 6.29167 9.11701C6.19094 8.75415 6.18559 8.37142 6.27614 8.00589L6.96114 5.26839C6.99208 5.14387 6.99444 5.01396 6.96803 4.8884C6.94162 4.76284 6.88713 4.64489 6.80864 4.54339L4.56614 1.65964ZM2.35364 0.638386C2.57238 0.419573 2.83517 0.249799 3.12456 0.140338C3.41395 0.0308764 3.72331 -0.0157677 4.03211 0.00350262C4.34091 0.022773 4.64208 0.107517 4.91561 0.252107C5.18915 0.396698 5.42879 0.597826 5.61864 0.842136L7.86114 3.72464C8.27239 4.25339 8.41739 4.94214 8.25489 5.59214L7.57114 8.32964C7.53603 8.47144 7.53806 8.61989 7.57704 8.76068C7.61601 8.90146 7.69061 9.02983 7.79364 9.13339L10.8649 12.2046C10.9686 12.3079 11.0971 12.3826 11.2382 12.4216C11.3792 12.4606 11.5279 12.4625 11.6699 12.4271L14.4061 11.7434C14.7269 11.6636 15.0616 11.6577 15.3851 11.7259C15.7085 11.7941 16.0123 11.9347 16.2736 12.1371L19.1561 14.3796C20.1924 15.1859 20.2874 16.7171 19.3599 17.6434L18.0674 18.9359C17.1424 19.8609 15.7599 20.2671 14.4711 19.8134C11.172 18.6541 8.17681 16.7656 5.70864 14.2884C3.2316 11.8206 1.34308 8.82585 0.183636 5.52714C-0.268864 4.23964 0.137386 2.85589 1.06239 1.93089L2.35364 0.638386Z" fill="currentColor"/></g><defs><clipPath id="clipPhone"><rect width="20" height="20" fill="currentColor"/></clipPath></defs></svg>
+                                <span>11 5610-5564</span>
+                            </a>
+                            <a href="mailto:contato@apextechmetais.com.br" target="_blank" class="dados_item">
+                                <svg width="21" height="17" viewBox="0 0 21 17" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M0 3.25C0 2.55381 0.276562 1.88613 0.768845 1.39384C1.26113 0.901562 1.92881 0.625 2.625 0.625H18.375C19.0712 0.625 19.7389 0.901562 20.2312 1.39384C20.7234 1.88613 21 2.55381 21 3.25V13.75C21 14.4462 20.7234 15.1139 20.2312 15.6062C19.7389 16.0984 19.0712 16.375 18.375 16.375H2.625C1.92881 16.375 1.26113 16.0984 0.768845 15.6062C0.276562 15.1139 0 14.4462 0 13.75V3.25ZM2.625 1.9375C2.2769 1.9375 1.94306 2.07578 1.69692 2.32192C1.45078 2.56806 1.3125 2.9019 1.3125 3.25V3.53481L10.5 9.04731L19.6875 3.53481V3.25C19.6875 2.9019 19.5492 2.56806 19.3031 2.32192C19.0569 2.07578 18.7231 1.9375 18.375 1.9375H2.625ZM19.6875 5.06519L13.5082 8.773L19.6875 12.5753V5.06519ZM19.6429 14.0899L12.2404 9.53425L10.5 10.5777L8.75962 9.53425L1.35713 14.0886C1.43171 14.3679 1.59642 14.6148 1.82567 14.7909C2.05493 14.967 2.33592 15.0625 2.625 15.0625H18.375C18.6639 15.0625 18.9448 14.9672 19.174 14.7914C19.4032 14.6156 19.568 14.369 19.6429 14.0899ZM1.3125 12.5753L7.49175 8.773L1.3125 5.06519V12.5753Z" fill="currentColor"/></svg>
+                                <span>contato@apextechmetais.com.br</span>
+                            </a>
+                        </div>
+                    </div>
+                    <ul class="redes-sociais">
+                        <li class="rede-social-facebook-item">
+                            <a href="https://www.facebook.com/apextechmetais" target="_blank" class="rede-social-facebook" aria-label="Facebook">
+                                <i class="fa-brands fa-facebook"></i>
+                            </a>
+                        </li>
+                        <li class="rede-social-instagram-item">
+                            <a href="https://www.instagram.com/apextechmetais/" target="_blank" class="rede-social-instagram" aria-label="Instagram">
+                                <i class="fa-brands fa-instagram"></i>
+                            </a>
+                        </li>
+                        <li class="rede-social-whatsapp-item">
+                            <a href="https://api.whatsapp.com/send?phone=5511940222249" target="_blank" class="rede-social-whatsapp" aria-label="WhatsApp">
+                                <i class="fa-brands fa-whatsapp"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu Drawer -->
+    <div class="mobile-drawer" id="mobile-drawer">
+        <div class="mobile-drawer-header">
+            <img src="https://apextechmetais.com.br/wp-content/uploads/2024/07/logo-apextech.svg" alt="Apex Tech Metais" class="mobile-logo">
+            <button class="btn-close-menu" id="btn-close-menu" aria-label="Fechar menu">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <nav>
+            <ul class="mobile-nav">
+                <li><a href="/" onclick="closeMenu()">Home</a></li>
+                <li><a href="#sobre" onclick="closeMenu()">Sobre</a></li>
+                <li><a href="#solucoes" onclick="closeMenu()">Soluções</a></li>
+                <li><a href="#catalogo" onclick="closeMenu()">Catálogo</a></li>
+                <li><a href="#onde-encontramos" onclick="closeMenu()">Onde Encontramos</a></li>
+                <li><a href="#cotacoes" onclick="closeMenu()">Cotações LME</a></li>
+                <li><a href="#contato" onclick="closeMenu()">Atendimento</a></li>
+            </ul>
+        </nav>
+        <div class="mobile-contact">
+            <a href="tel:+551156105564" class="mobile-contact-item"><i class="fa-solid fa-phone"></i> 11 5610-5564</a>
+            <a href="mailto:contato@apextechmetais.com.br" class="mobile-contact-item"><i class="fa-solid fa-envelope"></i> contato@apextechmetais.com.br</a>
+        </div>
+        <ul class="redes-sociais mobile-social">
+            <li><a href="https://www.facebook.com/apextechmetais" target="_blank" class="rede-social-facebook" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a></li>
+            <li><a href="https://www.instagram.com/apextechmetais/" target="_blank" class="rede-social-instagram" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a></li>
+            <li><a href="https://api.whatsapp.com/send?phone=5511940222249" target="_blank" class="rede-social-whatsapp" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a></li>
+        </ul>
+    </div>
+    <div class="drawer-overlay" id="drawer-overlay"></div>
+</header>
+
+<!-- HERO BANNER -->
+<section class="hero-banner" id="home">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <div class="hero-badge">Sucatas de Fios, Cabos, Conectores e Disjuntores</div>
+        <h1 class="hero-title">Profissionalismo na<br>Gestão de Resíduos</h1>
+        <p class="hero-subtitle">Descubra como a <strong>APEX TECH</strong> lidera o mercado de reciclagem com honestidade, fidelidade e inovação. Junte-se a nós na construção de um <strong>futuro sustentável!</strong></p>
+        <a href="#sobre" class="btn_saiba_mais hero-btn">
+            <p class="mb-0">Saiba mais</p>
+            <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+</section>
+
+<!-- MAIN CONTENT -->
+<main class="main-content-site">
+
+    <!-- SOBRE SECTION -->
+    <section id="sobre" class="section_transformando">
+        <div class="container">
+            <div class="transformando-grid">
+                <div class="transformando-img">
+                    <img src="https://apextechmetais.com.br/wp-content/uploads/2024/07/img-transformando-residuos.webp"
+                         alt="Transformando Resíduos" class="img-fluid">
+                </div>
+                <div class="transformando-text">
+                    <h2 class="titulo_section_70">Transformando Resíduos em Oportunidades</h2>
+                    <p>Uma referência no mercado de resíduos, baseada em princípios de honestidade, fidelidade e parcerias sólidas. Há mais de 9 anos no mercado, nossa visão sempre foi clara: possuir todos os documentos necessários para atender ao mercado, sempre preocupados com o &#8220;Por que fazer?&#8221; e com o objetivo maior de trazer profissionalismo ao setor de compra de sucata e promover a evolução constante.</p>
+                    <a href="#sobre" class="btn_saiba_mais">
+                        <p class="mb-0">Saiba mais</p>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SOLUÇÕES SECTION -->
+    <section id="solucoes" class="section-solucoes">
+        <div class="container">
+            <h2 class="titulo_section_solucoes text-center">Nossas soluções</h2>
+            <h3 class="titulo_section_40 text-center">Atendemos diversas indústrias, fornecendo soluções inovadoras e eficientes para a gestão de seus resíduos</h3>
+
+            <div class="loop_solucao">
+                <a href="https://apextechmetais.com.br/solucao/sucatas-de-industrias/" class="solucao_item" target="_blank">
+                    <article>
+                        <div class="solucoes_header">
+                            <img src="https://apextechmetais.com.br/wp-content/uploads/2024/07/residuos-de-empresas-e-industrias.svg"
+                                 alt="Sucatas de Indústrias" class="img-fluid solucao-icon">
+                            <h2>Sucatas de Indústrias</h2>
+                        </div>
+                        <div class="solucoes_conteudo">
+                            <p>Nosso principal serviço é a gestão e comercialização de resíduos gerados por empresas e indústrias, garantindo o correto descarte e reciclagem dos materiais.</p>
+                        </div>
+                    </article>
+                </a>
+
+                <a href="https://apextechmetais.com.br/solucao/residuos-de-conectores/" class="solucao_item" target="_blank">
+                    <article>
+                        <div class="solucoes_header">
+                            <img src="https://apextechmetais.com.br/wp-content/uploads/2024/07/icon-residuos-de-conectores.svg"
+                                 alt="Resíduos de Conectores" class="img-fluid solucao-icon">
+                            <h2>Resíduos de Conectores</h2>
+                        </div>
+                        <div class="solucoes_conteudo">
+                            <p>Tratamos e reciclamos resíduos de conectores, assegurando que esses materiais sejam reaproveitados de forma eficiente e sustentável.</p>
+                        </div>
+                    </article>
+                </a>
+
+                <a href="https://apextechmetais.com.br/solucao/sucatas-de-fios-e-cabos/" class="solucao_item" target="_blank">
+                    <article>
+                        <div class="solucoes_header">
+                            <img src="https://apextechmetais.com.br/wp-content/uploads/2024/07/sucata-de-fio.svg"
+                                 alt="Sucatas de Fios e Cabos" class="img-fluid solucao-icon">
+                            <h2>Sucatas de Fios e Cabos</h2>
+                        </div>
+                        <div class="solucoes_conteudo">
+                            <p>Especializamo-nos na compra e reciclagem de sucata de fio, transformando resíduos em recursos reutilizáveis e contribuindo para a economia circular.</p>
+                        </div>
+                    </article>
+                </a>
+
+                <a href="https://apextechmetais.com.br/solucao/residuos-e-sucatas-de-obras/" class="solucao_item" target="_blank">
+                    <article>
+                        <div class="solucoes_header">
+                            <img src="https://apextechmetais.com.br/wp-content/uploads/2024/07/residuos-e-sucatas-de-obras.svg"
+                                 alt="Resíduos e Sucatas de Obras" class="img-fluid solucao-icon">
+                            <h2>Resíduos e Sucatas de Obras</h2>
+                        </div>
+                        <div class="solucoes_conteudo">
+                            <p>Oferecemos serviços de gestão de resíduos em obras, proporcionando soluções completas e personalizadas para o setor da construção civil.</p>
+                        </div>
+                    </article>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ÁREAS DE ATUAÇÃO -->
+    <section id="areas-de-atuacoes" class="section-areas">
+        <div class="areas-intro">
+            <div class="container">
+                <h2 class="titulo_section_40 text-center">A APEX TECH atua em diferentes setores, proporcionando soluções integradas e específicas para cada área</h2>
+                <a href="#areas-de-atuacao-card" class="btn_conheca_areas_de_atuacao">
+                    <p class="mb-0">Conheça nossas áreas de atuação</p>
+                    <i class="fas fa-arrow-down"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="areas-cards" id="areas-de-atuacao-card">
+            <div class="area-card">
+                <h2 class="area-card-title">Indústrias</h2>
+                <div class="area-card-img-wrap">
+                    <img src="https://apextechmetais.com.br/wp-content/uploads/2024/07/industrial.webp"
+                         alt="Indústrias" class="img-fluid">
+                </div>
+            </div>
+            <div class="area-card">
+                <h2 class="area-card-title">Sucatas Eletrônicas</h2>
+                <div class="area-card-img-wrap">
+                    <img src="https://apextechmetais.com.br/wp-content/uploads/2024/07/sucatas-eletronicas.webp"
+                         alt="Sucatas Eletrônicas" class="img-fluid"
+                         onerror="this.src='https://apextechmetais.com.br/wp-content/uploads/2024/07/industrial.webp'">
+                </div>
+            </div>
+            <div class="area-card">
+                <h2 class="area-card-title">Construção Civil</h2>
+                <div class="area-card-img-wrap">
+                    <img src="https://apextechmetais.com.br/wp-content/uploads/2024/07/construcao-civil.webp"
+                         alt="Construção Civil" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CATÁLOGO -->
+    <section id="catalogo" class="section-catalogo">
+        <div class="container">
+            <h2 class="titulo_section_solucoes text-center">Catálogo</h2>
+            <h3 class="titulo_section_40 text-center">Conheça os materiais que compramos e vendemos</h3>
+
+            <div class="catalogo-grid">
+
+                <div class="catalogo-card">
+                    <div class="catalogo-icon">
+                        <i class="fa-solid fa-plug"></i>
+                    </div>
+                    <h3>Fios e Cabos</h3>
+                    <p>Sucatas de fios elétricos, cabos de cobre, alumínio e outros metais não-ferrosos.</p>
+                </div>
+
+                <div class="catalogo-card">
+                    <div class="catalogo-icon">
+                        <i class="fa-solid fa-microchip"></i>
+                    </div>
+                    <h3>Conectores e Disjuntores</h3>
+                    <p>Resíduos de conectores elétricos e disjuntores industriais de diversas marcas e modelos.</p>
+                </div>
+
+                <div class="catalogo-card">
+                    <div class="catalogo-icon">
+                        <i class="fa-solid fa-industry"></i>
+                    </div>
+                    <h3>Sucatas Industriais</h3>
+                    <p>Resíduos metálicos gerados por processos industriais, incluindo alumínio, cobre e ferro.</p>
+                </div>
+
+                <div class="catalogo-card">
+                    <div class="catalogo-icon">
+                        <i class="fa-solid fa-recycle"></i>
+                    </div>
+                    <h3>Sucatas Eletrônicas</h3>
+                    <p>Placas, componentes eletrônicos, equipamentos obsoletos e seus subprodutos recicláveis.</p>
+                </div>
+
+                <div class="catalogo-card">
+                    <div class="catalogo-icon">
+                        <i class="fa-solid fa-hammer"></i>
+                    </div>
+                    <h3>Resíduos de Obras</h3>
+                    <p>Materiais metálicos provenientes de demolições e construções civis, reformas e instalações.</p>
+                </div>
+
+                <div class="catalogo-card">
+                    <div class="catalogo-icon">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <h3>Materiais Elétricos</h3>
+                    <p>Transformadores, motores elétricos, bobinas e demais equipamentos elétricos fora de uso.</p>
+                </div>
+
+            </div>
+
+            <!-- Flip-book interativo -->
+            <div class="catalogo-flipbook" data-aos="fade-up" data-aos-delay="200">
+                <div class="flipbook-wrapper">
+                    <iframe
+                        allowfullscreen=""
+                        allow="clipboard-write"
+                        scrolling="no"
+                        class="fp-iframe"
+                        title="Catálogo Apex Tech Metais"
+                        src="https://heyzine.com/flip-book/80f9fed343.html">
+                    </iframe>
+                </div>
+            </div>
+
+            
+
+            <div class="catalogo-cta">
+                <p>Tem algum material para vender ou quer adquirir matéria-prima reciclada?</p>
+                <a href="#contato" class="btn_saiba_mais">
+                    <p class="mb-0">Entre em contato</p>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ONDE ENCONTRAMOS OS MATERIAIS -->
+    <section id="onde-encontramos" class="section-onde">
+        <div class="container">
+            <h2 class="titulo_section_solucoes text-center">Onde Encontramos</h2>
+            <h3 class="titulo_section_40 text-center">Saiba onde surgem os materiais que compramos para garantir o descarte correto</h3>
+
+            <!-- Material Tabs -->
+            <div class="onde-tabs" role="tablist" aria-label="Materiais">
+                <button class="onde-tab active" data-tab="cabos" role="tab" aria-selected="true" id="tab-cabos">
+                    <i class="fa-solid fa-cable-car"></i>
+                    <span>Cabos de Instalação</span>
+                </button>
+                <button class="onde-tab" data-tab="motores" role="tab" aria-selected="false" id="tab-motores">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Motores Elétricos</span>
+                </button>
+                <button class="onde-tab" data-tab="disjuntores" role="tab" aria-selected="false" id="tab-disjuntores">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>Disjuntores</span>
+                </button>
+                <button class="onde-tab" data-tab="coolers" role="tab" aria-selected="false" id="tab-coolers">
+                    <i class="fa-solid fa-fan"></i>
+                    <span>Coolers</span>
+                </button>
+            </div>
+
+            <!-- Tab Panels -->
+            <div class="onde-panels">
+
+                <!-- CABOS DE INSTALAÇÃO -->
+                <div class="onde-panel active" id="panel-cabos" role="tabpanel" aria-labelledby="tab-cabos">
+                    <div class="onde-panel-intro">
+                        <p>Cabos de instalação são condutores elétricos utilizados em redes prediais, comerciais e industriais. Trabalhamos com cabos de cobre de diversas bitolas, todos selecionados para máxima qualidade e reciclagem responsável.</p>
+                    </div>
+                    <div class="onde-cards-grid">
+                        <div class="onde-card">
+                            <div class="onde-card-icon"><i class="fa-solid fa-store"></i></div>
+                            <h4>Comércios e Lojas</h4>
+                            <p>Instalações elétricas de comércios, lojas e pontos comerciais em geral.</p>
+                        </div>
+                        <div class="onde-card">
+                            <div class="onde-card-icon"><i class="fa-solid fa-industry"></i></div>
+                            <h4>Indústrias e Galpões</h4>
+                            <p>Redes elétricas industriais para máquinas, painéis de comando e iluminação.</p>
+                        </div>
+                        <div class="onde-card">
+                            <div class="onde-card-icon"><i class="fa-solid fa-building"></i></div>
+                            <h4>Prédios e Condomínios</h4>
+                            <p>Infraestrutura elétrica de prédios, condomínios e áreas comuns.</p>
+                        </div>
+                        <div class="onde-card">
+                            <div class="onde-card-icon"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+                            <h4>Empresas de Manutenção</h4>
+                            <p>Manutenções elétricas preventivas e corretivas em diversos segmentos.</p>
+                        </div>
+                        <div class="onde-card">
+                            <div class="onde-card-icon"><i class="fa-solid fa-recycle"></i></div>
+                            <h4>Descartes Técnicos</h4>
+                            <p>Materiais provenientes de desmontes e instalações elétricas desativadas.</p>
+                        </div>
+                    </div>
+                    <div class="onde-sustentabilidade">
+                        <i class="fa-solid fa-leaf"></i>
+                        <p>A reciclagem de cabos reduz o impacto ambiental e contribui para o reuso de materiais nobres como o <strong>cobre</strong>, promovendo a economia circular e um futuro mais sustentável.</p>
+                    </div>
+                </div>
+
+                <!-- MOTORES ELÉTRICOS -->
+                <div class="onde-panel" id="panel-motores" role="tabpanel" aria-labelledby="tab-motores">
+                    <div class="onde-panel-intro">
+                        <p>Os motores elétricos com carcaça em alumínio são encontrados em diversos equipamentos. Compramos motores usados e fora de operação, garantindo destinação correta para os materiais recicláveis.</p>
+                    </div>
+                    <div class="onde-cards-grid">
+                        <div class="onde-card">
+                            <div class="onde-card-icon"><i class="fa-solid fa-industry"></i></div>
+                            <h4>Equipamentos Industriais</h4>
+                            <ul class="onde-list">
+                                <li>Máquinas industriais</li>
+                                <li>Compressores</li>
+                                <li>Bombas hidráulicas</li>
+                                <li>Esteiras industriais</li>
+                            </ul>
+                        </div>
+                        <div class="onde-card">
+                            <div class="onde-card-icon"><i class="fa-solid fa-house"></i></div>
+                            <h4>Equipamentos Domésticos</h4>
+                            <ul class="onde-list">
+                                <li>Ventiladores</li>
+                                <li>Máquinas de lavar</li>
+                                <li>Bombas de água</li>
+                                <li>Ferramentas elétricas</li>
+                            </ul>
+                        </div>
+                        <div class="onde-card">
+                            <div class="onde-card-icon"><i class="fa-solid fa-tractor"></i></div>
+                            <h4>Equipamentos Agrícolas</h4>
+                            <ul class="onde-list">
+                                <li>Sistemas de irrigação</li>
+                                <li>Motores de bombas agrícolas</li>
+                            </ul>
+                        </div>
+                        <div class="onde-card">
+                            <div class="onde-card-icon"><i class="fa-solid fa-robot"></i></div>
+                            <h4>Outros Equipamentos</h4>
+                            <ul class="onde-list">
+                                <li>Painéis elétricos</li>
+                                <li>Equipamentos de automação</li>
+                                <li>Nobreaks</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="onde-sustentabilidade">
+                        <i class="fa-solid fa-leaf"></i>
+                        <p>O alumínio e o cobre dos motores elétricos são materiais 100% recicláveis. Ao vender seus motores fora de uso, você evita o descarte irregular e contribui com a <strong>economia circular</strong>.</p>
+                    </div>
+                </div>
+
+                <!-- DISJUNTORES -->
+                <div class="onde-panel" id="panel-disjuntores" role="tabpanel" aria-labelledby="tab-disjuntores">
+                    <div class="onde-panel-intro">
+                        <p>Os disjuntores são dispositivos de proteção elétrica encontrados em todos os tipos de instalações. Compramos disjuntores residenciais, comerciais e industriais de diversas marcas e modelos.</p>
+                    </div>
+                    <div class="onde-cards-grid">
+                        <div class="onde-card">
+                            <div class="onde-card-icon"><i class="fa-solid fa-house-chimney"></i></div>
+                            <h4>Instalações Residenciais</h4>
+                            <ul class="onde-list">
+                                <li>Quadros de distribuição de casas</li>
+                                <li>Apartamentos</li>
+                                <li>Condomínios</li>
+                            </ul>
+                        </div>
+                        <div class="onde-card">
+                            <div class="onde-card-icon"><i class="fa-solid fa-shop"></i></div>
+                            <h4>Instalações Comerciais</h4>
+                            <ul class="onde-list">
+                                <li>Prédios comerciais</li>
+                                <li>Lojas</li>
+                                <li>Escritórios</li>
+                            </ul>
+                        </div>
+                        <div class="onde-card">
+                            <div class="onde-card-icon"><i class="fa-solid fa-warehouse"></i></div>
+                            <h4>Instalações Industriais</h4>
+                            <ul class="onde-list">
+                                <li>Painéis elétricos industriais</li>
+                                <li>Máquinas industriais</li>
+                                <li>Sistemas de automação</li>
+                            </ul>
+                        </div>
+                        <div class="onde-card">
+                            <div class="onde-card-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                            <h4>Tipos Mais Comuns</h4>
+                            <ul class="onde-list">
+                                <li>Disjuntor residencial</li>
+                                <li>Disjuntor industrial</li>
+                                <li>Disjuntor tripolar</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="onde-sustentabilidade">
+                        <i class="fa-solid fa-leaf"></i>
+                        <p>Disjuntores contêm plástico, cobre e outros metais recicláveis. O descarte incorreto contamina o solo e o lençol freático. <strong>Venda para a Apex Tech</strong> e garanta a destinação correta.</p>
+                    </div>
+                </div>
+
+                <!-- COOLERS DE COMPUTADORES -->
+                <div class="onde-panel" id="panel-coolers" role="tabpanel" aria-labelledby="tab-coolers">
+                    <div class="onde-panel-intro">
+                        <p>Coolers são componentes essenciais para o resfriamento de processadores, fontes, gabinetes e outros dispositivos. Trabalhamos com uma grande variedade de modelos, tamanhos e marcas.</p>
+                    </div>
+                    <div class="onde-cards-grid">
+                        <div class="onde-card">
+                            <div class="onde-card-icon"><i class="fa-solid fa-briefcase"></i></div>
+                            <h4>Empresas e Escritórios</h4>
+                            <p>Equipamentos de informática descartados por empresas, escritórios e instituições.</p>
+                        </div>
+                        <div class="onde-card">
+                            <div class="onde-card-icon"><i class="fa-solid fa-computer"></i></div>
+                            <h4>Assistências Técnicas</h4>
+                            <p>Peças substituídas ou descartadas durante manutenções e reparos de computadores.</p>
+                        </div>
+                        <div class="onde-card">
+                            <div class="onde-card-icon"><i class="fa-solid fa-microchip"></i></div>
+                            <h4>Upgrades e Montagens</h4>
+                            <p>Componentes retirados de computadores durante atualizações e montagens personalizadas.</p>
+                        </div>
+                        <div class="onde-card">
+                            <div class="onde-card-icon"><i class="fa-solid fa-house-laptop"></i></div>
+                            <h4>Uso Residencial</h4>
+                            <p>Equipamentos domésticos em desuso ou que apresentam falhas técnicas.</p>
+                        </div>
+                        <div class="onde-card">
+                            <div class="onde-card-icon"><i class="fa-solid fa-recycle"></i></div>
+                            <h4>Descartes Técnicos</h4>
+                            <p>Descarte de órgãos públicos, escolas e empresas de TI após renovação de frota.</p>
+                        </div>
+                    </div>
+                    <div class="onde-sustentabilidade">
+                        <i class="fa-solid fa-leaf"></i>
+                        <p>A reutilização de coolers contribui para a redução de resíduos eletrônicos e o reaproveitamento de <strong>plástico, cobre e alumínio</strong>, promovendo a economia circular e um futuro mais sustentável.</p>
+                    </div>
+                </div>
+
+            </div><!-- /.onde-panels -->
+
+            <!-- CTA -->
+            <div class="onde-cta">
+                <p>Tem algum desses materiais para descartar? A Apex Tech compra de você com responsabilidade!</p>
+                <a href="https://api.whatsapp.com/send?phone=5511940222249" target="_blank" class="btn-onde-cta">
+                    <i class="fa-brands fa-whatsapp"></i>
+                    Fale pelo WhatsApp
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- COTAÇÕES LME -->
+    <section id="cotacoes" class="section-lme">
+        <div class="container">
+            <div class="lme-header">
+                <h2 class="titulo_section_solucoes text-center">Cotações LME</h2>
+                <h3 class="titulo_section_40 text-center">Acompanhe o mercado global de metais</h3>
+            </div>
+            
+            <div class="lme-grid">
+                <!-- Ouro -->
+                <div class="lme-card">
+                    <div class="lme-card-header">
+                        <h3>Ouro (Gold)</h3>
+                        <i class="fa-solid fa-coins"></i>
+                    </div>
+                    <div class="lme-price">US$ 4.467,34 <span>/ oz</span></div>
+                    <div class="lme-metrics">
+                        <div class="metric positive">
+                            <span class="label">Diária</span>
+                            <span class="value"><i class="fa-solid fa-arrow-trend-up"></i> +1.2%</span>
+                        </div>
+                        <div class="metric positive">
+                            <span class="label">Semanal</span>
+                            <span class="value"><i class="fa-solid fa-arrow-trend-up"></i> +3.5%</span>
+                        </div>
+                        <div class="metric negative">
+                            <span class="label">Mensal</span>
+                            <span class="value"><i class="fa-solid fa-arrow-trend-down"></i> -0.8%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prata -->
+                <div class="lme-card">
+                    <div class="lme-card-header">
+                        <h3>Prata (Silver)</h3>
+                        <i class="fa-solid fa-ring"></i>
+                    </div>
+                    <div class="lme-price">US$ 73,95 <span>/ oz</span></div>
+                    <div class="lme-metrics">
+                        <div class="metric negative">
+                            <span class="label">Diária</span>
+                            <span class="value"><i class="fa-solid fa-arrow-trend-down"></i> -0.5%</span>
+                        </div>
+                        <div class="metric positive">
+                            <span class="label">Semanal</span>
+                            <span class="value"><i class="fa-solid fa-arrow-trend-up"></i> +1.1%</span>
+                        </div>
+                        <div class="metric positive">
+                            <span class="label">Mensal</span>
+                            <span class="value"><i class="fa-solid fa-arrow-trend-up"></i> +4.2%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Platina -->
+                <div class="lme-card">
+                    <div class="lme-card-header">
+                        <h3>Platina (Platinum)</h3>
+                        <i class="fa-solid fa-gem"></i>
+                    </div>
+                    <div class="lme-price">US$ 1.891,00 <span>/ oz</span></div>
+                    <div class="lme-metrics">
+                        <div class="metric positive">
+                            <span class="label">Diária</span>
+                            <span class="value"><i class="fa-solid fa-arrow-trend-up"></i> +2.1%</span>
+                        </div>
+                        <div class="metric negative">
+                            <span class="label">Semanal</span>
+                            <span class="value"><i class="fa-solid fa-arrow-trend-down"></i> -1.5%</span>
+                        </div>
+                        <div class="metric positive">
+                            <span class="label">Mensal</span>
+                            <span class="value"><i class="fa-solid fa-arrow-trend-up"></i> +2.8%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Paládio -->
+                <div class="lme-card">
+                    <div class="lme-card-header">
+                        <h3>Paládio (Palladium)</h3>
+                        <i class="fa-solid fa-weight-hanging"></i>
+                    </div>
+                    <div class="lme-price">US$ 1.296,00 <span>/ oz</span></div>
+                    <div class="lme-metrics">
+                        <div class="metric positive">
+                            <span class="label">Diária</span>
+                            <span class="value"><i class="fa-solid fa-arrow-trend-up"></i> +0.4%</span>
+                        </div>
+                        <div class="metric positive">
+                            <span class="label">Semanal</span>
+                            <span class="value"><i class="fa-solid fa-arrow-trend-up"></i> +2.0%</span>
+                        </div>
+                        <div class="metric negative">
+                            <span class="label">Mensal</span>
+                            <span class="value"><i class="fa-solid fa-arrow-trend-down"></i> -1.2%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="lme-footer">
+                <p>Baseado nos dados da <strong>LME (London Metal Exchange)</strong>.</p>
+                <p class="lme-reference">A <strong style="color: var(--cor-verde);">Apex Tech Metais</strong> é sua referência em consulta no mercado de resíduos e metais.</p>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- NOTÍCIAS DO MERCADO -->
+<section id="noticias" class="section-noticias">
+    <div class="container">
+        <div class="noticias-header">
+            <h2 class="titulo_section_solucoes text-center">Notícias do Mercado</h2>
+            <h3 class="titulo_section_40 text-center">Fique por dentro das últimas novidades</h3>
+        </div>
+        <div class="noticias-grid" id="noticias-grid">
+            <!-- Notícias inseridas pelo ADM via localStorage -->
+            <div class="noticias-empty" id="noticias-empty">
+                <i class="fa-solid fa-newspaper"></i>
+                <p>Em breve, novidades do mercado de metais e reciclagem.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer class="footer-desktop" id="contato">
+    <div class="container">
+        <div class="footer-content-row">
+            <!-- Logo + Social -->
+            <div class="footer-col footer-col-logo">
+                <div class="footer_column footer_column_1">
+                    <img src="https://apextechmetais.com.br/wp-content/uploads/2024/07/logo-apextech.svg"
+                         alt="Apex Tech Metais" class="footer-logo">
+                    <ul class="redes-sociais footer-social">
+                        <li class="rede-social-facebook-item">
+                            <a href="https://www.facebook.com/apextechmetais" target="_blank" class="rede-social-facebook" aria-label="Facebook">
+                                <i class="fa-brands fa-facebook"></i>
+                            </a>
+                        </li>
+                        <li class="rede-social-instagram-item">
+                            <a href="https://www.instagram.com/apextechmetais/" target="_blank" class="rede-social-instagram" aria-label="Instagram">
+                                <i class="fa-brands fa-instagram"></i>
+                            </a>
+                        </li>
+                        <li class="rede-social-whatsapp-item">
+                            <a href="https://api.whatsapp.com/send?phone=5511940222249" target="_blank" class="rede-social-whatsapp" aria-label="WhatsApp">
+                                <i class="fa-brands fa-whatsapp"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Institucional -->
+            <div class="footer-col footer-col-links">
+                <div class="footer_column footer_column_2">
+                    <h2 class="widgettitle">Institucional</h2>
+                    <ul class="footer-menu">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="#sobre">Sobre</a></li>
+                        <li><a href="#compra-venda">Compra e Venda</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Soluções -->
+            <div class="footer-col footer-col-links footer-col-solucoes">
+                <div class="footer_column footer_column_3">
+                    <h2 class="widgettitle">Soluções</h2>
+                    <ul class="footer-menu">
+                        <li><a href="https://apextechmetais.com.br/solucao/sucatas-de-industrias/" target="_blank">Sucatas de Indústrias</a></li>
+                        <li><a href="https://apextechmetais.com.br/solucao/sucatas-de-fios-e-cabos/" target="_blank">Sucatas de Fios e Cabos</a></li>
+                        <li><a href="https://apextechmetais.com.br/solucao/residuos-e-sucatas-de-obras/" target="_blank">Resíduos e Sucatas de Obras</a></li>
+                        <li><a href="https://apextechmetais.com.br/solucao/residuos-de-conectores/" target="_blank">Resíduos de Conectores</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Atendimento -->
+            <div class="footer-col footer-col-contact">
+                <div class="footer_column footer_column_4">
+                    <h2 class="widgettitle">Atendimento</h2>
+                    <div class="dados_de_atendimento">
+                        <a href="tel:+551156105564" target="_blank" class="dados_item">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clipPhone2)"><path d="M4.56614 1.65964C4.49234 1.56471 4.3992 1.48658 4.29289 1.43042C4.18658 1.37426 4.06953 1.34136 3.94953 1.33391C3.82953 1.32647 3.70932 1.34464 3.59688 1.38722C3.48444 1.4298 3.38235 1.49582 3.29739 1.58089L2.00489 2.87464C1.40114 3.47964 1.17864 4.33589 1.44239 5.08714C2.5383 8.19602 4.31883 11.0189 6.65239 13.3471C8.98063 15.6807 11.8035 17.4612 14.9124 18.5571C15.6636 18.8209 16.5199 18.5984 17.1249 17.9946L18.4174 16.7021C18.5025 16.6172 18.5685 16.5151 18.6111 16.4026C18.6536 16.2902 18.6718 16.17 18.6644 16.05C18.6569 15.93 18.624 15.8129 18.5679 15.7066C18.5117 15.6003 18.4336 15.5072 18.3386 15.4334L15.4549 13.1909C15.3534 13.1124 15.2354 13.0579 15.1099 13.0315C14.9843 13.0051 14.8544 13.0074 14.7299 13.0384L11.9924 13.7221C11.627 13.8128 11.2443 13.8077 10.8814 13.7072C10.5186 13.6067 10.1878 13.4142 9.92114 13.1484L6.85114 10.0771C6.58511 9.81059 6.39241 9.47987 6.29167 9.11701C6.19094 8.75415 6.18559 8.37142 6.27614 8.00589L6.96114 5.26839C6.99208 5.14387 6.99444 5.01396 6.96803 4.8884C6.94162 4.76284 6.88713 4.64489 6.80864 4.54339L4.56614 1.65964ZM2.35364 0.638386C2.57238 0.419573 2.83517 0.249799 3.12456 0.140338C3.41395 0.0308764 3.72331 -0.0157677 4.03211 0.00350262C4.34091 0.022773 4.64208 0.107517 4.91561 0.252107C5.18915 0.396698 5.42879 0.597826 5.61864 0.842136L7.86114 3.72464C8.27239 4.25339 8.41739 4.94214 8.25489 5.59214L7.57114 8.32964C7.53603 8.47144 7.53806 8.61989 7.57704 8.76068C7.61601 8.90146 7.69061 9.02983 7.79364 9.13339L10.8649 12.2046C10.9686 12.3079 11.0971 12.3826 11.2382 12.4216C11.3792 12.4606 11.5279 12.4625 11.6699 12.4271L14.4061 11.7434C14.7269 11.6636 15.0616 11.6577 15.3851 11.7259C15.7085 11.7941 16.0123 11.9347 16.2736 12.1371L19.1561 14.3796C20.1924 15.1859 20.2874 16.7171 19.3599 17.6434L18.0674 18.9359C17.1424 19.8609 15.7599 20.2671 14.4711 19.8134C11.172 18.6541 8.17681 16.7656 5.70864 14.2884C3.2316 11.8206 1.34308 8.82585 0.183636 5.52714C-0.268864 4.23964 0.137386 2.85589 1.06239 1.93089L2.35364 0.638386Z" fill="currentColor"/></g><defs><clipPath id="clipPhone2"><rect width="20" height="20" fill="currentColor"/></clipPath></defs></svg>
+                            <span>11 5610-5564</span>
+                        </a>
+                        <a href="mailto:contato@apextechmetais.com.br" target="_blank" class="dados_item">
+                            <svg width="21" height="17" viewBox="0 0 21 17" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M0 3.25C0 2.55381 0.276562 1.88613 0.768845 1.39384C1.26113 0.901562 1.92881 0.625 2.625 0.625H18.375C19.0712 0.625 19.7389 0.901562 20.2312 1.39384C20.7234 1.88613 21 2.55381 21 3.25V13.75C21 14.4462 20.7234 15.1139 20.2312 15.6062C19.7389 16.0984 19.0712 16.375 18.375 16.375H2.625C1.92881 16.375 1.26113 16.0984 0.768845 15.6062C0.276562 15.1139 0 14.4462 0 13.75V3.25ZM2.625 1.9375C2.2769 1.9375 1.94306 2.07578 1.69692 2.32192C1.45078 2.56806 1.3125 2.9019 1.3125 3.25V3.53481L10.5 9.04731L19.6875 3.53481V3.25C19.6875 2.9019 19.5492 2.56806 19.3031 2.32192C19.0569 2.07578 18.7231 1.9375 18.375 1.9375H2.625ZM19.6875 5.06519L13.5082 8.773L19.6875 12.5753V5.06519ZM19.6429 14.0899L12.2404 9.53425L10.5 10.5777L8.75962 9.53425L1.35713 14.0886C1.43171 14.3679 1.59642 14.6148 1.82567 14.7909C2.05493 14.967 2.33592 15.0625 2.625 15.0625H18.375C18.6639 15.0625 18.9448 14.9672 19.174 14.7914C19.4032 14.6156 19.568 14.369 19.6429 14.0899ZM1.3125 12.5753L7.49175 8.773L1.3125 5.06519V12.5753Z" fill="currentColor"/></svg>
+                            <span>contato@apextechmetais.com.br</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="copyright">
+        <div class="container">
+            <div class="copyright-row">
+                <div class="copyright-text">
+                    <p>Copyright 2026 - APEXTECH - INDUSTRIA DE <br>COMÉRCIO DE RESÍDUOS LTDA</p>
+                </div>
+                <div class="copyright-logo">
+                    <a href="admin.html" class="admin-access-btn" title="Acesso Restrito Admin">
+                        <i class="fa-solid fa-gear" style="font-size: 1.8rem; color: rgba(255,255,255,0.4); transition: color 0.3s ease;"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Chatbot -->
+<div class="chatbot-container" id="chatbot-container">
+    <div class="chatbot-header">
+        <div class="chatbot-avatar">
+            <img src="assets/img/avatar.png" alt="IA Avatar" id="ia-avatar-img">
+        </div>
+        <div class="chatbot-title">
+            <h4>Assistente Apex</h4>
+            <p>Online</p>
+        </div>
+        <button id="chatbot-close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="chatbot-messages" id="chatbot-messages">
+        <div class="message ai-message">
+            Olá! Sou a inteligência artificial da Apex Tech. Posso tirar suas dúvidas sobre os materiais que compramos. Como posso ajudar?
+        </div>
+    </div>
+    <div class="chatbot-input">
+        <input type="text" id="chatbot-input-field" placeholder="Digite sua mensagem...">
+        <button id="chatbot-send"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+</div>
+
+<button class="chatbot-toggle" id="chatbot-toggle">
+    <img src="assets/img/avatar.png" alt="IA" class="toggle-avatar">
+</button>
+
+<!-- WhatsApp Floating Button -->
+<a href="https://api.whatsapp.com/send?phone=5511940222249" target="_blank" class="btn-flutuante-whatsapp" aria-label="WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+</a>
+
+<!-- Catalog Product Lightbox Modal -->
+<div id="catalog-modal" class="catalog-modal" role="dialog" aria-modal="true" aria-label="Foto do Produto">
+    <div class="catalog-modal-overlay"></div>
+    <div class="catalog-modal-content">
+        <button class="catalog-modal-close" aria-label="Fechar">&times;</button>
+        <div class="catalog-modal-body">
+            <div class="catalog-modal-img-wrap">
+                <img id="catalog-modal-img" src="" alt="Imagem do Produto">
+            </div>
+            <div class="catalog-modal-info">
+                <span class="catalog-modal-badge"><i class="fa-solid fa-recycle"></i> Material</span>
+                <h3 id="catalog-modal-title"></h3>
+                <p id="catalog-modal-desc"></p>
+                <a href="#contato" class="catalog-modal-cta" onclick="document.getElementById('catalog-modal').classList.remove('open')">
+                    <i class="fa-brands fa-whatsapp"></i> Quero vender este material
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
