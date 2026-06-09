@@ -393,72 +393,24 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // --------------------------------------------------------
-    // SOLUTIONS LIGHTBOX MODAL
+    // SOLUTIONS LIGHTBOX MODAL (API)
     // --------------------------------------------------------
-    const solModal   = document.getElementById('solution-modal');
-    const solModalImg   = document.getElementById('solution-modal-img');
-    const solModalTitle = document.getElementById('solution-modal-title');
-    const solModalDesc  = document.getElementById('solution-modal-desc');
-    const solModalClose = solModal ? solModal.querySelector('#solution-modal-close') : null;
+    const solModal        = document.getElementById('solution-modal');
+    const solModalImg     = document.getElementById('solution-modal-img');
+    const solModalTitle   = document.getElementById('solution-modal-title');
+    const solModalDesc    = document.getElementById('solution-modal-desc');
+    const solModalClose   = solModal ? solModal.querySelector('#solution-modal-close') : null;
     const solModalOverlay = solModal ? solModal.querySelector('#solution-modal-overlay') : null;
-
-    let solucoesDataArray = [];
-    try {
-        const raw = localStorage.getItem('apex_solucoes');
-        if (raw) {
-            solucoesDataArray = JSON.parse(raw);
-        } else {
-            solucoesDataArray = [
-                { id: 'industrias', nome: 'Sucatas de Indústrias', img: 'https://apextechmetais.com.br/wp-content/uploads/2024/07/residuos-de-empresas-e-industrias.svg', desc: 'Nossos principais serviços incluem a gestão e comercialização de resíduos gerados por indústrias, assegurando o descarte adequado e a reciclagem responsável de materiais. Atendemos a diversos setores industriais, oferecendo soluções inovadoras e eficientes para a gestão de resíduos, com foco constante na sustentabilidade e no reaproveitamento, promovendo um ciclo ambientalmente consciente.' },
-                { id: 'conectores', nome: 'Resíduos de Conectores', img: 'https://apextechmetais.com.br/wp-content/uploads/2024/07/icon-residuos-de-conectores.svg', desc: 'Tratamos e reciclamos resíduos de conectores elétricos e eletrônicos, assegurando que esses materiais sejam reaproveitados de forma eficiente e sustentável. Nosso processo garante a máxima recuperação de metais, reduzindo o impacto ambiental e promovendo fortemente a economia circular em todos os nossos processos logísticos.' },
-                { id: 'fios', nome: 'Sucatas de Fios e Cabos', img: 'https://apextechmetais.com.br/wp-content/uploads/2024/07/sucata-de-fio.svg', desc: 'Especializamo-nos na compra e reciclagem de sucata de fio e cabos de todos os tipos. Transformamos resíduos em recursos reutilizáveis através de processos de separação de alta tecnologia que isolam o plástico dos metais valiosos como cobre e alumínio de maneira rápida, limpa e altamente sustentável.' },
-                { id: 'obras', nome: 'Resíduos e Sucatas de Obras', img: 'https://apextechmetais.com.br/wp-content/uploads/2024/07/residuos-e-sucatas-de-obras.svg', desc: 'Oferecemos serviços de gestão de resíduos em obras, proporcionando soluções completas e personalizadas para o setor da construção civil. Trabalhamos com planejamento de coleta programada para manter sua obra limpa, organizada e perfeitamente adequada às normas ambientais mais rigorosas de descarte.' }
-            ];
-            localStorage.setItem('apex_solucoes', JSON.stringify(solucoesDataArray));
-        }
-    } catch(e) {}
 
     function openSolucaoModal(data) {
         if (!solModal || !data) return;
         solModalImg.src = data.img;
         solModalImg.alt = data.nome;
         solModalTitle.textContent = data.nome;
-        solModalDesc.textContent = data.desc;
+        // A API retorna o campo como "descricao"
+        solModalDesc.textContent = data.descricao || data.desc || '';
         solModal.classList.add('open');
         document.body.style.overflow = 'hidden';
-    }
-
-    const solucoesContainer = document.getElementById('solucoes-container');
-    if (solucoesContainer && solucoesDataArray.length > 0) {
-        solucoesDataArray.forEach(data => {
-            const div = document.createElement('div');
-            div.className = 'solucao_item';
-            div.setAttribute('role', 'button');
-            div.setAttribute('tabindex', '0');
-            div.style.cursor = 'pointer';
-
-            // Resumo dinâmico para o card
-            const resumo = data.desc.length > 160 ? data.desc.substring(0, 160) + '...' : data.desc;
-
-            div.innerHTML = `
-                <article>
-                    <div class="solucoes_header">
-                        <img src="${data.img}" alt="${data.nome}" class="img-fluid solucao-icon">
-                        <h2>${data.nome}</h2>
-                    </div>
-                    <div class="solucoes_conteudo">
-                        <p>${resumo}</p>
-                    </div>
-                </article>
-            `;
-
-            div.addEventListener('click', (e) => {
-                e.preventDefault();
-                openSolucaoModal(data);
-            });
-
-            solucoesContainer.appendChild(div);
-        });
     }
 
     function closeSolucaoModal() {
@@ -467,8 +419,52 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.style.overflow = '';
     }
 
-    if (solModalClose) solModalClose.addEventListener('click', closeSolucaoModal);
+    if (solModalClose)   solModalClose.addEventListener('click', closeSolucaoModal);
     if (solModalOverlay) solModalOverlay.addEventListener('click', closeSolucaoModal);
+
+    // Busca soluções da API e renderiza os cards
+    const solucoesContainer = document.getElementById('solucoes-container');
+    if (solucoesContainer) {
+        fetch('/api/solucoes')
+            .then(res => res.json())
+            .then(items => {
+                solucoesContainer.innerHTML = '';
+                items.forEach(data => {
+                    const div = document.createElement('div');
+                    div.className = 'solucao_item';
+                    div.setAttribute('role', 'button');
+                    div.setAttribute('tabindex', '0');
+                    div.style.cursor = 'pointer';
+
+                    const texto = data.descricao || '';
+                    const resumo = texto.length > 160 ? texto.substring(0, 160) + '...' : texto;
+
+                    div.innerHTML = `
+                        <article>
+                            <div class="solucoes_header">
+                                <img src="${data.img}" alt="${data.nome}" class="img-fluid solucao-icon">
+                                <h2>${data.nome}</h2>
+                            </div>
+                            <div class="solucoes_conteudo">
+                                <p>${resumo}</p>
+                            </div>
+                        </article>
+                    `;
+
+                    div.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        openSolucaoModal(data);
+                    });
+
+                    solucoesContainer.appendChild(div);
+                });
+            })
+            .catch(err => {
+                console.error('Erro ao carregar soluções:', err);
+            });
+    }
+
+
 
     // --------------------------------------------------------
     // CHATBOT INTEGRATION (GROQ API)
