@@ -393,6 +393,69 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // --------------------------------------------------------
+    // SOLUTIONS LIGHTBOX MODAL
+    // --------------------------------------------------------
+    const solModal   = document.getElementById('solution-modal');
+    const solModalImg   = document.getElementById('solution-modal-img');
+    const solModalTitle = document.getElementById('solution-modal-title');
+    const solModalDesc  = document.getElementById('solution-modal-desc');
+    const solModalClose = solModal ? solModal.querySelector('#solution-modal-close') : null;
+    const solModalOverlay = solModal ? solModal.querySelector('#solution-modal-overlay') : null;
+
+    const solucoesData = {
+        'industrias': {
+            nome: 'Sucatas de Indústrias',
+            desc: 'Nossos principais serviços incluem a gestão e comercialização de resíduos gerados por indústrias, assegurando o descarte adequado e a reciclagem responsável de materiais. Atendemos a diversos setores industriais, oferecendo soluções inovadoras e eficientes para a gestão de resíduos, com foco constante na sustentabilidade e no reaproveitamento, promovendo um ciclo ambientalmente consciente.',
+            img: 'https://apextechmetais.com.br/wp-content/uploads/2024/07/residuos-de-empresas-e-industrias.svg'
+        },
+        'conectores': {
+            nome: 'Resíduos de Conectores',
+            desc: 'Tratamos e reciclamos resíduos de conectores elétricos e eletrônicos, assegurando que esses materiais sejam reaproveitados de forma eficiente e sustentável. Nosso processo garante a máxima recuperação de metais, reduzindo o impacto ambiental e promovendo fortemente a economia circular em todos os nossos processos logísticos.',
+            img: 'https://apextechmetais.com.br/wp-content/uploads/2024/07/icon-residuos-de-conectores.svg'
+        },
+        'fios': {
+            nome: 'Sucatas de Fios e Cabos',
+            desc: 'Especializamo-nos na compra e reciclagem de sucata de fio e cabos de todos os tipos. Transformamos resíduos em recursos reutilizáveis através de processos de separação de alta tecnologia que isolam o plástico dos metais valiosos como cobre e alumínio de maneira rápida, limpa e altamente sustentável.',
+            img: 'https://apextechmetais.com.br/wp-content/uploads/2024/07/sucata-de-fio.svg'
+        },
+        'obras': {
+            nome: 'Resíduos e Sucatas de Obras',
+            desc: 'Oferecemos serviços de gestão de resíduos em obras, proporcionando soluções completas e personalizadas para o setor da construção civil. Trabalhamos com planejamento de coleta programada para manter sua obra limpa, organizada e perfeitamente adequada às normas ambientais mais rigorosas de descarte.',
+            img: 'https://apextechmetais.com.br/wp-content/uploads/2024/07/residuos-e-sucatas-de-obras.svg'
+        }
+    };
+
+    function openSolucaoModal(id) {
+        if (!solModal || !solucoesData[id]) return;
+        const data = solucoesData[id];
+        solModalImg.src = data.img;
+        solModalImg.alt = data.nome;
+        solModalTitle.textContent = data.nome;
+        solModalDesc.textContent = data.desc;
+        solModal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeSolucaoModal() {
+        if (!solModal) return;
+        solModal.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    if (solModalClose) solModalClose.addEventListener('click', closeSolucaoModal);
+    if (solModalOverlay) solModalOverlay.addEventListener('click', closeSolucaoModal);
+
+    const solucoesItems = document.querySelectorAll('.solucao_item[data-solucao]');
+    solucoesItems.forEach(item => {
+        item.style.cursor = 'pointer';
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            const sid = item.getAttribute('data-solucao');
+            openSolucaoModal(sid);
+        });
+    });
+
+    // --------------------------------------------------------
     // CHATBOT INTEGRATION (GROQ API)
     // --------------------------------------------------------
     const chatToggle = document.getElementById('chatbot-toggle');

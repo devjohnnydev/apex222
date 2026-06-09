@@ -165,7 +165,7 @@
             <h3 class="titulo_section_40 text-center">Atendemos diversas indústrias, fornecendo soluções inovadoras e eficientes para a gestão de seus resíduos</h3>
 
             <div class="loop_solucao">
-                <a href="https://apextechmetais.com.br/solucao/sucatas-de-industrias/" class="solucao_item" target="_blank">
+                <div class="solucao_item" role="button" tabindex="0" data-solucao="industrias">
                     <article>
                         <div class="solucoes_header">
                             <img src="https://apextechmetais.com.br/wp-content/uploads/2024/07/residuos-de-empresas-e-industrias.svg"
@@ -176,9 +176,9 @@
                             <p>Nosso principal serviço é a gestão e comercialização de resíduos gerados por empresas e indústrias, garantindo o correto descarte e reciclagem dos materiais.</p>
                         </div>
                     </article>
-                </a>
+                </div>
 
-                <a href="https://apextechmetais.com.br/solucao/residuos-de-conectores/" class="solucao_item" target="_blank">
+                <div class="solucao_item" role="button" tabindex="0" data-solucao="conectores">
                     <article>
                         <div class="solucoes_header">
                             <img src="https://apextechmetais.com.br/wp-content/uploads/2024/07/icon-residuos-de-conectores.svg"
@@ -189,9 +189,9 @@
                             <p>Tratamos e reciclamos resíduos de conectores, assegurando que esses materiais sejam reaproveitados de forma eficiente e sustentável.</p>
                         </div>
                     </article>
-                </a>
+                </div>
 
-                <a href="https://apextechmetais.com.br/solucao/sucatas-de-fios-e-cabos/" class="solucao_item" target="_blank">
+                <div class="solucao_item" role="button" tabindex="0" data-solucao="fios">
                     <article>
                         <div class="solucoes_header">
                             <img src="https://apextechmetais.com.br/wp-content/uploads/2024/07/sucata-de-fio.svg"
@@ -202,9 +202,9 @@
                             <p>Especializamo-nos na compra e reciclagem de sucata de fio, transformando resíduos em recursos reutilizáveis e contribuindo para a economia circular.</p>
                         </div>
                     </article>
-                </a>
+                </div>
 
-                <a href="https://apextechmetais.com.br/solucao/residuos-e-sucatas-de-obras/" class="solucao_item" target="_blank">
+                <div class="solucao_item" role="button" tabindex="0" data-solucao="obras">
                     <article>
                         <div class="solucoes_header">
                             <img src="https://apextechmetais.com.br/wp-content/uploads/2024/07/residuos-e-sucatas-de-obras.svg"
@@ -215,7 +215,7 @@
                             <p>Oferecemos serviços de gestão de resíduos em obras, proporcionando soluções completas e personalizadas para o setor da construção civil.</p>
                         </div>
                     </article>
-                </a>
+                </div>
             </div>
         </div>
     </section>
@@ -842,6 +842,27 @@
     </div>
 </div>
 
-<script src="script.js?v=2"></script>
+<!-- Solution Detail Lightbox Modal -->
+<div id="solution-modal" class="catalog-modal" role="dialog" aria-modal="true" aria-label="Detalhes da Solução">
+    <div class="catalog-modal-overlay" id="solution-modal-overlay"></div>
+    <div class="catalog-modal-content">
+        <button class="catalog-modal-close" id="solution-modal-close" aria-label="Fechar">&times;</button>
+        <div class="catalog-modal-body">
+            <div class="catalog-modal-img-wrap" style="background: #0A1C11; padding: 40px; display: flex; align-items: center; justify-content: center;">
+                <img id="solution-modal-img" src="" alt="Ícone da Solução" style="width: 150px; height: 150px; object-fit: contain; filter: drop-shadow(0 0 10px rgba(42,208,122,0.3));">
+            </div>
+            <div class="catalog-modal-info">
+                <span class="catalog-modal-badge"><i class="fa-solid fa-industry"></i> Solução</span>
+                <h3 id="solution-modal-title"></h3>
+                <p id="solution-modal-desc"></p>
+                <a href="#contato" class="catalog-modal-cta" onclick="document.getElementById('solution-modal').classList.remove('open')">
+                    <i class="fa-brands fa-whatsapp"></i> Falar com Especialista
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="script.js?v=4"></script>
 </body>
 </html>
