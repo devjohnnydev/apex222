@@ -40,6 +40,7 @@
             <nav class="sidebar-nav">
                 <a href="#" class="nav-item active" data-target="dashboard"><i class="fa-solid fa-chart-pie"></i> LME Dashboard</a>
                 <a href="#" class="nav-item" data-target="materiais"><i class="fa-solid fa-box-open"></i> Meus Materiais</a>
+                <a href="#" class="nav-item" data-target="solucoes"><i class="fa-solid fa-industry"></i> Soluções</a>
                 <a href="#" class="nav-item" data-target="noticias"><i class="fa-solid fa-newspaper"></i> Notícias</a>
                 <a href="/" class="nav-item return-site"><i class="fa-solid fa-arrow-left"></i> Voltar ao Site</a>
             </nav>
@@ -143,6 +144,47 @@
                 </div>
             </section>
 
+            <!-- Soluções View -->
+            <section id="solucoes" class="view-section">
+                <header class="section-header">
+                    <h1>Gerenciar Soluções</h1>
+                    <p>Adicione ou edite os cartões de soluções oferecidas. Eles aparecerão na seção "Nossas Soluções" na página principal.</p>
+                </header>
+
+                <div class="materiais-layout">
+                    <!-- Formulário -->
+                    <div class="form-container">
+                        <h3>Adicionar/Editar Solução</h3>
+                        <form id="form-solucao">
+                            <input type="hidden" id="sol-id" value="">
+                            <div class="form-group">
+                                <label for="sol-titulo">Título da Solução *</label>
+                                <input type="text" id="sol-titulo" required placeholder="Ex: Sucatas de Indústrias">
+                            </div>
+                            <div class="form-group">
+                                <label for="sol-img">URL do Ícone/Imagem *</label>
+                                <input type="url" id="sol-img" required placeholder="https://exemplo.com/icone.svg">
+                            </div>
+                            <div class="form-group">
+                                <label for="sol-desc">Descrição Completa *</label>
+                                <textarea id="sol-desc" rows="4" required placeholder="Nossos principais serviços incluem a gestão..."></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn-primary"><i class="fa-solid fa-save"></i> Salvar Solução</button>
+                            <button type="button" id="btn-cancel-solucao" class="btn-secondary" style="display:none; margin-top: 10px;"><i class="fa-solid fa-xmark"></i> Cancelar Edição</button>
+                        </form>
+                    </div>
+
+                    <!-- Lista -->
+                    <div class="list-container">
+                        <h3>Soluções Cadastradas</h3>
+                        <div id="solucoes-admin-list">
+                            <!-- Items via JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- Notícias View -->
             <section id="noticias" class="view-section">
                 <header class="section-header">
@@ -198,6 +240,6 @@
             </section>
         </main>
     </div>
-    <script src="admin.js"></script>
+    <script src="admin.js?v=2"></script>
 </body>
 </html>

@@ -235,6 +235,133 @@ document.addEventListener('DOMContentLoaded', () => {
     renderMateriais();
 
     // ============================================================
+    // SOLUÇÕES - LocalStorage
+    // ============================================================
+    const formSolucao = document.getElementById('form-solucao');
+    const solucoesAdminList = document.getElementById('solucoes-admin-list');
+    const btnCancelSolucao = document.getElementById('btn-cancel-solucao');
+    const solIdInput = document.getElementById('sol-id');
+    const solTituloInput = document.getElementById('sol-titulo');
+    const solImgInput = document.getElementById('sol-img');
+    const solDescInput = document.getElementById('sol-desc');
+
+    function getSolucoes() {
+        const raw = localStorage.getItem('apex_solucoes');
+        // Se estiver vazio, retornamos as 4 soluções originais como default para evitar que a aba inicie vazia
+        if (!raw) {
+            const defaultSolucoes = [
+                { id: 'industrias', nome: 'Sucatas de Indústrias', img: 'https://apextechmetais.com.br/wp-content/uploads/2024/07/residuos-de-empresas-e-industrias.svg', desc: 'Nossos principais serviços incluem a gestão e comercialização de resíduos gerados por indústrias, assegurando o descarte adequado e a reciclagem responsável de materiais. Atendemos a diversos setores industriais, oferecendo soluções inovadoras e eficientes para a gestão de resíduos, com foco constante na sustentabilidade e no reaproveitamento, promovendo um ciclo ambientalmente consciente.' },
+                { id: 'conectores', nome: 'Resíduos de Conectores', img: 'https://apextechmetais.com.br/wp-content/uploads/2024/07/icon-residuos-de-conectores.svg', desc: 'Tratamos e reciclamos resíduos de conectores elétricos e eletrônicos, assegurando que esses materiais sejam reaproveitados de forma eficiente e sustentável. Nosso processo garante a máxima recuperação de metais, reduzindo o impacto ambiental e promovendo fortemente a economia circular em todos os nossos processos logísticos.' },
+                { id: 'fios', nome: 'Sucatas de Fios e Cabos', img: 'https://apextechmetais.com.br/wp-content/uploads/2024/07/sucata-de-fio.svg', desc: 'Especializamo-nos na compra e reciclagem de sucata de fio e cabos de todos os tipos. Transformamos resíduos em recursos reutilizáveis através de processos de separação de alta tecnologia que isolam o plástico dos metais valiosos como cobre e alumínio de maneira rápida, limpa e altamente sustentável.' },
+                { id: 'obras', nome: 'Resíduos e Sucatas de Obras', img: 'https://apextechmetais.com.br/wp-content/uploads/2024/07/residuos-e-sucatas-de-obras.svg', desc: 'Oferecemos serviços de gestão de resíduos em obras, proporcionando soluções completas e personalizadas para o setor da construção civil. Trabalhamos com planejamento de coleta programada para manter sua obra limpa, organizada e perfeitamente adequada às normas ambientais mais rigorosas de descarte.' }
+            ];
+            localStorage.setItem('apex_solucoes', JSON.stringify(defaultSolucoes));
+            return defaultSolucoes;
+        }
+        return JSON.parse(raw);
+    }
+
+    function saveSolucoes(items) {
+        localStorage.setItem('apex_solucoes', JSON.stringify(items));
+    }
+
+    function renderSolucoesAdmin() {
+        if (!solucoesAdminList) return;
+        const items = getSolucoes();
+        solucoesAdminList.innerHTML = '';
+
+        if (items.length === 0) {
+            solucoesAdminList.innerHTML = '<p style="color:#888; padding:10px 0;">Nenhuma solução cadastrada.</p>';
+            return;
+        }
+
+        items.forEach(s => {
+            const div = document.createElement('div');
+            div.className = 'noticia-admin-item'; // Reutilizando a classe pra layout semelhante
+            div.style.alignItems = 'center';
+
+            div.innerHTML = `
+                <div style="margin-right: 15px;">
+                    <img src="${s.img}" alt="${s.nome}" style="width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 0 5px rgba(42,208,122,0.5));">
+                </div>
+                <div class="noticia-admin-info" style="flex: 1;">
+                    <strong>${s.nome}</strong>
+                    <small style="display:block; margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 300px;">${s.desc}</small>
+                </div>
+                <div>
+                    <button class="btn-primary btn-edit-solucao" data-id="${s.id}" style="padding: 6px 10px; margin-right: 5px;"><i class="fa-solid fa-edit"></i></button>
+                    <button class="btn-delete btn-delete-solucao" data-id="${s.id}" style="padding: 6px 10px; margin-top: 0;"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `;
+            solucoesAdminList.appendChild(div);
+        });
+
+        // Edit
+        document.querySelectorAll('.btn-edit-solucao').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = e.currentTarget.dataset.id;
+                const sol = getSolucoes().find(s => s.id == id);
+                if (sol) {
+                    solIdInput.value = sol.id;
+                    solTituloInput.value = sol.nome;
+                    solImgInput.value = sol.img;
+                    solDescInput.value = sol.desc;
+                    btnCancelSolucao.style.display = 'inline-block';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Delete
+        document.querySelectorAll('.btn-delete-solucao').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = e.currentTarget.dataset.id;
+                if (confirm('Remover esta solução do site?')) {
+                    const updated = getSolucoes().filter(s => s.id != id);
+                    saveSolucoes(updated);
+                    renderSolucoesAdmin();
+                }
+            });
+        });
+    }
+
+    if (formSolucao) {
+        formSolucao.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = solIdInput.value || 'sol_' + Date.now();
+            const nome = solTituloInput.value.trim();
+            const img = solImgInput.value.trim();
+            const desc = solDescInput.value.trim();
+
+            const items = getSolucoes();
+            const existingIndex = items.findIndex(s => s.id == id);
+            
+            if (existingIndex > -1) {
+                items[existingIndex] = { id, nome, img, desc };
+            } else {
+                items.push({ id, nome, img, desc });
+            }
+
+            saveSolucoes(items);
+            formSolucao.reset();
+            solIdInput.value = '';
+            btnCancelSolucao.style.display = 'none';
+            renderSolucoesAdmin();
+            alert('✅ Solução salva! Atualize a página inicial para ver as mudanças.');
+        });
+    }
+
+    if (btnCancelSolucao) {
+        btnCancelSolucao.addEventListener('click', () => {
+            formSolucao.reset();
+            solIdInput.value = '';
+            btnCancelSolucao.style.display = 'none';
+        });
+    }
+
+    renderSolucoesAdmin();
+
+    // ============================================================
     // NOTÍCIAS - LocalStorage
     // ============================================================
     const formNoticia = document.getElementById('form-noticia');
