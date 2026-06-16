@@ -47,6 +47,7 @@
                         <li><a href="#catalogo">Catálogo</a></li>
                         <li><a href="#onde-encontramos">Onde Encontramos</a></li>
                         <li><a href="#cotacoes">Cotações LME</a></li>
+                        <li><a href="#galeria">Galeria</a></li>
                         <li><a href="#noticias">Notícias</a></li>
                         <li><a href="#contato">Atendimento</a></li>
                     </ul>
@@ -105,6 +106,7 @@
                 <li><a href="#catalogo" onclick="closeMenu()">Catálogo</a></li>
                 <li><a href="#onde-encontramos" onclick="closeMenu()">Onde Encontramos</a></li>
                 <li><a href="#cotacoes" onclick="closeMenu()">Cotações LME</a></li>
+                <li><a href="#galeria" onclick="closeMenu()">Galeria</a></li>
                 <li><a href="#contato" onclick="closeMenu()">Atendimento</a></li>
             </ul>
         </nav>
@@ -521,110 +523,100 @@
     </section>
 
     <!-- COTAÇÕES LME -->
+    <!-- COTAÇÕES LME DINÂMICAS -->
     <section id="cotacoes" class="section-lme">
         <div class="container">
             <div class="lme-header">
                 <h2 class="titulo_section_solucoes text-center">Cotações LME</h2>
-                <h3 class="titulo_section_40 text-center">Acompanhe o mercado global de metais</h3>
+                <h3 class="titulo_section_40 text-center">Acompanhe o mercado global de metais em tempo real</h3>
             </div>
             
-            <div class="lme-grid">
-                <!-- Ouro -->
-                <div class="lme-card">
-                    <div class="lme-card-header">
-                        <h3>Ouro (Gold)</h3>
-                        <i class="fa-solid fa-coins"></i>
-                    </div>
-                    <div class="lme-price">US$ 4.467,34 <span>/ oz</span></div>
-                    <div class="lme-metrics">
-                        <div class="metric positive">
-                            <span class="label">Diária</span>
-                            <span class="value"><i class="fa-solid fa-arrow-trend-up"></i> +1.2%</span>
-                        </div>
-                        <div class="metric positive">
-                            <span class="label">Semanal</span>
-                            <span class="value"><i class="fa-solid fa-arrow-trend-up"></i> +3.5%</span>
-                        </div>
-                        <div class="metric negative">
-                            <span class="label">Mensal</span>
-                            <span class="value"><i class="fa-solid fa-arrow-trend-down"></i> -0.8%</span>
-                        </div>
+            <div class="lme-controls">
+                <div class="lme-metals-tabs" id="indices">
+                    <button class="lme-metal-btn active" data-indice="cobre"><span class="bullet" style="background-color: #BE5715;"></span> Cobre</button>
+                    <button class="lme-metal-btn" data-indice="zinco"><span class="bullet" style="background-color: #64b0ac;"></span> Zinco</button>
+                    <button class="lme-metal-btn" data-indice="aluminio"><span class="bullet" style="background-color: #6b777d;"></span> Alumínio</button>
+                    <button class="lme-metal-btn" data-indice="chumbo"><span class="bullet" style="background-color: #3f505c;"></span> Chumbo</button>
+                    <button class="lme-metal-btn" data-indice="estanho"><span class="bullet" style="background-color: #8f8f4f;"></span> Estanho</button>
+                    <button class="lme-metal-btn" data-indice="niquel"><span class="bullet" style="background-color: #18497a;"></span> Níquel</button>
+                    <button class="lme-metal-btn" data-indice="dolar"><span class="bullet" style="background-color: #3A7E27;"></span> Dólar</button>
+                </div>
+                
+                <div class="lme-select-month">
+                    <label for="meslme">Mês de Referência:</label>
+                    <div class="select-wrapper">
+                        <select name="meslme" id="meslme" class="custom-select">
+                            <!-- Populado dinamicamente pelo JavaScript -->
+                        </select>
+                        <i class="fa-solid fa-chevron-down select-icon"></i>
                     </div>
                 </div>
+            </div>
 
-                <!-- Prata -->
-                <div class="lme-card">
-                    <div class="lme-card-header">
-                        <h3>Prata (Silver)</h3>
-                        <i class="fa-solid fa-ring"></i>
-                    </div>
-                    <div class="lme-price">US$ 73,95 <span>/ oz</span></div>
-                    <div class="lme-metrics">
-                        <div class="metric negative">
-                            <span class="label">Diária</span>
-                            <span class="value"><i class="fa-solid fa-arrow-trend-down"></i> -0.5%</span>
-                        </div>
-                        <div class="metric positive">
-                            <span class="label">Semanal</span>
-                            <span class="value"><i class="fa-solid fa-arrow-trend-up"></i> +1.1%</span>
-                        </div>
-                        <div class="metric positive">
-                            <span class="label">Mensal</span>
-                            <span class="value"><i class="fa-solid fa-arrow-trend-up"></i> +4.2%</span>
-                        </div>
-                    </div>
+            <!-- Variação Cards -->
+            <div id="variacao" class="lme-variation-row">
+                <div class="lme-variation-loading">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i> Carregando variações...
                 </div>
+            </div>
 
-                <!-- Platina -->
-                <div class="lme-card">
-                    <div class="lme-card-header">
-                        <h3>Platina (Platinum)</h3>
-                        <i class="fa-solid fa-gem"></i>
-                    </div>
-                    <div class="lme-price">US$ 1.891,00 <span>/ oz</span></div>
-                    <div class="lme-metrics">
-                        <div class="metric positive">
-                            <span class="label">Diária</span>
-                            <span class="value"><i class="fa-solid fa-arrow-trend-up"></i> +2.1%</span>
-                        </div>
-                        <div class="metric negative">
-                            <span class="label">Semanal</span>
-                            <span class="value"><i class="fa-solid fa-arrow-trend-down"></i> -1.5%</span>
-                        </div>
-                        <div class="metric positive">
-                            <span class="label">Mensal</span>
-                            <span class="value"><i class="fa-solid fa-arrow-trend-up"></i> +2.8%</span>
-                        </div>
+            <!-- Gráficos -->
+            <div class="lme-charts-grid">
+                <div class="lme-chart-box full-width">
+                    <h4 id="titchart-diario" class="titchart-title">Evolução Diária</h4>
+                    <div class="chart-canvas-wrapper">
+                        <canvas id="chart-diario"></canvas>
                     </div>
                 </div>
                 
-                <!-- Paládio -->
-                <div class="lme-card">
-                    <div class="lme-card-header">
-                        <h3>Paládio (Palladium)</h3>
-                        <i class="fa-solid fa-weight-hanging"></i>
+                <div class="lme-chart-box">
+                    <h4 id="titchart-semanal" class="titchart-title">Evolução Semanal</h4>
+                    <div class="chart-canvas-wrapper">
+                        <canvas id="chart-semanal"></canvas>
                     </div>
-                    <div class="lme-price">US$ 1.296,00 <span>/ oz</span></div>
-                    <div class="lme-metrics">
-                        <div class="metric positive">
-                            <span class="label">Diária</span>
-                            <span class="value"><i class="fa-solid fa-arrow-trend-up"></i> +0.4%</span>
-                        </div>
-                        <div class="metric positive">
-                            <span class="label">Semanal</span>
-                            <span class="value"><i class="fa-solid fa-arrow-trend-up"></i> +2.0%</span>
-                        </div>
-                        <div class="metric negative">
-                            <span class="label">Mensal</span>
-                            <span class="value"><i class="fa-solid fa-arrow-trend-down"></i> -1.2%</span>
-                        </div>
+                </div>
+
+                <div class="lme-chart-box">
+                    <h4 id="titchart-mensal" class="titchart-title">Evolução Mensal</h4>
+                    <div class="chart-canvas-wrapper">
+                        <canvas id="chart-mensal"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela -->
+            <div class="lme-table-section">
+                <div class="lme-table-header">
+                    <h4 id="table-title">Tabela de informações diárias</h4>
+                    <button id="imprimirlme" class="btn-print"><i class="fa-solid fa-print"></i> Imprimir Tabela</button>
+                </div>
+                
+                <div class="table-responsive" id="boxtabela">
+                    <div class="lme-table-loading">
+                        <i class="fa-solid fa-circle-notch fa-spin"></i> Carregando dados da tabela...
                     </div>
                 </div>
             </div>
             
             <div class="lme-footer">
-                <p>Baseado nos dados da <strong>LME (London Metal Exchange)</strong>.</p>
-                <p class="lme-reference">A <strong style="color: var(--cor-verde);">Apex Tech Metais</strong> é sua referência em consulta no mercado de resíduos e metais.</p>
+                <p>Fonte dos dados: <strong>London Metal Exchange (LME)</strong>.</p>
+                <p class="lme-reference">A <strong style="color: var(--cor-verde);">Apex Tech Metais</strong> é sua referência em gestão sustentável de resíduos e comercialização de metais industriais.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- GALERIA DE FOTOS -->
+    <section id="galeria" class="section-galeria">
+        <div class="container">
+            <div class="galeria-header">
+                <h2 class="titulo_section_solucoes text-center">Galeria de Fotos</h2>
+                <h3 class="titulo_section_40 text-center">Conheça nossa infraestrutura e processos de reciclagem</h3>
+            </div>
+            
+            <div class="galeria-grid" id="galeria-grid">
+                <div class="galeria-loading text-center">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i> Carregando fotos...
+                </div>
             </div>
         </div>
     </section>
@@ -813,6 +805,7 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
 <script src="script.js?v=6"></script>
 </body>
 </html>

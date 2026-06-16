@@ -627,5 +627,469 @@ Responda de forma curta, amigável e profissional. Use o português do Brasil. N
 
     renderNoticias();
 
+    // --------------------------------------------------------
+    // COTAÇÕES LME DINÂMICAS
+    // --------------------------------------------------------
+    let lmeIndice = 'cobre';
+    let lmeMesAtual = '';
+    const lmeCharts = {};
+
+    function initLMEDashboard() {
+        const indicesButtons = document.querySelectorAll('#indices .lme-metal-btn');
+        const selectMonth = document.getElementById('meslme');
+        const printBtn = document.getElementById('imprimirlme');
+
+        if (!selectMonth) return; // Se a seção LME não estiver nesta página
+
+        // 1. Carga Inicial: busca o mês padrão
+        fetchLMETabela('6-2026'); // Mês inicial padrão. A API retornará os meses disponíveis.
+        
+        // 2. Mudança de Mês no Dropdown
+        selectMonth.addEventListener('change', function(e) {
+            e.preventDefault();
+            lmeMesAtual = this.value;
+            fetchLMETabela(lmeMesAtual);
+        });
+
+        // 3. Clique nas abas de metais
+        indicesButtons.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                lmeIndice = this.dataset.indice;
+                
+                // Tonalidade das abas
+                indicesButtons.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                // Atualizar os gráficos e cards de variação
+                atualizaGraficosLME();
+            });
+        });
+
+        // 4. Botão de Impressão da Tabela
+        if (printBtn) {
+            printBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Imprimir tabela em tela cheia usando print nativo com regras de css @media print
+                window.print();
+            });
+        }
+    }
+
+    async function fetchLMETabela(mes) {
+        const tableBox = document.getElementById('boxtabela');
+        const selectMonth = document.getElementById('meslme');
+        const tableTitle = document.getElementById('table-title');
+
+        if (!tableBox) return;
+
+        // Mostrar indicador de carregamento
+        tableBox.innerHTML = `
+            <div class="lme-table-loading">
+                <i class="fa-solid fa-circle-notch fa-spin"></i> Carregando dados da tabela...
+            </div>
+        `;
+
+        try {
+            const response = await fetch(`/api/lme/tabela/${mes}`);
+            if (!response.ok) throw new Error('Falha na requisição dos dados da LME.');
+            const data = await response.json();
+
+            // Preencher o dropdown de meses na primeira execução
+            if (selectMonth && selectMonth.children.length === 0) {
+                data.mesesDisponiveis.forEach(item => {
+                    const opt = document.createElement('option');
+                    opt.value = item.valor;
+                    opt.textContent = item.texto;
+                    if (item.valor === mes) {
+                        opt.selected = true;
+                    }
+                    selectMonth.appendChild(opt);
+                });
+                lmeMesAtual = selectMonth.value;
+            }
+
+            // Atualizar o título
+            const selectText = selectMonth.options[selectMonth.selectedIndex]?.text || '';
+            if (tableTitle) {
+                tableTitle.textContent = `Tabela de informações diárias de ${selectText.toLowerCase()}`;
+            }
+
+            // Renderizar a tabela HTML
+            renderLMETable(data.cotacoes);
+
+            // Atualizar os gráficos e variações
+            atualizaGraficosLME();
+
+        } catch (err) {
+            console.error('Erro ao carregar tabela LME:', err);
+            tableBox.innerHTML = `
+                <div class="lme-table-loading" style="color: #ff4d4d;">
+                    <i class="fa-solid fa-circle-xmark"></i> Não foi possível carregar os dados das cotações.
+                </div>
+            `;
+        }
+    }
+
+    function renderLMETable(cotacoes) {
+        const tableBox = document.getElementById('boxtabela');
+        if (!tableBox || !cotacoes || cotacoes.length === 0) return;
+
+        let tableHtml = `
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dia</th>
+                        <th>Cobre <small>U$/t</small></th>
+                        <th>Zinco <small>U$/t</small></th>
+                        <th>Alumínio <small>U$/t</small></th>
+                        <th>Chumbo <small>U$/t</small></th>
+                        <th>Estanho <small>U$/t</small></th>
+                        <th>Níquel <small>U$/t</small></th>
+                        <th>Dólar <small>R$/US$</small></th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        cotacoes.forEach(row => {
+            let rowClass = '';
+            if (row.tipo === 'semanal') rowClass = 'row-semanal';
+            if (row.tipo === 'mensal') rowClass = 'row-mensal';
+
+            let cellClass = row.tipo === 'mensal' ? 'lmemensal' : (row.tipo === 'semanal' ? 'lmemedia' : 'lmenormal');
+
+            const isDolarFeriado = row.dolar.toLowerCase().includes('feriado');
+            const dolarCellClass = isDolarFeriado ? 'lmeferiado' : '';
+
+            tableHtml += `
+                <tr class="${rowClass}">
+                    <td class="${cellClass}">${row.dia}</td>
+                    <td class="${cellClass}">${row.cobre}</td>
+                    <td class="${cellClass}">${row.zinco}</td>
+                    <td class="${cellClass}">${row.aluminio}</td>
+                    <td class="${cellClass}">${row.chumbo}</td>
+                    <td class="${cellClass}">${row.estanho}</td>
+                    <td class="${cellClass}">${row.niquel}</td>
+                    <td class="${dolarCellClass}">${row.dolar}</td>
+                </tr>
+            `;
+        });
+
+        tableHtml += `
+                </tbody>
+            </table>
+        `;
+
+        tableBox.innerHTML = tableHtml;
+    }
+
+    function atualizaGraficosLME() {
+        if (!lmeMesAtual) return;
+        renderLMEGrafico('diario');
+        renderLMEGrafico('semanal');
+        renderLMEGrafico('mensal');
+        fetchLMEVariacao();
+    }
+
+    async function renderLMEGrafico(tipoGraf) {
+        const canvasId = `chart-${tipoGraf}`;
+        const titleId = `titchart-${tipoGraf}`;
+        const canvas = document.getElementById(canvasId);
+        const titleEl = document.getElementById(titleId);
+
+        if (!canvas) return;
+
+        try {
+            const response = await fetch('/api/lme/graflme', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    tipograf: tipoGraf,
+                    meslme: lmeMesAtual,
+                    indice: lmeIndice
+                })
+            });
+
+            if (!response.ok) throw new Error('Falha ao obter dados do gráfico.');
+            const data = await response.json();
+
+            // Destruir instância anterior do gráfico se existir
+            if (lmeCharts[tipoGraf]) {
+                lmeCharts[tipoGraf].destroy();
+            }
+
+            // Aplicar identidade visual da Apex Tech Metais (verde brilhante em vez de vermelho do original)
+            if (data.datasets && data.datasets[0]) {
+                data.datasets[0].borderColor = '#2AD07A';
+                data.datasets[0].backgroundColor = 'rgba(42, 208, 122, 0.04)';
+                data.datasets[0].pointBackgroundColor = '#2AD07A';
+                data.datasets[0].pointBorderColor = '#0E291B';
+                data.datasets[0].pointHoverBackgroundColor = '#FFFFFF';
+                data.datasets[0].pointHoverBorderColor = '#2AD07A';
+                data.datasets[0].borderWidth = 3;
+                data.datasets[0].pointRadius = 4;
+            }
+
+            // Customizar o título
+            if (titleEl) {
+                titleEl.textContent = `Evolução ${data.datasets[0].label}`;
+            }
+
+            // Instanciar Chart.js v2
+            lmeCharts[tipoGraf] = new Chart(canvas, {
+                type: 'line',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    legend: {
+                        display: false
+                    },
+                    tooltips: {
+                        backgroundColor: '#0E291B',
+                        titleFontFamily: 'Raleway',
+                        bodyFontFamily: 'Lato',
+                        titleFontColor: '#2AD07A',
+                        bodyFontColor: '#FFFFFF',
+                        borderColor: 'rgba(42, 208, 122, 0.25)',
+                        borderWidth: 1,
+                        displayColors: false
+                    },
+                    scales: {
+                        yAxes: [{
+                            gridLines: {
+                                color: 'rgba(255, 255, 255, 0.05)',
+                                zeroLineColor: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                fontColor: 'rgba(255, 255, 255, 0.6)',
+                                fontSize: 11
+                            }
+                        }],
+                        xAxes: [{
+                            gridLines: {
+                                display: false
+                            },
+                            ticks: {
+                                fontColor: 'rgba(255, 255, 255, 0.6)',
+                                fontSize: 10
+                            }
+                        }]
+                    }
+                }
+            });
+
+        } catch (err) {
+            console.error(`Erro ao carregar gráfico ${tipoGraf}:`, err);
+        }
+    }
+
+    async function fetchLMEVariacao() {
+        const container = document.getElementById('variacao');
+        if (!container) return;
+
+        try {
+            const response = await fetch('/api/lme/varialme', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    meslme: lmeMesAtual,
+                    indice: lmeIndice
+                })
+            });
+
+            if (!response.ok) throw new Error('Falha ao carregar variações.');
+            const data = await response.json();
+
+            // Renderizar cards de variação usando JSON limpo
+            renderLMEVariacoes(data.parsed);
+
+        } catch (err) {
+            console.error('Erro ao buscar variações:', err);
+            container.innerHTML = `
+                <div class="lme-variation-loading" style="color: #ff4d4d;">
+                    <i class="fa-solid fa-circle-xmark"></i> Erro ao carregar variações.
+                </div>
+            `;
+        }
+    }
+
+    function renderLMEVariacoes(variaveis) {
+        const container = document.getElementById('variacao');
+        if (!container) return;
+
+        if (!variaveis || variaveis.length === 0) {
+            container.innerHTML = `
+                <div class="lme-variation-loading">
+                    Sem dados de variação disponíveis para o período.
+                </div>
+            `;
+            return;
+        }
+
+        let html = '';
+        variaveis.forEach(item => {
+            const valClass = item.isPositive ? 'text-success' : 'text-danger';
+            const icon = item.isPositive ? 'fa-solid fa-arrow-trend-up' : 'fa-solid fa-arrow-trend-down';
+            
+            html += `
+                <div class="lme-variation-card">
+                    <div class="lme-var-header">
+                        <h4>${item.titulo}</h4>
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    
+                    <div class="lme-var-body">
+                        <div class="lme-var-col current">
+                            <small>${item.dataAtual}</small>
+                            <b>${item.valAtual}</b>
+                        </div>
+                        <div class="lme-var-col previous">
+                            <small>${item.dataAnt}</small>
+                            <b>${item.valAnt}</b>
+                        </div>
+                    </div>
+                    
+                    <div class="lme-var-footer">
+                        <span>Variação</span>
+                        <h3 class="${valClass}">
+                            <i class="${icon}"></i>
+                            ${item.footerText}
+                        </h3>
+                    </div>
+                </div>
+            `;
+        });
+
+        container.innerHTML = html;
+    }
+
+    // --------------------------------------------------------
+    // APLICAR CONFIGURAÇÕES DA HOME (MOSTRAR/OCULTAR SEÇÕES)
+    // --------------------------------------------------------
+    async function applyHomepageSettings() {
+        try {
+            const response = await fetch('/api/settings');
+            if (!response.ok) throw new Error('Falha ao obter configurações da home.');
+            const settings = await response.json();
+
+            // Mapeamento: chave da config -> ID da seção no HTML
+            const sectionMap = {
+                'show_sobre': ['sobre'],
+                'show_solucoes': ['solucoes', 'areas-de-atuacoes'],
+                'show_catalogo': ['catalogo'],
+                'show_onde_encontramos': ['onde-encontramos'],
+                'show_cotacoes': ['cotacoes'],
+                'show_noticias': ['noticias'],
+                'show_galeria': ['galeria']
+            };
+
+            // Ligar/Desligar visibilidade de cada seção e seu item de menu correspondente
+            for (const [key, sectionIds] of Object.entries(sectionMap)) {
+                const show = settings[key] !== 'false';
+
+                // Seções
+                sectionIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.style.display = show ? '' : 'none';
+                    }
+                });
+
+                // Links de menu (desktop e mobile)
+                sectionIds.forEach(id => {
+                    const links = document.querySelectorAll(`a[href="#${id}"]`);
+                    links.forEach(link => {
+                        const li = link.closest('li');
+                        if (li) {
+                            li.style.display = show ? '' : 'none';
+                        }
+                    });
+                });
+            }
+
+            // Carregar a galeria se estiver ativa
+            if (settings['show_galeria'] !== 'false') {
+                renderHomepageGallery();
+            }
+
+        } catch (err) {
+            console.error('Erro ao aplicar configurações da home:', err);
+            renderHomepageGallery();
+        }
+    }
+
+    // --------------------------------------------------------
+    // RENDERIZAR GALERIA DE FOTOS DINÂMICA
+    // --------------------------------------------------------
+    async function renderHomepageGallery() {
+        const grid = document.getElementById('galeria-grid');
+        if (!grid) return;
+
+        try {
+            const response = await fetch('/api/galeria');
+            if (!response.ok) throw new Error('Falha ao obter imagens da galeria.');
+            const items = await response.json();
+
+            grid.innerHTML = '';
+
+            if (items.length === 0) {
+                grid.innerHTML = `
+                    <div class="galeria-loading text-center" style="color: #888;">
+                        <i class="fa-solid fa-images"></i> Nenhuma foto na galeria no momento.
+                    </div>
+                `;
+                return;
+            }
+
+            items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'galeria-item fade-up';
+                div.innerHTML = `
+                    <img src="${item.url}" alt="${item.titulo}" loading="lazy">
+                    <div class="galeria-overlay">
+                        <h4 class="galeria-title">${item.titulo}</h4>
+                        <div class="galeria-expand-icon"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
+                    </div>
+                `;
+
+                div.addEventListener('click', () => {
+                    if (typeof openCatalogModal === 'function') {
+                        openCatalogModal(item.url, item.titulo, 'Apex Tech Metais - Galeria de Fotos');
+                    }
+                });
+
+                grid.appendChild(div);
+            });
+
+            // Disparar animações para os novos elementos
+            const newFadeElements = grid.querySelectorAll('.fade-up');
+            if (typeof fadeObserver !== 'undefined') {
+                newFadeElements.forEach(el => fadeObserver.observe(el));
+            } else {
+                newFadeElements.forEach(el => el.classList.add('visible'));
+            }
+
+        } catch (err) {
+            console.error('Erro ao carregar galeria:', err);
+            grid.innerHTML = `
+                <div class="galeria-loading text-center" style="color: #ff4d4d;">
+                    <i class="fa-solid fa-circle-xmark"></i> Erro ao carregar as fotos da galeria.
+                </div>
+            `;
+        }
+    }
+
+    // Inicializar o dashboard cotações LME
+    initLMEDashboard();
+
+    // Aplicar configurações da home e carregar galeria
+    applyHomepageSettings();
+
     console.log('🌿 Apex Tech Metais - Carregado com sucesso!');
 });

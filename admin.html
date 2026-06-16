@@ -7,13 +7,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;800&family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="admin.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
     <!-- Login Overlay -->
     <div id="login-overlay" class="login-overlay">
         <div class="login-box">
-            <h2 style="color: var(--cor-verde); margin-bottom: 20px; font-family: 'Raleway', sans-serif;"><i class="fa-solid fa-lock"></i> Acesso Restrito</h2>
+            <div class="login-logo">APEX TECH</div>
+            <h2><i class="fa-solid fa-lock"></i> Acesso Restrito</h2>
             <form id="admin-login-form">
                 <div class="form-group">
                     <label for="login-user">Usuário</label>
@@ -23,10 +24,10 @@
                     <label for="login-pass">Senha</label>
                     <input type="password" id="login-pass" required placeholder="Digite a senha">
                 </div>
-                <button type="submit" class="btn-primary">Entrar</button>
-                <p id="login-error" style="color: #ff4d4d; font-size: 0.85rem; margin-top: 10px; display: none;">Credenciais incorretas.</p>
+                <button type="submit" class="btn-primary"><i class="fa-solid fa-sign-in-alt"></i> Entrar</button>
+                <p id="login-error" style="color: #ff4d4d; font-size: 0.85rem; margin-top: 10px; display: none;"><i class="fa-solid fa-circle-exclamation"></i> Credenciais incorretas.</p>
             </form>
-            <a href="index.html" style="display: block; margin-top: 15px; color: #888; text-decoration: none; font-size: 0.85rem;"><i class="fa-solid fa-arrow-left"></i> Voltar ao site</a>
+            <a href="index.html" class="login-back"><i class="fa-solid fa-arrow-left"></i> Voltar ao site</a>
         </div>
     </div>
 
@@ -35,74 +36,435 @@
         <aside class="sidebar">
             <div class="sidebar-header">
                 <h2>APEX TECH</h2>
-                <p>Painel Admin</p>
+                <p>Painel Administrativo</p>
             </div>
             <nav class="sidebar-nav">
-                <a href="#" class="nav-item active" data-target="dashboard"><i class="fa-solid fa-chart-pie"></i> LME Dashboard</a>
-                <a href="#" class="nav-item" data-target="materiais"><i class="fa-solid fa-box-open"></i> Meus Materiais</a>
-                <a href="#" class="nav-item" data-target="solucoes"><i class="fa-solid fa-industry"></i> Soluções</a>
-                <a href="#" class="nav-item" data-target="noticias"><i class="fa-solid fa-newspaper"></i> Notícias</a>
-                <a href="/" class="nav-item return-site"><i class="fa-solid fa-arrow-left"></i> Voltar ao Site</a>
+                <a href="#" class="nav-item active" data-target="dashboard">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Análises LME</span>
+                </a>
+                <a href="#" class="nav-item" data-target="home-config">
+                    <i class="fa-solid fa-toggle-on"></i>
+                    <span>Configurar Home</span>
+                </a>
+                <a href="#" class="nav-item" data-target="galeria-admin">
+                    <i class="fa-solid fa-images"></i>
+                    <span>Galeria de Fotos</span>
+                </a>
+                <a href="#" class="nav-item" data-target="materiais">
+                    <i class="fa-solid fa-box-open"></i>
+                    <span>Meus Materiais</span>
+                </a>
+                <a href="#" class="nav-item" data-target="solucoes">
+                    <i class="fa-solid fa-industry"></i>
+                    <span>Soluções</span>
+                </a>
+                <a href="#" class="nav-item" data-target="noticias">
+                    <i class="fa-solid fa-newspaper"></i>
+                    <span>Notícias</span>
+                </a>
+                <a href="/" class="nav-item return-site">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Voltar ao Site</span>
+                </a>
             </nav>
         </aside>
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Dashboard View -->
+
+            <!-- ═══════════════════════════════════════════════════════════
+                 DASHBOARD — ANÁLISES LME (20 análises)
+            ═══════════════════════════════════════════════════════════ -->
             <section id="dashboard" class="view-section active">
                 <header class="section-header">
-                    <h1>Dashboard de Análises LME</h1>
-                    <p>Acompanhe as cotações e tendências dos metais.</p>
+                    <div class="section-header-row">
+                        <div>
+                            <h1><i class="fa-solid fa-chart-line"></i> Central de Decisão LME</h1>
+                            <p>Dados em tempo real · Decida o melhor momento de vender cada metal</p>
+                        </div>
+                        <div class="dashboard-controls">
+                            <select id="mes-selector" class="mes-select"></select>
+                            <button id="btn-refresh-lme" class="btn-refresh">
+                                <i class="fa-solid fa-rotate-right"></i> Atualizar
+                            </button>
+                        </div>
+                    </div>
                 </header>
-                
-                <div class="dashboard-cards">
-                    <div class="dash-card">
-                        <div class="dash-icon"><i class="fa-solid fa-coins"></i></div>
-                        <div class="dash-info">
-                            <h3>Cobre (Copper)</h3>
-                            <p class="price">US$ 8.450/t</p>
-                            <span class="trend up"><i class="fa-solid fa-arrow-up"></i> +1.5%</span>
+
+                <div id="lme-loading" class="loading-state">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i>
+                    <span>Carregando dados LME...</span>
+                </div>
+
+                <div id="lme-error" class="error-state" style="display:none;">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span>Erro ao carregar dados. Verifique a conexão e tente novamente.</span>
+                    <button onclick="document.getElementById('btn-refresh-lme').click()" class="btn-secondary" style="width:auto;margin-top:10px;">Tentar novamente</button>
+                </div>
+
+                <!-- Analysis Content -->
+                <div id="analysis-content" style="display:none;">
+
+                    <!-- ── ANÁLISE 01 + 04: KPI Cards + Sinalizadores ── -->
+                    <div class="analysis-block">
+                        <div class="analysis-header">
+                            <div>
+                                <h2 class="analysis-title"><span class="analysis-num">01</span> Cotação Atual + Sinalizador de Venda</h2>
+                                <p class="analysis-desc">Preço atual de cada metal com recomendação baseada na posição dentro do canal de preços do mês (Mínima → Máxima).</p>
+                            </div>
+                        </div>
+                        <div id="kpi-cards" class="kpi-grid"></div>
+                    </div>
+
+                    <!-- ── ANÁLISE 02: Noble Basket Index ── -->
+                    <div class="analysis-block">
+                        <h2 class="analysis-title"><span class="analysis-num">02</span> Noble Basket Index — Índice de Sucata Eletrônica</h2>
+                        <p class="analysis-desc">Índice ponderado simulando o valor de uma tonelada de sucata eletrônica mista. Composição: <strong style="color:#e07b39;">Cobre 45%</strong>, <strong style="color:#7eb3d5;">Alumínio 20%</strong>, <strong style="color:#b0a0c0;">Chumbo 15%</strong>, <strong style="color:#d4b896;">Estanho 10%</strong>, <strong style="color:#a8c5a0;">Zinco 10%</strong>.</p>
+                        <div class="noble-basket-card">
+                            <div class="nbi-main">
+                                <div class="nbi-value-wrap">
+                                    <span class="nbi-label">Índice Hoje</span>
+                                    <span id="nbi-value" class="nbi-value">—</span>
+                                    <span id="nbi-change" class="nbi-change">calculando...</span>
+                                </div>
+                                <div id="nbi-bars" class="nbi-bars"></div>
+                            </div>
+                            <div class="nbi-chart-wrap">
+                                <canvas id="nbiChart"></canvas>
+                            </div>
                         </div>
                     </div>
-                    <div class="dash-card">
-                        <div class="dash-icon"><i class="fa-solid fa-ring"></i></div>
-                        <div class="dash-info">
-                            <h3>Alumínio (Aluminium)</h3>
-                            <p class="price">US$ 2.230/t</p>
-                            <span class="trend down"><i class="fa-solid fa-arrow-down"></i> -0.8%</span>
+
+                    <!-- ── ANÁLISE 03: Posição no Canal ── -->
+                    <div class="analysis-block">
+                        <h2 class="analysis-title"><span class="analysis-num">03</span> Posição no Canal de Preços (Min–Max do Mês)</h2>
+                        <p class="analysis-desc">Onde o preço atual está em relação à mínima e máxima do mês. <span style="color:#ff4d4d;">Perto do topo (≥85%)</span> = melhor momento de vender. <span style="color:#2AD07A;">Perto da base (&lt;30%)</span> = momento de acumular.</p>
+                        <div id="canal-bars" class="canal-container"></div>
+                    </div>
+
+                    <!-- ── ANÁLISE 05: Tendência de Preços ── -->
+                    <div class="analysis-block">
+                        <h2 class="analysis-title"><span class="analysis-num">05</span> Tendência de Preços do Mês</h2>
+                        <p class="analysis-desc">Evolução diária dos preços. Selecione o metal para focar a análise.</p>
+                        <div class="metal-filter-row" id="metal-filters">
+                            <button class="btn-metal-filter active" data-metal="cobre" style="--mc:#e07b39;">Cobre</button>
+                            <button class="btn-metal-filter" data-metal="aluminio" style="--mc:#7eb3d5;">Alumínio</button>
+                            <button class="btn-metal-filter" data-metal="zinco" style="--mc:#a8c5a0;">Zinco</button>
+                            <button class="btn-metal-filter" data-metal="chumbo" style="--mc:#b0a0c0;">Chumbo</button>
+                            <button class="btn-metal-filter" data-metal="estanho" style="--mc:#d4b896;">Estanho</button>
+                            <button class="btn-metal-filter" data-metal="niquel" style="--mc:#2AD07A;">Níquel</button>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="trendChart"></canvas>
                         </div>
                     </div>
-                    <div class="dash-card">
-                        <div class="dash-icon"><i class="fa-solid fa-gem"></i></div>
-                        <div class="dash-info">
-                            <h3>Platina (Platinum)</h3>
-                            <p class="price">US$ 1.891/oz</p>
-                            <span class="trend up"><i class="fa-solid fa-arrow-up"></i> +2.1%</span>
+
+                    <!-- ── ANÁLISE 06: Variação Diária ── -->
+                    <div class="analysis-block">
+                        <h2 class="analysis-title"><span class="analysis-num">06</span> Variação Diária dos Metais</h2>
+                        <p class="analysis-desc">Variação percentual do preço de hoje em relação ao dia anterior de negociação.</p>
+                        <div class="charts-grid-2">
+                            <div class="chart-container">
+                                <canvas id="varDiariaChart"></canvas>
+                            </div>
+                            <div id="var-diaria-list" class="var-list"></div>
                         </div>
+                    </div>
+
+                    <!-- ── ANÁLISE 07: Volatilidade ── -->
+                    <div class="analysis-block">
+                        <h2 class="analysis-title"><span class="analysis-num">07</span> Volatilidade do Mês (Amplitude Máx–Mín)</h2>
+                        <p class="analysis-desc">Qual metal oscilou mais em valor absoluto e percentual. Alta volatilidade = maior risco E maior oportunidade de lucro.</p>
+                        <div class="chart-container">
+                            <canvas id="volatChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- ── ANÁLISE 08: Ranking de Performance ── -->
+                    <div class="analysis-block">
+                        <h2 class="analysis-title"><span class="analysis-num">08</span> Ranking de Performance Mensal</h2>
+                        <p class="analysis-desc">Classificação dos metais pela variação do primeiro ao último dia com preço registrado no mês.</p>
+                        <div id="ranking-container" class="ranking-container"></div>
+                    </div>
+
+                    <!-- ── ANÁLISE 09: Score de Oportunidade ── -->
+                    <div class="analysis-block">
+                        <h2 class="analysis-title"><span class="analysis-num">09</span> Score de Oportunidade Composto (0–100)</h2>
+                        <p class="analysis-desc">Pontuação calculada: <strong>Posição no Canal (40%) + Momentum 5d (30%) + Variação do Dia (30%)</strong>. Quanto maior, melhor o momento para vender.</p>
+                        <div class="charts-grid-2">
+                            <div class="chart-container">
+                                <canvas id="scoreChart"></canvas>
+                            </div>
+                            <div id="score-list" class="score-list"></div>
+                        </div>
+                    </div>
+
+                    <!-- ── ANÁLISE 10: Semana Atual vs Anterior ── -->
+                    <div class="analysis-block">
+                        <h2 class="analysis-title"><span class="analysis-num">10</span> Semana Atual vs. Semana Anterior</h2>
+                        <p class="analysis-desc">Compara a média dos últimos 5 dias úteis com os 5 dias úteis anteriores para todos os metais.</p>
+                        <div class="chart-container">
+                            <canvas id="semanaChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- ── ANÁLISE 11: Melhor Dia da Semana ── -->
+                    <div class="analysis-block">
+                        <h2 class="analysis-title"><span class="analysis-num">11</span> Melhor Dia da Semana para Vender</h2>
+                        <p class="analysis-desc">Média de preços do Cobre por dia da semana no mês. O dia com <span style="color:#2AD07A;">barra verde intensa</span> é historicamente o mais lucrativo para negociar.</p>
+                        <div class="chart-container">
+                            <canvas id="diaSemanaChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- ── ANÁLISE 12: Momentum ── -->
+                    <div class="analysis-block">
+                        <h2 class="analysis-title"><span class="analysis-num">12</span> Momentum de Mercado (Últimos 5 Dias)</h2>
+                        <p class="analysis-desc">Compara a média dos últimos 5 pregões com os 5 anteriores. <span style="color:#2AD07A;">Verde = acelerando para cima</span> · <span style="color:#ff4d4d;">Vermelho = tendência de queda</span>.</p>
+                        <div id="momentum-grid" class="momentum-grid"></div>
+                    </div>
+
+                    <!-- ── ANÁLISE 13: Impacto do Dólar ── -->
+                    <div class="analysis-block">
+                        <h2 class="analysis-title"><span class="analysis-num">13</span> Evolução do Dólar (BRL/USD) no Mês</h2>
+                        <p class="analysis-desc">O câmbio impacta diretamente no valor recebido ao vender metais para exportação. Dólar alto = melhor margem em reais.</p>
+                        <div class="chart-container">
+                            <canvas id="dolarChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- ── ANÁLISE 14: SMA-5 ── -->
+                    <div class="analysis-block">
+                        <h2 class="analysis-title"><span class="analysis-num">14</span> Preço vs. Média Móvel SMA-5 (Cobre)</h2>
+                        <p class="analysis-desc">Quando o preço cruza <strong>acima</strong> da SMA-5 (linha branca pontilhada), indica tendência de alta. Quando cruza <strong>abaixo</strong>, indica cautela.</p>
+                        <div class="chart-container">
+                            <canvas id="smaChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- ── ANÁLISE 15: Preço Atual vs. Média ── -->
+                    <div class="analysis-block">
+                        <h2 class="analysis-title"><span class="analysis-num">15</span> Preço Atual vs. Média Mensal</h2>
+                        <p class="analysis-desc">Compara o preço de hoje com a média aritmética do mês. <span style="color:#2AD07A;">Acima da média = bom momento de venda</span> · <span style="color:#ff9900;">Abaixo = aguardar recuperação</span>.</p>
+                        <div class="chart-container">
+                            <canvas id="vsMediaChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- ── ANÁLISE 16: Índice de Risco ── -->
+                    <div class="analysis-block">
+                        <h2 class="analysis-title"><span class="analysis-num">16</span> Índice de Risco por Metal (Coeficiente de Variação)</h2>
+                        <p class="analysis-desc">Calculado como (Desvio Padrão / Média) × 100. Maior índice = maior volatilidade. Metais com alto CV oferecem mais oportunidades mas exigem atenção.</p>
+                        <div class="chart-container" style="max-width: 500px; margin: 0 auto;">
+                            <canvas id="riscoChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- ── ANÁLISE 17: Radar Multi-metal ── -->
+                    <div class="analysis-block">
+                        <h2 class="analysis-title"><span class="analysis-num">17</span> Radar de Desempenho Comparativo</h2>
+                        <p class="analysis-desc">Visualização multidimensional comparando todos os metais em: Posição no Canal, Momentum, Variação do Dia, Score de Oportunidade e Volatilidade.</p>
+                        <div class="chart-container" style="max-width: 520px; margin: 0 auto;">
+                            <canvas id="radarChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- ── ANÁLISE 18: Comparativo Histórico ── -->
+                    <div class="analysis-block">
+                        <h2 class="analysis-title"><span class="analysis-num">18</span> Análise de Desvio da Média (Zscore Simplificado)</h2>
+                        <p class="analysis-desc">Quantos desvios padrão o preço atual está acima ou abaixo da média. Valores acima de +1.0 indicam preço elevado (bom para vender). Abaixo de -1.0 indica desconto.</p>
+                        <div id="zscore-container" class="zscore-container"></div>
+                    </div>
+
+                    <!-- ── ANÁLISE 19: Alertas de Preço ── -->
+                    <div class="analysis-block">
+                        <h2 class="analysis-title"><span class="analysis-num">19</span> Alertas de Preço Personalizados</h2>
+                        <p class="analysis-desc">Configure um preço-alvo para cada metal. Quando o preço atingir ou superar seu alvo, o card acende um alerta visual. Os alertas ficam salvos no navegador.</p>
+                        <div id="alertas-grid" class="alertas-grid"></div>
+                    </div>
+
+                    <!-- ── ANÁLISE 20: Resumo Executivo ── -->
+                    <div class="analysis-block resumo-block">
+                        <h2 class="analysis-title"><span class="analysis-num">20</span> Resumo Executivo — Melhor Ação Hoje</h2>
+                        <p class="analysis-desc">Síntese de todas as análises. Visão rápida: qual metal vender, qual observar e qual acumular agora.</p>
+                        <div id="resumo-executivo" class="resumo-grid"></div>
+                    </div>
+
+                </div><!-- end analysis-content -->
+            </section>
+
+            <!-- ═══════════════════════════════════════════════════════════
+                 CONFIGURAR HOME
+            ═══════════════════════════════════════════════════════════ -->
+            <section id="home-config" class="view-section">
+                <header class="section-header">
+                    <h1><i class="fa-solid fa-toggle-on"></i> Configurar Homepage</h1>
+                    <p>Ative ou desative seções da página inicial. Mudanças aplicadas ao clicar em "Salvar".</p>
+                </header>
+
+                <div class="settings-grid">
+                    <div class="setting-card">
+                        <div class="setting-info">
+                            <div class="setting-icon"><i class="fa-solid fa-circle-info"></i></div>
+                            <div>
+                                <strong>Seção "Sobre Nós"</strong>
+                                <small>Apresentação da empresa e missão</small>
+                            </div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="toggle-sobre" data-key="show_sobre" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-card">
+                        <div class="setting-info">
+                            <div class="setting-icon"><i class="fa-solid fa-industry"></i></div>
+                            <div>
+                                <strong>Seção "Nossas Soluções"</strong>
+                                <small>Cards dos serviços oferecidos</small>
+                            </div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="toggle-solucoes" data-key="show_solucoes" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-card">
+                        <div class="setting-info">
+                            <div class="setting-icon"><i class="fa-solid fa-box-open"></i></div>
+                            <div>
+                                <strong>Seção "Catálogo / Materiais"</strong>
+                                <small>Materiais que a empresa compra</small>
+                            </div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="toggle-catalogo" data-key="show_catalogo" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-card">
+                        <div class="setting-info">
+                            <div class="setting-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+                            <div>
+                                <strong>Seção "Onde Encontramos"</strong>
+                                <small>Locais de coleta de sucata eletrônica</small>
+                            </div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="toggle-onde" data-key="show_onde_encontramos" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-card">
+                        <div class="setting-info">
+                            <div class="setting-icon"><i class="fa-solid fa-chart-bar"></i></div>
+                            <div>
+                                <strong>Seção "Cotações LME"</strong>
+                                <small>Tabela e gráficos de cotações de metais</small>
+                            </div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="toggle-cotacoes" data-key="show_cotacoes" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-card">
+                        <div class="setting-info">
+                            <div class="setting-icon"><i class="fa-solid fa-newspaper"></i></div>
+                            <div>
+                                <strong>Seção "Notícias do Mercado"</strong>
+                                <small>Feed de notícias publicadas no admin</small>
+                            </div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="toggle-noticias" data-key="show_noticias" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-card">
+                        <div class="setting-info">
+                            <div class="setting-icon"><i class="fa-solid fa-images"></i></div>
+                            <div>
+                                <strong>Seção "Galeria de Fotos"</strong>
+                                <small>Galeria de imagens da empresa e processos</small>
+                            </div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="toggle-galeria" data-key="show_galeria" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
                     </div>
                 </div>
 
-                <div class="charts-grid">
-                    <div class="chart-container">
-                        <h3>Tendência de Preços (30 dias)</h3>
-                        <canvas id="lmeChartLine"></canvas>
+                <div class="settings-actions">
+                    <button id="btn-save-settings" class="btn-primary" style="max-width: 280px;">
+                        <i class="fa-solid fa-save"></i> Salvar Configurações
+                    </button>
+                    <p id="settings-msg" class="settings-msg" style="display:none;"></p>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════════════════════
+                 GALERIA ADMIN
+            ═══════════════════════════════════════════════════════════ -->
+            <section id="galeria-admin" class="view-section">
+                <header class="section-header">
+                    <h1><i class="fa-solid fa-images"></i> Gerenciar Galeria de Fotos</h1>
+                    <p>Adicione e remova fotos da galeria exibida no site.</p>
+                </header>
+
+                <div class="materiais-layout">
+                    <div class="form-container">
+                        <h3><i class="fa-solid fa-plus-circle"></i> Adicionar Nova Foto</h3>
+                        <form id="form-galeria">
+                            <div class="form-group">
+                                <label for="gal-url">URL da Imagem *</label>
+                                <input type="url" id="gal-url" required placeholder="https://exemplo.com/foto.jpg">
+                                <small style="color:#888;font-size:0.78rem;display:block;margin-top:4px;">Links diretos de imagens (.jpg, .png, .webp)</small>
+                            </div>
+                            <div id="gal-preview" class="gal-preview-wrap" style="display:none;">
+                                <img id="gal-preview-img" src="" alt="Prévia">
+                            </div>
+                            <div class="form-group">
+                                <label for="gal-titulo">Legenda / Título *</label>
+                                <input type="text" id="gal-titulo" required placeholder="Ex: Triagem de Sucata Eletrônica">
+                            </div>
+                            <div class="form-group">
+                                <label for="gal-ordem">Ordem de Exibição</label>
+                                <input type="number" id="gal-ordem" value="0" min="0" placeholder="0 = primeiro">
+                            </div>
+                            <button type="submit" class="btn-primary">
+                                <i class="fa-solid fa-plus"></i> Adicionar à Galeria
+                            </button>
+                        </form>
                     </div>
-                    <div class="chart-container">
-                        <h3>Volume Negociado</h3>
-                        <canvas id="lmeChartBar"></canvas>
+
+                    <div class="list-container">
+                        <h3><i class="fa-solid fa-photo-film"></i> Fotos Cadastradas</h3>
+                        <div id="galeria-admin-grid" class="galeria-admin-grid">
+                            <p style="color:#888;grid-column:1/-1;">Carregando...</p>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Materiais View -->
+            <!-- ═══════════════════════════════════════════════════════════
+                 MATERIAIS
+            ═══════════════════════════════════════════════════════════ -->
             <section id="materiais" class="view-section">
                 <header class="section-header">
-                    <h1>Gerenciar Materiais</h1>
+                    <h1><i class="fa-solid fa-box-open"></i> Gerenciar Materiais</h1>
                     <p>Adicione novos materiais que a empresa compra. O Chatbot será atualizado automaticamente.</p>
                 </header>
 
                 <div class="materiais-layout">
-                    <!-- Formulário -->
                     <div class="form-container">
                         <h3>Adicionar Novo Material</h3>
                         <form id="form-material">
@@ -119,40 +481,31 @@
                                 <label for="mat-desc">Descrição Geral (Aparece na aba)</label>
                                 <textarea id="mat-desc" rows="3" required placeholder="Ex: Motores elétricos e induzidos são componentes vitais..."></textarea>
                             </div>
-                            
                             <hr style="border-color: var(--borda); margin: 20px 0;">
                             <h4 style="margin-bottom: 10px; color: #fff;">Locais de Coleta (Cards)</h4>
                             <p style="font-size: 0.8rem; color: #888; margin-bottom: 15px;">Adicione os locais onde este material é encontrado para criar os cards dinâmicos.</p>
-                            
-                            <div id="locations-wrapper">
-                                <!-- Locais serão adicionados aqui -->
-                            </div>
-
+                            <div id="locations-wrapper"></div>
                             <button type="button" id="btn-add-location" class="btn-secondary" style="margin-bottom: 20px;"><i class="fa-solid fa-plus"></i> Adicionar Local</button>
-
                             <button type="submit" class="btn-primary"><i class="fa-solid fa-save"></i> Salvar Material</button>
                         </form>
                     </div>
-
-                    <!-- Lista -->
                     <div class="list-container">
                         <h3>Materiais Cadastrados</h3>
-                        <div class="materiais-grid" id="materiais-list">
-                            <!-- Items via JS -->
-                        </div>
+                        <div class="materiais-grid" id="materiais-list"></div>
                     </div>
                 </div>
             </section>
 
-            <!-- Soluções View -->
+            <!-- ═══════════════════════════════════════════════════════════
+                 SOLUÇÕES
+            ═══════════════════════════════════════════════════════════ -->
             <section id="solucoes" class="view-section">
                 <header class="section-header">
-                    <h1>Gerenciar Soluções</h1>
-                    <p>Adicione ou edite os cartões de soluções oferecidas. Eles aparecerão na seção "Nossas Soluções" na página principal.</p>
+                    <h1><i class="fa-solid fa-industry"></i> Gerenciar Soluções</h1>
+                    <p>Adicione ou edite os cartões de soluções oferecidas na página principal.</p>
                 </header>
 
                 <div class="materiais-layout">
-                    <!-- Formulário -->
                     <div class="form-container">
                         <h3>Adicionar/Editar Solução</h3>
                         <form id="form-solucao">
@@ -169,31 +522,27 @@
                                 <label for="sol-desc">Descrição Completa *</label>
                                 <textarea id="sol-desc" rows="4" required placeholder="Nossos principais serviços incluem a gestão..."></textarea>
                             </div>
-                            
                             <button type="submit" class="btn-primary"><i class="fa-solid fa-save"></i> Salvar Solução</button>
                             <button type="button" id="btn-cancel-solucao" class="btn-secondary" style="display:none; margin-top: 10px;"><i class="fa-solid fa-xmark"></i> Cancelar Edição</button>
                         </form>
                     </div>
-
-                    <!-- Lista -->
                     <div class="list-container">
                         <h3>Soluções Cadastradas</h3>
-                        <div id="solucoes-admin-list">
-                            <!-- Items via JS -->
-                        </div>
+                        <div id="solucoes-admin-list"></div>
                     </div>
                 </div>
             </section>
 
-            <!-- Notícias View -->
+            <!-- ═══════════════════════════════════════════════════════════
+                 NOTÍCIAS
+            ═══════════════════════════════════════════════════════════ -->
             <section id="noticias" class="view-section">
                 <header class="section-header">
-                    <h1>Gerenciar Notícias</h1>
-                    <p>Adicione notícias e links de outros sites. Elas aparecerão na seção "Notícias do Mercado" do site.</p>
+                    <h1><i class="fa-solid fa-newspaper"></i> Gerenciar Notícias</h1>
+                    <p>Adicione notícias e links de outros sites. Aparecerão na seção "Notícias do Mercado".</p>
                 </header>
 
                 <div class="materiais-layout">
-                    <!-- Formulário -->
                     <div class="form-container">
                         <h3>Publicar Nova Notícia</h3>
                         <form id="form-noticia">
@@ -228,18 +577,16 @@
                             <button type="submit" class="btn-primary"><i class="fa-solid fa-paper-plane"></i> Publicar no Site</button>
                         </form>
                     </div>
-
-                    <!-- Lista de notícias -->
                     <div class="list-container">
                         <h3>Notícias Publicadas</h3>
-                        <div id="noticias-admin-list">
-                            <!-- Itens via JS -->
-                        </div>
+                        <div id="noticias-admin-list"></div>
                     </div>
                 </div>
             </section>
+
         </main>
     </div>
-    <script src="admin.js?v=3"></script>
+
+    <script src="admin.js?v=4"></script>
 </body>
 </html>
