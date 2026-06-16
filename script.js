@@ -580,49 +580,56 @@ Responda de forma curta, amigável e profissional. Use o português do Brasil. N
     }
 
     // --------------------------------------------------------
-    // RENDERIZAR NOTÍCIAS DO MERCADO (localStorage)
+    // RENDERIZAR NOTÍCIAS DO MERCADO (API)
     // --------------------------------------------------------
-    function renderNoticias() {
-        const grid = document.getElementById('noticias-grid');
+    async function renderNoticias() {
+        const grid    = document.getElementById('noticias-grid');
+        const emptyEl = document.getElementById('noticias-empty');
         if (!grid) return;
 
-        const raw = localStorage.getItem('apex_noticias');
-        const noticias = raw ? JSON.parse(raw) : [];
+        try {
+            const res      = await fetch('/api/noticias');
+            const noticias = res.ok ? await res.json() : [];
 
-        const emptyEl = document.getElementById('noticias-empty');
+            if (!noticias.length) {
+                if (emptyEl) emptyEl.style.display = 'flex';
+                return;
+            }
 
-        if (noticias.length === 0) {
-            if (emptyEl) emptyEl.style.display = 'block';
-            return;
+            if (emptyEl) emptyEl.style.display = 'none';
+            grid.innerHTML = '';
+
+            // Ordenar do mais recente para o mais antigo
+            const sorted = [...noticias].sort((a, b) =>
+                new Date(b.data_pub || b.data || 0) - new Date(a.data_pub || a.data || 0)
+            );
+
+            sorted.forEach(n => {
+                const card = document.createElement('div');
+                card.className = 'noticia-card';
+
+                const rawDate = n.data_pub || n.data || '';
+                const dataFormatada = rawDate
+                    ? new Date(rawDate + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })
+                    : '';
+
+                card.innerHTML = `
+                    <div class="noticia-meta">
+                        ${n.categoria ? `<span class="noticia-categoria">${n.categoria}</span>` : ''}
+                        ${dataFormatada ? `<span class="noticia-data"><i class="fa-regular fa-calendar"></i> ${dataFormatada}</span>` : ''}
+                    </div>
+                    <h3 class="noticia-titulo">${n.titulo}</h3>
+                    ${n.resumo ? `<p class="noticia-resumo">${n.resumo}</p>` : ''}
+                    ${n.url ? `<a href="${n.url}" target="_blank" rel="noopener noreferrer" class="noticia-link">
+                        Leia a matéria completa <i class="fa-solid fa-arrow-right"></i>
+                    </a>` : ''}
+                `;
+                grid.appendChild(card);
+            });
+        } catch (err) {
+            console.error('Erro ao carregar notícias:', err);
+            if (emptyEl) emptyEl.style.display = 'flex';
         }
-
-        if (emptyEl) emptyEl.style.display = 'none';
-
-        // Ordenar do mais recente para o mais antigo
-        const sorted = [...noticias].sort((a, b) => new Date(b.data) - new Date(a.data));
-
-        sorted.forEach(n => {
-            const card = document.createElement('div');
-            card.className = 'noticia-card';
-
-            const dataFormatada = n.data
-                ? new Date(n.data + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })
-                : '';
-
-            card.innerHTML = `
-                <div class="noticia-meta">
-                    ${n.categoria ? `<span class="noticia-categoria">${n.categoria}</span>` : ''}
-                    ${dataFormatada ? `<span class="noticia-data"><i class="fa-regular fa-calendar"></i>${dataFormatada}</span>` : ''}
-                </div>
-                <h3 class="noticia-titulo">${n.titulo}</h3>
-                ${n.resumo ? `<p class="noticia-resumo">${n.resumo}</p>` : ''}
-                ${n.url ? `<a href="${n.url}" target="_blank" rel="noopener noreferrer" class="noticia-link">
-                    Leia a matéria completa <i class="fa-solid fa-arrow-right"></i>
-                </a>` : ''}
-            `;
-
-            grid.appendChild(card);
-        });
     }
 
     renderNoticias();
