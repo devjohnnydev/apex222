@@ -13,14 +13,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const overlay = document.getElementById('drawer-overlay');
 
     function openMenu() {
-        drawer.classList.add('open');
-        overlay.classList.add('active');
+        if(drawer) drawer.style.left = '0';
+        if(overlay) overlay.style.display = 'block';
         document.body.style.overflow = 'hidden';
     }
 
     function closeMenu() {
-        drawer.classList.remove('open');
-        overlay.classList.remove('active');
+        if(drawer) drawer.style.left = '-320px';
+        if(overlay) overlay.style.display = 'none';
         document.body.style.overflow = '';
     }
 
@@ -409,13 +409,13 @@ document.addEventListener('DOMContentLoaded', function () {
         solModalTitle.textContent = data.nome;
         // A API retorna o campo como "descricao"
         solModalDesc.textContent = data.descricao || data.desc || '';
-        solModal.classList.add('open');
+        solModal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
     }
 
     function closeSolucaoModal() {
         if (!solModal) return;
-        solModal.classList.remove('open');
+        solModal.style.display = 'none';
         document.body.style.overflow = '';
     }
 
@@ -431,7 +431,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 solucoesContainer.innerHTML = '';
                 items.forEach(data => {
                     const div = document.createElement('div');
-                    div.className = 'solucao_item';
+                    div.className = 'product-card';
                     div.setAttribute('role', 'button');
                     div.setAttribute('tabindex', '0');
                     div.style.cursor = 'pointer';
@@ -440,15 +440,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     const resumo = texto.length > 160 ? texto.substring(0, 160) + '...' : texto;
 
                     div.innerHTML = `
-                        <article>
-                            <div class="solucoes_header">
-                                <img src="${data.img}" alt="${data.nome}" class="img-fluid solucao-icon">
-                                <h2>${data.nome}</h2>
-                            </div>
-                            <div class="solucoes_conteudo">
-                                <p>${resumo}</p>
-                            </div>
-                        </article>
+                        <div class="product-img-wrap">
+                            <img src="${data.img}" alt="${data.nome}" style="max-height: 120px; filter: invert(0) !important;">
+                        </div>
+                        <span class="product-category">MATERIAL</span>
+                        <h3 class="product-title">${data.nome}</h3>
+                        <p class="product-desc">${resumo}</p>
+                        <span style="color: var(--minipa-yellow); font-weight: bold; font-size: 0.85rem; margin-top: auto;">Ver mais detalhes &rarr;</span>
                     `;
 
                     div.addEventListener('click', (e) => {
@@ -606,23 +604,16 @@ Responda de forma curta, amigável e profissional. Use o português do Brasil. N
 
             sorted.forEach(n => {
                 const card = document.createElement('div');
-                card.className = 'noticia-card';
-
-                const rawDate = n.data_pub || n.data || '';
-                const dataFormatada = rawDate
-                    ? new Date(rawDate + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })
-                    : '';
+                card.className = 'news-item';
 
                 card.innerHTML = `
-                    <div class="noticia-meta">
-                        ${n.categoria ? `<span class="noticia-categoria">${n.categoria}</span>` : ''}
-                        ${dataFormatada ? `<span class="noticia-data"><i class="fa-regular fa-calendar"></i> ${dataFormatada}</span>` : ''}
+                    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=150&q=80" alt="News" class="news-item-img">
+                    <div class="news-item-content">
+                        ${n.categoria ? `<span class="news-badge" style="font-size: 0.6rem;">${n.categoria}</span>` : ''}
+                        <h4>${n.titulo}</h4>
+                        ${n.resumo ? `<p>${n.resumo}</p>` : ''}
+                        ${n.url ? `<a href="${n.url}" target="_blank" rel="noopener noreferrer" style="color: var(--minipa-yellow); font-size: 0.8rem; font-weight: bold; margin-top: 5px; display: inline-block;">Leia mais &rarr;</a>` : ''}
                     </div>
-                    <h3 class="noticia-titulo">${n.titulo}</h3>
-                    ${n.resumo ? `<p class="noticia-resumo">${n.resumo}</p>` : ''}
-                    ${n.url ? `<a href="${n.url}" target="_blank" rel="noopener noreferrer" class="noticia-link">
-                        Leia a matéria completa <i class="fa-solid fa-arrow-right"></i>
-                    </a>` : ''}
                 `;
                 grid.appendChild(card);
             });
