@@ -1,16 +1,16 @@
 /* ============================================================
-   APEX TECH METAIS - Minipa Style Redesign
+   APEX TECH METAIS - apex Style Redesign
    ============================================================ */
 
 :root {
-    --minipa-yellow: #FDC82F;
-    --minipa-yellow-hover: #e0af24;
-    --minipa-dark: #212529;
-    --minipa-dark-hover: #1a1e21;
-    --minipa-light-bg: #F8F9FA;
-    --minipa-border: #E5E5E5;
-    --minipa-text: #333333;
-    --minipa-text-muted: #6C757D;
+    --apex-yellow: #FDC82F;
+    --apex-yellow-hover: #e0af24;
+    --apex-dark: #212529;
+    --apex-dark-hover: #1a1e21;
+    --apex-light-bg: #F8F9FA;
+    --apex-border: #E5E5E5;
+    --apex-text: #333333;
+    --apex-text-muted: #6C757D;
     --white: #FFFFFF;
     --header-height: 120px;
 }
@@ -28,7 +28,7 @@ html {
 
 body {
     font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-    color: var(--minipa-text);
+    color: var(--apex-text);
     background-color: var(--white);
     line-height: 1.6;
     overflow-x: hidden;
@@ -57,10 +57,10 @@ img {
 }
 
 /* ============================================================
-   HEADER (Minipa Style)
+   HEADER (apex Style)
    ============================================================ */
 .top-bar {
-    background-color: var(--minipa-dark);
+    background-color: var(--apex-dark);
     color: var(--white);
     font-size: 0.85rem;
     padding: 8px 0;
@@ -83,7 +83,7 @@ img {
 }
 
 .top-social a:hover {
-    color: var(--minipa-yellow);
+    color: var(--apex-yellow);
 }
 
 .top-contact {
@@ -92,12 +92,12 @@ img {
 }
 
 .top-contact a:hover {
-    color: var(--minipa-yellow);
+    color: var(--apex-yellow);
 }
 
 .main-header {
     background-color: var(--white);
-    border-bottom: 1px solid var(--minipa-border);
+    border-bottom: 1px solid var(--apex-border);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -123,14 +123,14 @@ img {
 .nav-menu li a {
     font-weight: 500;
     font-size: 0.95rem;
-    color: var(--minipa-dark);
+    color: var(--apex-dark);
     text-transform: uppercase;
     padding: 10px 0;
     position: relative;
 }
 
 .nav-menu li a:hover, .nav-menu li.current a {
-    color: var(--minipa-yellow);
+    color: var(--apex-yellow);
 }
 
 .nav-menu li a::after {
@@ -140,7 +140,7 @@ img {
     left: 0;
     width: 0;
     height: 3px;
-    background-color: var(--minipa-yellow);
+    background-color: var(--apex-yellow);
     transition: width 0.3s ease;
 }
 
@@ -159,11 +159,11 @@ img {
     border: none;
     font-size: 1.2rem;
     cursor: pointer;
-    color: var(--minipa-dark);
+    color: var(--apex-dark);
 }
 
 .search-btn:hover {
-    color: var(--minipa-yellow);
+    color: var(--apex-yellow);
 }
 
 .mobile-menu-btn {
@@ -172,7 +172,7 @@ img {
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
-    color: var(--minipa-dark);
+    color: var(--apex-dark);
 }
 
 /* ============================================================
@@ -183,7 +183,7 @@ img {
     width: 100%;
     height: 60vh;
     min-height: 400px;
-    background: var(--minipa-dark) url('https://apextechmetais.com.br/wp-content/uploads/2024/10/BG-banner-home.webp') no-repeat center center/cover;
+    background: var(--apex-dark) url('https://apextechmetais.com.br/wp-content/uploads/2024/10/BG-banner-home.webp') no-repeat center center/cover;
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -215,9 +215,9 @@ img {
     color: #e2e2e2;
 }
 
-.btn-primary-minipa {
-    background-color: var(--minipa-yellow);
-    color: var(--minipa-dark);
+.btn-primary-apex {
+    background-color: var(--apex-yellow);
+    color: var(--apex-dark);
     padding: 12px 30px;
     font-weight: 700;
     border-radius: 4px;
@@ -227,14 +227,14 @@ img {
     display: inline-block;
 }
 
-.btn-primary-minipa:hover {
-    background-color: var(--minipa-yellow-hover);
+.btn-primary-apex:hover {
+    background-color: var(--apex-yellow-hover);
 }
 
-.btn-secondary-minipa {
+.btn-secondary-apex {
     background-color: transparent;
-    border: 2px solid var(--minipa-yellow);
-    color: var(--minipa-yellow);
+    border: 2px solid var(--apex-yellow);
+    color: var(--apex-yellow);
     padding: 10px 28px;
     font-weight: 700;
     border-radius: 4px;
@@ -243,13 +243,13 @@ img {
     display: inline-block;
 }
 
-.btn-secondary-minipa:hover {
-    background-color: var(--minipa-yellow);
-    color: var(--minipa-dark);
+.btn-secondary-apex:hover {
+    background-color: var(--apex-yellow);
+    color: var(--apex-dark);
 }
 
 /* ============================================================
-   PRODUCTS TABS SECTION (Minipa Style)
+   PRODUCTS TABS SECTION (apex Style)
    ============================================================ */
 .section-products-tabs {
     padding: 60px 0;
@@ -262,7 +262,7 @@ img {
     justify-content: center;
     gap: 30px;
     margin-bottom: 40px;
-    border-bottom: 2px solid var(--minipa-border);
+    border-bottom: 2px solid var(--apex-border);
 }
 
 .tab-btn {
@@ -270,14 +270,14 @@ img {
     border: none;
     font-size: 1.4rem;
     font-weight: 700;
-    color: var(--minipa-text-muted);
+    color: var(--apex-text-muted);
     padding-bottom: 10px;
     cursor: pointer;
     position: relative;
 }
 
 .tab-btn.active {
-    color: var(--minipa-dark);
+    color: var(--apex-dark);
 }
 
 .tab-btn.active::after {
@@ -287,7 +287,7 @@ img {
     left: 0;
     width: 100%;
     height: 4px;
-    background-color: var(--minipa-yellow);
+    background-color: var(--apex-yellow);
 }
 
 .products-grid {
@@ -298,7 +298,7 @@ img {
 }
 
 .product-card {
-    border: 1px solid var(--minipa-border);
+    border: 1px solid var(--apex-border);
     border-radius: 8px;
     padding: 20px;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
@@ -328,7 +328,7 @@ img {
 
 .product-category {
     font-size: 0.8rem;
-    color: var(--minipa-text-muted);
+    color: var(--apex-text-muted);
     text-transform: uppercase;
     font-weight: 700;
     margin-bottom: 5px;
@@ -337,23 +337,23 @@ img {
 .product-title {
     font-size: 1.1rem;
     font-weight: 700;
-    color: var(--minipa-dark);
+    color: var(--apex-dark);
     margin-bottom: 10px;
 }
 
 .product-desc {
     font-size: 0.9rem;
-    color: var(--minipa-text);
+    color: var(--apex-text);
     margin-bottom: 15px;
     flex-grow: 1;
 }
 
 /* ============================================================
-   CATEGORIES HIGHLIGHT (Minipa Cards)
+   CATEGORIES HIGHLIGHT (apex Cards)
    ============================================================ */
 .section-categories {
     padding: 60px 0;
-    background-color: var(--minipa-light-bg);
+    background-color: var(--apex-light-bg);
 }
 
 .categories-grid {
@@ -376,7 +376,7 @@ img {
 
 .category-highlight-img {
     height: 200px;
-    background-color: var(--minipa-dark);
+    background-color: var(--apex-dark);
     position: relative;
 }
 
@@ -396,12 +396,12 @@ img {
     font-size: 1.3rem;
     font-weight: 700;
     margin-bottom: 10px;
-    color: var(--minipa-dark);
+    color: var(--apex-dark);
 }
 
 .category-highlight-desc {
     font-size: 0.95rem;
-    color: var(--minipa-text-muted);
+    color: var(--apex-text-muted);
 }
 
 /* ============================================================
@@ -409,7 +409,7 @@ img {
    ============================================================ */
 .section-services {
     padding: 80px 0;
-    background-color: var(--minipa-dark);
+    background-color: var(--apex-dark);
     color: var(--white);
     text-align: center;
 }
@@ -442,12 +442,12 @@ img {
 
 .service-card:hover {
     background-color: rgba(253, 200, 47, 0.1);
-    border-color: var(--minipa-yellow);
+    border-color: var(--apex-yellow);
 }
 
 .service-icon {
     font-size: 3rem;
-    color: var(--minipa-yellow);
+    color: var(--apex-yellow);
     margin-bottom: 20px;
 }
 
@@ -468,7 +468,7 @@ img {
 .section-title-dark {
     font-size: 2.2rem;
     font-weight: 700;
-    color: var(--minipa-dark);
+    color: var(--apex-dark);
     margin-bottom: 40px;
     text-align: center;
 }
@@ -504,8 +504,8 @@ img {
 }
 
 .news-badge {
-    background-color: var(--minipa-yellow);
-    color: var(--minipa-dark);
+    background-color: var(--apex-yellow);
+    color: var(--apex-dark);
     padding: 4px 10px;
     font-size: 0.8rem;
     font-weight: 700;
@@ -536,22 +536,22 @@ img {
 
 .news-item-content h4 {
     font-size: 1rem;
-    color: var(--minipa-dark);
+    color: var(--apex-dark);
     margin-bottom: 5px;
 }
 
 .news-item-content p {
     font-size: 0.85rem;
-    color: var(--minipa-text-muted);
+    color: var(--apex-text-muted);
 }
 
 /* ============================================================
-   LME QUOTES (Adapted to Minipa Style)
+   LME QUOTES (Adapted to apex Style)
    ============================================================ */
 .section-lme {
     padding: 60px 0;
-    background-color: var(--minipa-light-bg);
-    border-top: 1px solid var(--minipa-border);
+    background-color: var(--apex-light-bg);
+    border-top: 1px solid var(--apex-border);
 }
 
 .lme-controls {
@@ -571,35 +571,35 @@ img {
 
 .lme-metal-btn {
     background: var(--white);
-    border: 1px solid var(--minipa-border);
+    border: 1px solid var(--apex-border);
     padding: 8px 16px;
     border-radius: 20px;
     font-weight: 600;
     font-size: 0.9rem;
     cursor: pointer;
-    color: var(--minipa-text);
+    color: var(--apex-text);
     transition: all 0.2s;
 }
 
 .lme-metal-btn.active {
-    background: var(--minipa-yellow);
-    border-color: var(--minipa-yellow);
-    color: var(--minipa-dark);
+    background: var(--apex-yellow);
+    border-color: var(--apex-yellow);
+    color: var(--apex-dark);
 }
 
 .lme-chart-box {
     background: var(--white);
-    border: 1px solid var(--minipa-border);
+    border: 1px solid var(--apex-border);
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 20px;
 }
 
 /* ============================================================
-   FOOTER (Minipa Style)
+   FOOTER (apex Style)
    ============================================================ */
 .footer-desktop {
-    background-color: var(--minipa-dark);
+    background-color: var(--apex-dark);
     color: #cccccc;
     padding: 60px 0 20px;
     font-size: 0.9rem;
@@ -624,7 +624,7 @@ img {
 }
 
 .footer-col ul li a:hover {
-    color: var(--minipa-yellow);
+    color: var(--apex-yellow);
 }
 
 .footer-bottom {
@@ -689,3 +689,11 @@ img {
 /* Custom modal styles if needed can be appended here */
 . d r a w e r - o v e r l a y   {   p o s i t i o n :   f i x e d ;   i n s e t :   0 ;   b a c k g r o u n d :   r g b a ( 0 , 0 , 0 , 0 . 5 ) ;   z - i n d e x :   1 9 9 9 ;   d i s p l a y :   n o n e ;   }  
  
+/* LME Table Styles */
+#boxtabela table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.9rem; }
+#boxtabela th, #boxtabela td { border: 1px solid var(--apex-border); padding: 10px; text-align: right; }
+#boxtabela th { background: var(--apex-light-bg); font-weight: 700; color: var(--apex-dark); }
+#boxtabela th:first-child, #boxtabela td:first-child { text-align: left; font-weight: 600; }
+#boxtabela tr:nth-child(even) { background-color: #fafafa; }
+#boxtabela tr.row-semanal td, #boxtabela tr.row-mensal td { background-color: var(--apex-yellow); color: var(--apex-dark); font-weight: 700; border-color: #e0af24; }
+#boxtabela td.lmeferiado { color: #ff4d4d; font-style: italic; }

@@ -446,7 +446,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <span class="product-category">MATERIAL</span>
                         <h3 class="product-title">${data.nome}</h3>
                         <p class="product-desc">${resumo}</p>
-                        <span style="color: var(--minipa-yellow); font-weight: bold; font-size: 0.85rem; margin-top: auto;">Ver mais detalhes &rarr;</span>
+                        <span style="color: var(--apex-yellow); font-weight: bold; font-size: 0.85rem; margin-top: auto;">Ver mais detalhes &rarr;</span>
                     `;
 
                     div.addEventListener('click', (e) => {
@@ -612,7 +612,7 @@ Responda de forma curta, amigável e profissional. Use o português do Brasil. N
                         ${n.categoria ? `<span class="news-badge" style="font-size: 0.6rem;">${n.categoria}</span>` : ''}
                         <h4>${n.titulo}</h4>
                         ${n.resumo ? `<p>${n.resumo}</p>` : ''}
-                        ${n.url ? `<a href="${n.url}" target="_blank" rel="noopener noreferrer" style="color: var(--minipa-yellow); font-size: 0.8rem; font-weight: bold; margin-top: 5px; display: inline-block;">Leia mais &rarr;</a>` : ''}
+                        ${n.url ? `<a href="${n.url}" target="_blank" rel="noopener noreferrer" style="color: var(--apex-yellow); font-size: 0.8rem; font-weight: bold; margin-top: 5px; display: inline-block;">Leia mais &rarr;</a>` : ''}
                     </div>
                 `;
                 grid.appendChild(card);
@@ -819,14 +819,14 @@ Responda de forma curta, amigável e profissional. Use o português do Brasil. N
                 lmeCharts[tipoGraf].destroy();
             }
 
-            // Aplicar identidade visual da Apex Tech Metais (verde brilhante em vez de vermelho do original)
+            // Aplicar identidade visual da Apex Tech Metais (amarelo brilhante)
             if (data.datasets && data.datasets[0]) {
-                data.datasets[0].borderColor = '#2AD07A';
-                data.datasets[0].backgroundColor = 'rgba(42, 208, 122, 0.04)';
-                data.datasets[0].pointBackgroundColor = '#2AD07A';
-                data.datasets[0].pointBorderColor = '#0E291B';
+                data.datasets[0].borderColor = '#FDC82F';
+                data.datasets[0].backgroundColor = 'rgba(253, 200, 47, 0.04)';
+                data.datasets[0].pointBackgroundColor = '#FDC82F';
+                data.datasets[0].pointBorderColor = '#212529';
                 data.datasets[0].pointHoverBackgroundColor = '#FFFFFF';
-                data.datasets[0].pointHoverBorderColor = '#2AD07A';
+                data.datasets[0].pointHoverBorderColor = '#FDC82F';
                 data.datasets[0].borderWidth = 3;
                 data.datasets[0].pointRadius = 4;
             }
@@ -847,14 +847,11 @@ Responda de forma curta, amigável e profissional. Use o português do Brasil. N
                         display: false
                     },
                     tooltips: {
-                        backgroundColor: '#0E291B',
-                        titleFontFamily: 'Raleway',
-                        bodyFontFamily: 'Lato',
-                        titleFontColor: '#2AD07A',
+                        backgroundColor: '#212529',
+                        titleFontColor: '#FDC82F',
                         bodyFontColor: '#FFFFFF',
-                        borderColor: 'rgba(42, 208, 122, 0.25)',
-                        borderWidth: 1,
-                        displayColors: false
+                        borderColor: '#FDC82F',
+                        borderWidth: 1
                     },
                     scales: {
                         yAxes: [{
