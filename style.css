@@ -697,3 +697,16 @@ img {
 #boxtabela tr:nth-child(even) { background-color: #fafafa; }
 #boxtabela tr.row-semanal td, #boxtabela tr.row-mensal td { background-color: var(--apex-yellow); color: var(--apex-dark); font-weight: 700; border-color: #e0af24; }
 #boxtabela td.lmeferiado { color: #ff4d4d; font-style: italic; }
+
+/* LME Variation Cards */
+.lme-variation-card { background: #fff; border: 1px solid var(--apex-border); border-radius: 8px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.lme-var-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--apex-border); padding-bottom: 10px; margin-bottom: 10px; }
+.lme-var-header h4 { font-size: 1rem; color: var(--apex-dark); margin: 0; }
+.lme-var-header i { color: var(--apex-yellow); }
+.lme-var-body { display: flex; justify-content: space-between; margin-bottom: 15px; }
+.lme-var-col { display: flex; flex-direction: column; }
+.lme-var-col small { font-size: 0.75rem; color: var(--apex-text-muted); }
+.lme-var-col b { font-size: 1.1rem; color: var(--apex-dark); }
+.lme-var-footer { font-weight: bold; font-size: 0.9rem; }
+.text-success { color: #28a745; }
+.text-danger { color: #dc3545; }
