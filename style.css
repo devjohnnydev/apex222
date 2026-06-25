@@ -111,7 +111,7 @@ p.mb-0 { margin-bottom: 0; }
     align-items: center;
     justify-content: space-between;
     height: var(--header-height);
-    gap: 10px;
+    gap: 18px;
 }
 
 /* Logo */
@@ -180,49 +180,53 @@ p.mb-0 { margin-bottom: 0; }
     width: 80%;
 }
 
-/* Header Contact */
+/* Header Contact (legacy — hidden in new header layout) */
 .header-contact {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: center;
-    gap: 4px;
-    flex-shrink: 0;
+    display: none;
 }
 
-.atendimento-title {
-    font-family: 'Raleway', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--cor-verde);
-    margin: 0 0 2px 0;
-}
-
-.dados_de_atendimento {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-}
-
-.dados_item {
+/* ── NEW Compact Header Actions ── */
+.header-actions {
     display: flex;
     align-items: center;
-    gap: 6px;
-    color: rgba(255, 255, 255, 0.85);
-    font-size: 0.78rem;
-    font-weight: 500;
-    transition: color 0.3s ease;
-}
-
-.dados_item:hover {
-    color: var(--cor-verde);
-}
-
-.dados_item svg {
+    gap: 12px;
     flex-shrink: 0;
-    color: var(--cor-verde);
+    margin-left: auto;
+}
+
+.header-phone-link {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 7px 12px;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 6px;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+}
+
+.header-phone-link:hover {
+    color: #2ad07a;
+    border-color: rgba(42,208,122,0.35);
+    background: rgba(42,208,122,0.06);
+}
+
+.header-phone-link i {
+    color: #2ad07a;
+    font-size: 0.8rem;
+}
+
+.header-social-compact {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 /* Social Icons Header */
