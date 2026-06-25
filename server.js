@@ -495,62 +495,489 @@ app.delete('/api/galeria/:id', async (req, res) => {
     }
 });
 
-// ─── API: LME Excel Parser and Generator ─────────────────────────────────────
-const { exec } = require('child_process');
-const fs = require('fs');
+// ─── API: LME Relatório Semanal (sem planilha, cálculo automático) ─────────────
+// Busca dados da LME via scraping, agrupa por semana e calcula todas as métricas
 
-app.get('/api/lme/excel-weeks', async (req, res) => {
-    const pythonScript = path.join(__dirname, 'parse_lme.py');
-    exec(`python "${pythonScript}"`, (error, stdout, stderr) => {
-        if (error) {
-            console.error(`Error running parse_lme.py: ${error.message}`);
-        }
-        
-        const jsonPath = path.join(__dirname, 'assets', 'excel', 'lme_parsed.json');
-        fs.readFile(jsonPath, 'utf8', (err, data) => {
-            if (err) {
-                console.error(`Error reading lme_parsed.json: ${err.message}`);
-                return res.status(500).json({ error: 'Erro ao carregar dados do Excel.' });
-            }
-            try {
-                const parsed = JSON.parse(data);
-                res.json(parsed);
-            } catch (e) {
-                res.status(500).json({ error: 'Erro ao parsear dados do Excel.' });
-            }
-        });
-    });
-});
+function parseNum(str) {
+    if (!str || str.trim() === '' || str.trim() === '-') return null;
+    // Remove R$, %, espaços; troca vírgula decimal
+    let s = str.replace(/R\$\s*/g, '').replace(/%/g, '').trim();
+    if (s.includes(',') && s.includes('.')) s = s.replace(/\./g, '').replace(',', '.');
+    else if (s.includes(',')) s = s.replace(',', '.');
+    const n = parseFloat(s);
+    return isNaN(n) ? null : n;
+}
 
-app.get('/api/lme/download-excel/:header', (req, res) => {
-    const header = req.params.header.replace(/\//g, '-');
-    const rawHeader = req.params.header;
-    const jsonPath = path.join(__dirname, 'assets', 'excel', 'lme_parsed.json');
-    const generatorScript = path.join(__dirname, 'generate_lme_excel.py');
-    const tempFile = path.join(__dirname, 'assets', 'excel', `temp_report_${header}.xlsx`);
+const mesMapLME = {
+    'jan': 0, 'fev': 1, 'mar': 2, 'abr': 3, 'mai': 4, 'jun': 5,
+    'jul': 6, 'ago': 7, 'set': 8, 'out': 9, 'nov': 10, 'dez': 11
+};
+
+function parseDate(diaStr, currentYearStr) {
+    if (!diaStr) return null;
     
-    exec(`python "${generatorScript}" "${jsonPath}" "${tempFile}" "${rawHeader}"`, (error, stdout, stderr) => {
-        if (error) {
-            console.error(`Error running generate_lme_excel.py: ${error.message}`);
-            return res.status(500).send('Erro ao gerar planilha Excel.');
-        }
+    // Formato: "27/Abr"
+    const parts = diaStr.split('/');
+    if (parts.length === 2) {
+        const d = parseInt(parts[0], 10);
+        const mStr = parts[1].toLowerCase();
+        let m = mesMapLME[mStr];
+        if (m === undefined) return null;
         
-        res.download(tempFile, `LME-Relatorio-${header}.xlsx`, (err) => {
-            if (err) {
-                console.error('Error sending file:', err);
-            }
-            fs.unlink(tempFile, (unlinkErr) => {
-                if (unlinkErr) console.error('Error deleting temp file:', unlinkErr);
+        // Determina o ano. Se currentYearStr não for passado, usa o atual.
+        let y = currentYearStr ? parseInt(currentYearStr, 10) : new Date().getFullYear();
+        // Nota: O site pode ter 'Dez' no relatório de 'Jan/2026'.
+        // Trataremos isso comparando se m=11 e o mês do relatório é 0.
+        return new Date(y, m, d);
+    }
+    
+    // Formato antigo: "dd/mm/yyyy"
+    if (parts.length >= 3) {
+        let [d, m, y] = parts.map(Number);
+        if (y < 100) y += 2000;
+        return new Date(y, m - 1, d);
+    }
+    return null;
+}
+
+function weekKey(dateObj) {
+    // Semana começa na segunda-feira — retorna "YYYY-Www"
+    const d = new Date(dateObj);
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() - (d.getDay() === 0 ? 6 : d.getDay() - 1));
+    const year = d.getFullYear();
+    const start = new Date(year, 0, 1);
+    const weekNum = Math.ceil(((d - start) / 86400000 + start.getDay() + 1) / 7);
+    return `${year}-W${String(weekNum).padStart(2, '0')}`;
+}
+
+function avg(arr) {
+    const valid = arr.filter(v => v !== null && v !== undefined);
+    if (valid.length === 0) return null;
+    return valid.reduce((a, b) => a + b, 0) / valid.length;
+}
+
+app.get('/api/lme/relatorio-semanal', async (req, res) => {
+    try {
+        const mes = req.query.mes; // ex: "6-2026"
+        if (!mes) return res.status(400).json({ error: 'Parâmetro mes obrigatório. Ex: ?mes=6-2026' });
+
+        // 1. Busca dados do mês atual
+        const targetUrl = `https://shockmetais.com.br/lme/${mes}`;
+        const { data: html } = await axios.get(targetUrl, { timeout: 15000 });
+        const $ = cheerio.load(html);
+
+        // 2. Extrai opções de meses disponíveis
+        const mesesDisponiveis = [];
+        $('#meslme option').each((i, el) => {
+            mesesDisponiveis.push({ valor: $(el).val(), texto: $(el).text().trim() });
+        });
+
+        const reqYear = mes.split('-')[1];
+
+        // 3. Extrai linhas diárias
+        const dailyRows = [];
+        $('#boxtabela table tbody tr').each((i, el) => {
+            const tds = $(el).find('td');
+            if (tds.length < 8) return;
+            const isMedia   = $(tds[0]).hasClass('lmemedia');
+            const isMensal  = $(tds[0]).hasClass('lmemensal');
+            if (isMedia || isMensal) return; // pula médias do site externo
+
+            const diaStr = $(tds[0]).text().trim();
+            const dateObj = parseDate(diaStr, reqYear);
+            if (!dateObj) return;
+
+            dailyRows.push({
+                data:     diaStr,
+                dateObj,
+                cobre:    parseNum($(tds[1]).text()),
+                zinco:    parseNum($(tds[2]).text()),
+                aluminio: parseNum($(tds[3]).text()),
+                chumbo:   parseNum($(tds[4]).text()),
+                estanho:  parseNum($(tds[5]).text()),
+                niquel:   parseNum($(tds[6]).text()),
+                dolar:    parseNum($(tds[7]).text()),
             });
         });
-    });
+
+        const METALS = ['cobre', 'zinco', 'aluminio', 'chumbo', 'estanho', 'niquel'];
+
+        // 4. Agrupa por semana
+        const weekMap = new Map();
+        dailyRows.forEach(row => {
+            const wk = weekKey(row.dateObj);
+            if (!weekMap.has(wk)) weekMap.set(wk, []);
+            weekMap.get(wk).push(row);
+        });
+
+        // 5. Calcula média mensal de 100% LME (para usar em cada semana)
+        // Calcula todas as semanas primeiro para ter a média mensal
+        const allWeekLME = {}; // wk -> {metal: valor100pct}
+        weekMap.forEach((days, wk) => {
+            const entry = {};
+            METALS.forEach(m => {
+                const mediaMetal = avg(days.map(d => d[m]));
+                const mediaDolar = avg(days.map(d => d.dolar));
+                entry[m] = (mediaMetal !== null && mediaDolar !== null)
+                    ? (mediaMetal * mediaDolar) / 1000 : null;
+            });
+            entry.dolar = avg(days.map(d => d.dolar));
+            allWeekLME[wk] = entry;
+        });
+
+        // Média mensal de 100% LME por metal
+        const mediaMensalLME = {};
+        METALS.forEach(m => {
+            const vals = Object.values(allWeekLME).map(e => e[m]).filter(v => v !== null);
+            mediaMensalLME[m] = vals.length ? avg(vals) : null;
+        });
+        mediaMensalLME.dolar = avg(dailyRows.map(d => d.dolar).filter(v => v !== null));
+
+        // 6. Monta blocos semanais com todos os cálculos
+        const sortedWeekKeys = [...weekMap.keys()].sort();
+        const weekBlocks = sortedWeekKeys.map((wk, idx) => {
+            const days = weekMap.get(wk);
+            const prevWk = idx > 0 ? sortedWeekKeys[idx - 1] : null;
+            const prevLME = prevWk ? allWeekLME[prevWk] : null;
+            const prevPrevWk = idx > 1 ? sortedWeekKeys[idx - 2] : null;
+
+            // Médias semanais
+            const mediaSemanal = {};
+            METALS.forEach(m => { mediaSemanal[m] = avg(days.map(d => d[m])); });
+            mediaSemanal.dolar = avg(days.map(d => d.dolar));
+
+            // 100% LME = (média_metal * média_dolar) / 1000
+            const lme100 = {};
+            METALS.forEach(m => {
+                lme100[m] = (mediaSemanal[m] !== null && mediaSemanal.dolar !== null)
+                    ? (mediaSemanal[m] * mediaSemanal.dolar) / 1000 : null;
+            });
+            lme100.dolar = mediaSemanal.dolar;
+
+            // SEMANA ANTERIOR = 100% LME da semana anterior
+            const semanaAnterior = {};
+            METALS.forEach(m => { semanaAnterior[m] = prevLME ? prevLME[m] : null; });
+            semanaAnterior.dolar = prevLME ? prevLME.dolar : null;
+
+            // OSCILAÇÃO R$ = 100% LME - SEMANA ANTERIOR
+            const oscRS = {};
+            METALS.forEach(m => {
+                oscRS[m] = (lme100[m] !== null && semanaAnterior[m] !== null)
+                    ? lme100[m] - semanaAnterior[m] : null;
+            });
+            oscRS.dolar = (lme100.dolar !== null && semanaAnterior.dolar !== null)
+                ? lme100.dolar - semanaAnterior.dolar : null;
+
+            // OSCILAÇÃO % = oscRS / semanaAnterior
+            const oscPct = {};
+            METALS.forEach(m => {
+                oscPct[m] = (oscRS[m] !== null && semanaAnterior[m] !== null && semanaAnterior[m] !== 0)
+                    ? oscRS[m] / semanaAnterior[m] : null;
+            });
+            oscPct.dolar = (oscRS.dolar !== null && semanaAnterior.dolar !== null && semanaAnterior.dolar !== 0)
+                ? oscRS.dolar / semanaAnterior.dolar : null;
+
+            // FECHAMENTO % (SEMANA ANTERIOR) = OSCILAÇÃO % da semana anterior
+            const fechamentoPct = {};
+            if (prevPrevWk) {
+                const prevPrevLME = allWeekLME[prevPrevWk];
+                METALS.forEach(m => {
+                    const osc = (prevLME && prevPrevLME && prevLME[m] !== null && prevPrevLME[m] !== null && prevPrevLME[m] !== 0)
+                        ? (prevLME[m] - prevPrevLME[m]) / prevPrevLME[m] : null;
+                    fechamentoPct[m] = osc;
+                });
+                fechamentoPct.dolar = (prevLME && prevPrevLME && prevLME.dolar !== null && prevPrevLME.dolar !== null && prevPrevLME.dolar !== 0)
+                    ? (prevLME.dolar - prevPrevLME.dolar) / prevPrevLME.dolar : null;
+            } else {
+                [...METALS, 'dolar'].forEach(m => { fechamentoPct[m] = null; });
+            }
+
+            // Formata dias para exibição (pad até 5 dias)
+            const daysDisplay = [];
+            for (let i = 0; i < 5; i++) {
+                daysDisplay.push(days[i] ? {
+                    data:     days[i].data,
+                    cobre:    days[i].cobre,
+                    zinco:    days[i].zinco,
+                    aluminio: days[i].aluminio,
+                    chumbo:   days[i].chumbo,
+                    estanho:  days[i].estanho,
+                    niquel:   days[i].niquel,
+                    dolar:    days[i].dolar,
+                } : { data: '—', cobre: null, zinco: null, aluminio: null, chumbo: null, estanho: null, niquel: null, dolar: null });
+            }
+
+            const firstDate = days[0].data;
+            const lastDate  = days[days.length - 1].data;
+
+            return {
+                weekKey: wk,
+                header:  firstDate,
+                lastDay: lastDate,
+                label:   `${firstDate} → ${lastDate}`,
+                days:    daysDisplay,
+                computed: {
+                    'MEDIA SEMANAL':                    mediaSemanal,
+                    '100% LME':                         lme100,
+                    'SEMANA ANTERIOR':                  semanaAnterior,
+                    'FECHAMENTO % ( SEMANA ANTERIOR )': fechamentoPct,
+                    'OSCILAÇÃO %':                      oscPct,
+                    'OSCILAÇÃO R$':                     oscRS,
+                    'MEDIA MENSAL':                     mediaMensalLME,
+                }
+            };
+        });
+
+        res.json({ semanas: weekBlocks.reverse(), mesesDisponiveis });
+    } catch (err) {
+        console.error('Erro GET /api/lme/relatorio-semanal:', err.message);
+        res.status(500).json({ error: 'Erro ao gerar relatório semanal LME: ' + err.message });
+    }
 });
 
-// ─── API: LME (Scraping e Proxy) ──────────────────────────────────────────────
+// ─── API: LME Meses Disponíveis ───────────────────────────────────────────────
+app.get('/api/lme/meses', async (req, res) => {
+    try {
+        const { data: html } = await axios.get(`https://shockmetais.com.br/lme/`, { timeout: 10000 });
+        const $ = cheerio.load(html);
+        const meses = [];
+        $('#meslme option').each((i, el) => {
+            meses.push({ valor: $(el).val(), texto: $(el).text().trim() });
+        });
+        res.json(meses);
+    } catch (err) {
+        console.error('Erro GET /api/lme/meses:', err.message);
+        res.status(500).json({ error: 'Erro ao buscar meses LME.' });
+    }
+});
+
+// ─── API: LME Gerar Excel (Node.js / ExcelJS — sem Python) ───────────────────
+app.post('/api/lme/gerar-excel', async (req, res) => {
+    try {
+        const ExcelJS = require('exceljs');
+        const { semana, mesLabel } = req.body;
+        if (!semana) return res.status(400).json({ error: 'Dados da semana obrigatórios.' });
+
+        const wb = new ExcelJS.Workbook();
+        wb.creator = 'ApexTech Metais';
+        const ws = wb.addWorksheet('TABELA LME', { pageSetup: { paperSize: 9, orientation: 'landscape' } });
+
+        // ── Estilos ──
+        const METALS = ['cobre', 'zinco', 'aluminio', 'chumbo', 'estanho', 'niquel', 'dolar'];
+        const METAL_LABELS = ['COBRE', 'ZINCO', 'ALUMÍNIO', 'CHUMBO', 'ESTANHO', 'NÍQUEL', 'DÓLAR'];
+        const HDR_COLORS   = ['C65911', '806000', '5B5B5B', '2F5597', '7F6000', '333333', '375623'];
+        const CELL_COLORS  = ['FCE4D6', 'FFF2CC', 'F2F2F2', 'D9E1F2', 'FFF2CC', 'F2F2F2', 'E2EFDA'];
+
+        const fontBase = { name: 'Segoe UI', size: 10 };
+        const bold = { ...fontBase, bold: true };
+        const centerAlign = { horizontal: 'center', vertical: 'middle' };
+        const leftAlign   = { horizontal: 'left',   vertical: 'middle' };
+
+        const thin = { style: 'thin', color: { argb: 'FFD3D3D3' } };
+        const border = { top: thin, bottom: thin, left: thin, right: thin };
+
+        function fill(hex)  { return { type: 'pattern', pattern: 'solid', fgColor: { argb: `FF${hex}` } }; }
+        function fmtNum(v, decimals = 2) {
+            if (v === null || v === undefined) return '—';
+            return v.toFixed(decimals).replace('.', ',');
+        }
+
+        // ── Widths ──
+        ws.getColumn(1).width = 3;
+        ws.getColumn(2).width = 30;
+        METALS.forEach((_, i) => { ws.getColumn(i + 3).width = 16; });
+
+        // ── Título ──
+        ws.mergeCells('B1:I1');
+        const titleCell = ws.getCell('B1');
+        titleCell.value = 'APEXTECH METAIS — Relatório LME Semanal';
+        titleCell.font  = { name: 'Segoe UI', size: 16, bold: true, color: { argb: 'FF1F4E78' } };
+        titleCell.alignment = leftAlign;
+        ws.getRow(1).height = 28;
+
+        ws.mergeCells('B2:I2');
+        const subCell = ws.getCell('B2');
+        subCell.value = `${mesLabel || ''} — Semana: ${semana.label || semana.header}`;
+        subCell.font  = { name: 'Segoe UI', size: 10, italic: true, color: { argb: 'FF555555' } };
+        subCell.alignment = leftAlign;
+        ws.getRow(2).height = 18;
+
+        // ── Cabeçalho da Tabela (linha 4) ──
+        ws.getRow(4).height = 24;
+        const hdrRow = ws.getRow(4);
+        hdrRow.getCell(2).value = 'DATA';
+        hdrRow.getCell(2).fill  = fill('7F7F7F');
+        hdrRow.getCell(2).font  = { ...bold, color: { argb: 'FFFFFFFF' } };
+        hdrRow.getCell(2).alignment = centerAlign;
+        hdrRow.getCell(2).border = border;
+
+        METALS.forEach((_, i) => {
+            const c = hdrRow.getCell(i + 3);
+            c.value     = METAL_LABELS[i];
+            c.fill      = fill(HDR_COLORS[i]);
+            c.font      = { ...bold, color: { argb: 'FFFFFFFF' } };
+            c.alignment = centerAlign;
+            c.border    = border;
+        });
+
+        // ── Dias (linhas 5–9) ──
+        const days = semana.days || [];
+        for (let i = 0; i < 5; i++) {
+            const rowNum = 5 + i;
+            ws.getRow(rowNum).height = 20;
+            const r = ws.getRow(rowNum);
+            const day = days[i] || {};
+            r.getCell(2).value     = day.data || '—';
+            r.getCell(2).font      = bold;
+            r.getCell(2).alignment = centerAlign;
+            r.getCell(2).border    = border;
+
+            METALS.forEach((m, mi) => {
+                const c = r.getCell(mi + 3);
+                const v = day[m];
+                c.value     = (v !== null && v !== undefined) ? v : '—';
+                c.fill      = fill(CELL_COLORS[mi]);
+                c.font      = { ...fontBase };
+                c.alignment = centerAlign;
+                c.border    = border;
+                if (typeof v === 'number') {
+                    c.numFmt = m === 'dolar' ? '0.0000' : '#,##0.00';
+                }
+            });
+        }
+
+        // ── Linhas Computadas (10–16) ──
+        const comp = semana.computed || {};
+        const COMP_ROWS = [
+            { lbl: 'MÉDIA SEMANAL',                   key: 'MEDIA SEMANAL',                    bg: 'F2F2F2', fmt: '#,##0.00',   dolFmt: '0.0000'    },
+            { lbl: '100% LME (R$)',                   key: '100% LME',                         bg: 'FFF2CC', fmt: 'R$ #,##0.000', dolFmt: '0.0000'   },
+            { lbl: 'SEMANA ANTERIOR',                 key: 'SEMANA ANTERIOR',                  bg: 'D9E1F2', fmt: 'R$ #,##0.000', dolFmt: 'R$ #,##0.0000' },
+            { lbl: 'FECHAMENTO % (SEMANA ANTERIOR)',  key: 'FECHAMENTO % ( SEMANA ANTERIOR )', bg: 'E2EFDA', fmt: '0.000%',      dolFmt: '0.000%'    },
+            { lbl: 'OSCILAÇÃO %',                     key: 'OSCILAÇÃO %',                      bg: 'FFF2CC', fmt: '0.000%',      dolFmt: '0.000%'    },
+            { lbl: 'OSCILAÇÃO R$',                    key: 'OSCILAÇÃO R$',                     bg: 'F2F2F2', fmt: 'R$ #,##0.0000', dolFmt: 'R$ #,##0.0000' },
+            { lbl: 'MÉDIA MENSAL',                    key: 'MEDIA MENSAL',                     bg: 'D9D9D9', fmt: 'R$ #,##0.00',  dolFmt: 'R$ #,##0.0000' },
+        ];
+
+        COMP_ROWS.forEach((row, idx) => {
+            const rowNum = 10 + idx;
+            ws.getRow(rowNum).height = 22;
+            const r = ws.getRow(rowNum);
+            r.getCell(2).value     = row.lbl;
+            r.getCell(2).font      = bold;
+            r.getCell(2).fill      = fill(row.bg);
+            r.getCell(2).alignment = leftAlign;
+            r.getCell(2).border    = border;
+
+            const vals = comp[row.key] || {};
+            METALS.forEach((m, mi) => {
+                const c  = r.getCell(mi + 3);
+                const v  = vals[m];
+                c.fill      = fill(row.bg);
+                c.font      = bold;
+                c.alignment = centerAlign;
+                c.border    = border;
+                if (v !== null && v !== undefined) {
+                    c.value  = v;
+                    c.numFmt = m === 'dolar' ? row.dolFmt : row.fmt;
+                } else {
+                    c.value = '—';
+                }
+            });
+        });
+
+        // ── Espaço ──
+        ws.getRow(18).height = 12;
+
+        // ── Tabela Resumo (19–22) ──
+        ws.getRow(19).height = 24;
+        const sumHdr = ws.getRow(19);
+        sumHdr.getCell(2).value = 'TIPO';
+        sumHdr.getCell(2).fill  = fill('7F7F7F');
+        sumHdr.getCell(2).font  = { ...bold, color: { argb: 'FFFFFFFF' } };
+        sumHdr.getCell(2).alignment = centerAlign;
+        sumHdr.getCell(2).border = border;
+        METALS.forEach((_, i) => {
+            const c = sumHdr.getCell(i + 3);
+            c.value     = METAL_LABELS[i];
+            c.fill      = fill(HDR_COLORS[i]);
+            c.font      = { ...bold, color: { argb: 'FFFFFFFF' } };
+            c.alignment = centerAlign;
+            c.border    = border;
+        });
+
+        const SUMMARY_ROWS = [
+            { lbl: 'SEMANA ANTERIOR', key: 'SEMANA ANTERIOR', fmt: 'R$ #,##0.00', dolFmt: 'R$ #,##0.0000', bg: 'D9E1F2' },
+            { lbl: 'LME ATUAL',       key: '100% LME',        fmt: 'R$ #,##0.00', dolFmt: 'R$ #,##0.0000', bg: 'FFF2CC' },
+        ];
+        SUMMARY_ROWS.forEach((row, idx) => {
+            const rowNum = 20 + idx;
+            ws.getRow(rowNum).height = 20;
+            const r = ws.getRow(rowNum);
+            r.getCell(2).value     = row.lbl;
+            r.getCell(2).font      = bold;
+            r.getCell(2).fill      = fill(row.bg);
+            r.getCell(2).alignment = centerAlign;
+            r.getCell(2).border    = border;
+            const vals = comp[row.key] || {};
+            METALS.forEach((m, mi) => {
+                const c = r.getCell(mi + 3);
+                const v = vals[m];
+                c.fill      = fill(row.bg);
+                c.font      = fontBase;
+                c.alignment = centerAlign;
+                c.border    = border;
+                if (v !== null && v !== undefined) {
+                    c.value  = v;
+                    c.numFmt = m === 'dolar' ? row.dolFmt : row.fmt;
+                } else {
+                    c.value = '—';
+                }
+            });
+        });
+
+        // ── Linha Oscilação com setas ──
+        ws.getRow(22).height = 22;
+        const oscRow = ws.getRow(22);
+        oscRow.getCell(2).value     = 'Oscilação';
+        oscRow.getCell(2).font      = { ...bold, italic: true };
+        oscRow.getCell(2).alignment = leftAlign;
+        oscRow.getCell(2).border    = border;
+
+        const oscVals = comp['OSCILAÇÃO R$'] || {};
+        METALS.forEach((m, mi) => {
+            const c = oscRow.getCell(mi + 3);
+            const v = oscVals[m];
+            c.alignment = centerAlign;
+            c.border    = border;
+            if (v !== null && v !== undefined) {
+                const arrow = v >= 0 ? '▲' : '▼';
+                const colorHex = v >= 0 ? 'FF385723' : 'FFC65911';
+                const prefix = m === 'dolar' ? '' : 'R$ ';
+                c.value = `${arrow} ${prefix}${Math.abs(v).toFixed(4).replace('.', ',')}`;
+                c.font  = { ...bold, color: { argb: colorHex } };
+            } else {
+                c.value = '—';
+                c.font  = fontBase;
+            }
+        });
+
+        // ── Gera buffer e envia ──
+        const safeName = (semana.header || 'semana').replace(/\//g, '-');
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', `attachment; filename="LME-ApexTech-${safeName}.xlsx"`);
+        await wb.xlsx.write(res);
+        res.end();
+    } catch (err) {
+        console.error('Erro POST /api/lme/gerar-excel:', err.message);
+        res.status(500).json({ error: 'Erro ao gerar Excel: ' + err.message });
+    }
+});
+
+// ─── API: LME (Scraping e Proxy — mantido para dashboard existente) ────────────
 app.get('/api/lme/tabela/:mes', async (req, res) => {
     try {
-        const mes = req.params.mes; // ex: 6-2026
-        // Para a tabela, precisamos fazer um GET na página principal da LME com o mês selecionado
+        const mes = req.params.mes;
         const targetUrl = `https://shockmetais.com.br/lme/${mes}`;
         const { data } = await axios.get(targetUrl);
         const $ = cheerio.load(data);
@@ -559,33 +986,24 @@ app.get('/api/lme/tabela/:mes', async (req, res) => {
         $('#boxtabela table tbody tr').each((index, element) => {
             const colunas = $(element).find('td');
             if (colunas.length > 0) {
-                const dia = $(colunas[0]).text().trim();
-                const cobre = $(colunas[1]).text().trim();
-                const zinco = $(colunas[2]).text().trim();
+                const dia      = $(colunas[0]).text().trim();
+                const cobre    = $(colunas[1]).text().trim();
+                const zinco    = $(colunas[2]).text().trim();
                 const aluminio = $(colunas[3]).text().trim();
-                const chumbo = $(colunas[4]).text().trim();
-                const estanho = $(colunas[5]).text().trim();
-                const niquel = $(colunas[6]).text().trim();
-                const dolar = $(colunas[7]).text().trim();
-                
-                // Pega a classe da linha para identificar se é média ou normal
-                const isMedia = $(colunas[0]).hasClass('lmemedia');
+                const chumbo   = $(colunas[4]).text().trim();
+                const estanho  = $(colunas[5]).text().trim();
+                const niquel   = $(colunas[6]).text().trim();
+                const dolar    = $(colunas[7]).text().trim();
+                const isMedia  = $(colunas[0]).hasClass('lmemedia');
                 const isMensal = $(colunas[0]).hasClass('lmemensal');
-                
-                cotacoes.push({
-                    dia, cobre, zinco, aluminio, chumbo, estanho, niquel, dolar,
-                    tipo: isMensal ? 'mensal' : (isMedia ? 'semanal' : 'diaria')
-                });
+                cotacoes.push({ dia, cobre, zinco, aluminio, chumbo, estanho, niquel, dolar,
+                    tipo: isMensal ? 'mensal' : (isMedia ? 'semanal' : 'diaria') });
             }
         });
 
-        // Buscar as opções de meses disponíveis (para preencher o select)
         const mesesDisponiveis = [];
         $('#meslme option').each((i, el) => {
-            mesesDisponiveis.push({
-                valor: $(el).val(),
-                texto: $(el).text()
-            });
+            mesesDisponiveis.push({ valor: $(el).val(), texto: $(el).text() });
         });
 
         res.json({ cotacoes, mesesDisponiveis });
@@ -597,7 +1015,6 @@ app.get('/api/lme/tabela/:mes', async (req, res) => {
 
 app.post('/api/lme/graflme', async (req, res) => {
     try {
-        // Proxy para o gráfico
         const response = await axios.post('https://shockmetais.com.br/lme/graflme', new URLSearchParams(req.body), {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         });
@@ -610,41 +1027,26 @@ app.post('/api/lme/graflme', async (req, res) => {
 
 app.post('/api/lme/varialme', async (req, res) => {
     try {
-        // Proxy para as variações
         const response = await axios.post('https://shockmetais.com.br/lme/varialme', new URLSearchParams(req.body), {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         });
-        
-        // Retornar o HTML bruto ou JSON parseado. Retornaremos JSON parseado para ser mais flexível no frontend
         const $ = cheerio.load(response.data);
         const variaveis = [];
-        
         $('.card').each((i, el) => {
             const titulo = $(el).find('.card-header').text().trim();
             const cols = $(el).find('.card-body .col-6');
             let dataAnt = '', valAnt = '', dataAtual = '', valAtual = '';
-            if(cols.length >= 2) {
+            if (cols.length >= 2) {
                 dataAtual = $(cols[0]).find('small').text().trim();
-                valAtual = $(cols[0]).find('b').text().trim();
-                dataAnt = $(cols[1]).find('small').text().trim();
-                valAnt = $(cols[1]).find('b').text().trim();
+                valAtual  = $(cols[0]).find('b').text().trim();
+                dataAnt   = $(cols[1]).find('small').text().trim();
+                valAnt    = $(cols[1]).find('b').text().trim();
             }
-            
             const footerText = $(el).find('.card-footer h3').text().trim();
-            const iconClass = $(el).find('.card-footer i').attr('class') || '';
+            const iconClass  = $(el).find('.card-footer i').attr('class') || '';
             const isPositive = footerText.includes('+') || $(el).find('.card-footer h3').hasClass('text-success') || iconClass.includes('up');
-            
-            variaveis.push({
-                titulo,
-                dataAtual,
-                valAtual,
-                dataAnt,
-                valAnt,
-                footerText,
-                isPositive
-            });
+            variaveis.push({ titulo, dataAtual, valAtual, dataAnt, valAnt, footerText, isPositive });
         });
-
         res.json({ html: response.data, parsed: variaveis });
     } catch (err) {
         console.error('Erro POST /api/lme/varialme:', err.message);
@@ -659,3 +1061,4 @@ initDatabase().then(() => {
         console.log(`📦 Modo de dados: ${dbAvailable ? 'PostgreSQL' : 'Memória (local)'}`);
     });
 });
+

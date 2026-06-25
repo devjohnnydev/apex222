@@ -76,7 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // LME EXCEL REPORT
     // =========================================================================
     async function initLMEExcelReport() {
-        const filterAno     = document.getElementById('lme-filter-ano');
         const filterMes     = document.getElementById('lme-filter-mes');
         const selector      = document.getElementById('lme-week-selector');
         const preview       = document.getElementById('excel-table-preview');
@@ -115,88 +114,54 @@ document.addEventListener('DOMContentLoaded', () => {
             if (previewWrap) { previewWrap.style.display = 'block'; }
         }
 
-        // Parse "dd/mm/yyyy" → { day, month, year }
-        function parseDateParts(dateStr) {
-            if (!dateStr || typeof dateStr !== 'string') return null;
-            const parts = dateStr.split('/');
-            if (parts.length < 3) return null;
-            return { day: parseInt(parts[0]), month: parseInt(parts[1]), year: parseInt(parts[2]) };
-        }
-
         // ─── LOAD DATA ──────────────────────────────────────────────────
-        async function loadWeeks() {
+        async function loadWeeks(mesOverride = null) {
             showLoading();
             try {
-                const res = await fetch('/api/lme/excel-weeks');
+                // 1. Fetch available months if not overriding
+                let mesToFetch = mesOverride;
+                if (!mesToFetch) {
+                    const resMeses = await fetch('/api/lme/meses');
+                    const mesesDisponiveis = await resMeses.json();
+                    
+                    filterMes.innerHTML = mesesDisponiveis.map(m => 
+                        `<option value="${m.valor}">${m.texto}</option>`
+                    ).join('');
+                    
+                    if (mesesDisponiveis.length > 0) {
+                        mesToFetch = mesesDisponiveis[0].valor;
+                        filterMes.value = mesToFetch;
+                    } else {
+                        throw new Error('Nenhum mês disponível na LME.');
+                    }
+                }
+
+                // 2. Fetch weekly report for the selected month
+                const res = await fetch(`/api/lme/relatorio-semanal?mes=${mesToFetch}`);
                 if (!res.ok) throw new Error(`Servidor respondeu com erro ${res.status}`);
-                excelWeeks = await res.json();
-                if (!Array.isArray(excelWeeks) || excelWeeks.length === 0) {
-                    throw new Error('Nenhuma semana encontrada na planilha LME.');
+                
+                const data = await res.json();
+                excelWeeks = data.semanas || [];
+                
+                if (excelWeeks.length === 0) {
+                    selector.innerHTML = '<option value="">Nenhuma semana encontrada</option>';
+                    showError('Nenhuma semana encontrada neste mês.');
+                    if (countNum) countNum.textContent = '0';
+                    return;
                 }
-                buildFilters();
-                applyFilters();
+
+                if (countNum) countNum.textContent = excelWeeks.length;
+                
+                selector.innerHTML = excelWeeks.map(w => {
+                    const lastDay = w.days && w.days.length > 0 ? w.days[w.days.length - 1]?.data : '—';
+                    return `<option value="${w.header}">Semana ${w.header} → ${lastDay}</option>`;
+                }).join('');
+
+                renderPreview(excelWeeks[0].header);
             } catch(e) {
-                console.error('Error loading LME Excel weeks:', e);
-                showError(`Erro ao carregar planilha: ${e.message}. Verifique se o arquivo "assets/excel/LME (version 1) (version 1).xlsx" existe.`);
+                console.error('Error loading LME weeks:', e);
+                showError(`Erro ao carregar dados LME: ${e.message}`);
             }
-        }
-
-        // ─── BUILD YEAR / MONTH FILTERS ─────────────────────────────────
-        function buildFilters() {
-            const years  = new Set();
-            excelWeeks.forEach(w => {
-                const p = parseDateParts(w.header);
-                if (p) years.add(p.year);
-            });
-            const sortedYears = [...years].sort((a, b) => b - a);
-
-            filterAno.innerHTML = '<option value="">Todos os anos</option>' +
-                sortedYears.map(y => `<option value="${y}">${y}</option>`).join('');
-
-            updateMonthFilter('');
-        }
-
-        function updateMonthFilter(selectedYear) {
-            const months = new Set();
-            excelWeeks.forEach(w => {
-                const p = parseDateParts(w.header);
-                if (!p) return;
-                if (selectedYear === '' || p.year === parseInt(selectedYear)) {
-                    months.add(p.month);
-                }
-            });
-            const sortedMonths = [...months].sort((a, b) => a - b);
-            filterMes.innerHTML = '<option value="">Todos os meses</option>' +
-                sortedMonths.map(m => `<option value="${m}">${MONTH_NAMES[m]}</option>`).join('');
-        }
-
-        // ─── APPLY FILTERS → POPULATE WEEK SELECTOR ─────────────────────
-        function applyFilters() {
-            const ano = filterAno.value;
-            const mes = filterMes.value;
-
-            const filtered = [...excelWeeks].reverse().filter(w => {
-                const p = parseDateParts(w.header);
-                if (!p) return false;
-                if (ano && p.year !== parseInt(ano)) return false;
-                if (mes && p.month !== parseInt(mes)) return false;
-                return true;
-            });
-
-            if (countNum) countNum.textContent = filtered.length;
-
-            if (filtered.length === 0) {
-                selector.innerHTML = '<option value="">Nenhuma semana encontrada</option>';
-                showError('Nenhuma semana encontrada para os filtros selecionados.');
-                return;
-            }
-
-            selector.innerHTML = filtered.map(w => {
-                const lastDay = w.days && w.days.length > 0 ? w.days[w.days.length - 1]?.data : '—';
-                return `<option value="${w.header}">Semana ${w.header} → ${lastDay}</option>`;
-            }).join('');
-
-            renderPreview(filtered[0].header);
         }
 
         // ─── RENDER PREVIEW TABLE ────────────────────────────────────────
@@ -258,16 +223,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const thHeaders = vc.map(c => `<th class="${c.hcls}">${c.lbl}</th>`).join('');
             const thSummary = vc.map(c => `<th class="${c.hcls}">${c.lbl}</th>`).join('');
 
-            // Date range subtitle
             const firstDate = d[0]?.data || headerVal;
             const lastDate  = d[d.length - 1]?.data || '—';
-            const p = parseDateParts(headerVal);
-            const monthName = p ? MONTH_NAMES[p.month] : '';
+            const monthName = filterMes.options[filterMes.selectedIndex]?.text || '';
 
             let html = `
             <div class="excel-title-row">
                 <span class="excel-company">APEXTECH METAIS</span>
-                <span class="excel-week-label">${monthName} ${p ? p.year : ''} &mdash; Semana de ${firstDate} a ${lastDate}</span>
+                <span class="excel-week-label">${monthName} &mdash; Semana de ${firstDate} a ${lastDate}</span>
             </div>
             <table class="excel-table">
                 <thead>
@@ -350,27 +313,46 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // ─── EVENT LISTENERS ─────────────────────────────────────────────
-        filterAno.addEventListener('change', () => {
-            updateMonthFilter(filterAno.value);
-            filterMes.value = '';
-            applyFilters();
-        });
-
         filterMes.addEventListener('change', () => {
-            applyFilters();
+            loadWeeks(filterMes.value);
         });
 
         selector.addEventListener('change', () => {
             if (selector.value) renderPreview(selector.value);
         });
 
-        btnDownload.addEventListener('click', () => {
+        btnDownload.addEventListener('click', async () => {
             const val = selector.value;
             if (!val) return;
-            // Flash button to indicate download started
+            const block = excelWeeks.find(b => b.header === val);
+            if (!block) return;
+            
             btnDownload.classList.add('downloading');
-            setTimeout(() => btnDownload.classList.remove('downloading'), 2000);
-            window.location.href = `/api/lme/download-excel/${encodeURIComponent(val)}`;
+            try {
+                const res = await fetch('/api/lme/gerar-excel', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        semana: block,
+                        mesLabel: filterMes.options[filterMes.selectedIndex]?.text
+                    })
+                });
+                if (!res.ok) throw new Error('Erro ao gerar Excel');
+                const blob = await res.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = `LME-Relatorio-${val.replace(/\//g, '-')}.xlsx`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            } catch(e) {
+                console.error(e);
+                alert('Erro ao baixar Excel: ' + e.message);
+            } finally {
+                btnDownload.classList.remove('downloading');
+            }
         });
 
         btnRefresh.addEventListener('click', async () => {
