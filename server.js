@@ -766,49 +766,43 @@ app.post('/api/lme/gerar-excel', async (req, res) => {
         // ── Estilos ──
         const METALS = ['cobre', 'zinco', 'aluminio', 'chumbo', 'estanho', 'niquel', 'dolar'];
         const METAL_LABELS = ['COBRE', 'ZINCO', 'ALUMÍNIO', 'CHUMBO', 'ESTANHO', 'NÍQUEL', 'DÓLAR'];
-        const HDR_COLORS   = ['C65911', '806000', '5B5B5B', '2F5597', '7F6000', '333333', '375623'];
-        const CELL_COLORS  = ['FCE4D6', 'FFF2CC', 'F2F2F2', 'D9E1F2', 'FFF2CC', 'F2F2F2', 'E2EFDA'];
+        const HDR_COLORS   = ['FF0000', 'E6B8B7', 'A6A6A6', 'D9D9D9', 'B5B059', 'FFFFFF', '70AD47'];
 
-        const fontBase = { name: 'Segoe UI', size: 10 };
+        const fontBase = { name: 'Calibri', size: 11 };
         const bold = { ...fontBase, bold: true };
+        const boldWhite = { ...bold, color: { argb: 'FFFFFFFF' } };
         const centerAlign = { horizontal: 'center', vertical: 'middle' };
         const leftAlign   = { horizontal: 'left',   vertical: 'middle' };
 
-        const thin = { style: 'thin', color: { argb: 'FFD3D3D3' } };
+        const thin = { style: 'thin', color: { argb: 'FF000000' } };
         const border = { top: thin, bottom: thin, left: thin, right: thin };
 
         function fill(hex)  { return { type: 'pattern', pattern: 'solid', fgColor: { argb: `FF${hex}` } }; }
-        function fmtNum(v, decimals = 2) {
-            if (v === null || v === undefined) return '—';
-            return v.toFixed(decimals).replace('.', ',');
-        }
 
         // ── Widths ──
         ws.getColumn(1).width = 3;
-        ws.getColumn(2).width = 30;
-        METALS.forEach((_, i) => { ws.getColumn(i + 3).width = 16; });
+        ws.getColumn(2).width = 36;
+        METALS.forEach((_, i) => { ws.getColumn(i + 3).width = 17; });
 
         // ── Título ──
         ws.mergeCells('B1:I1');
         const titleCell = ws.getCell('B1');
-        titleCell.value = 'APEXTECH METAIS — Relatório LME Semanal';
-        titleCell.font  = { name: 'Segoe UI', size: 16, bold: true, color: { argb: 'FF1F4E78' } };
-        titleCell.alignment = leftAlign;
-        ws.getRow(1).height = 28;
+        const labelFull = `COTACAO VALIDA PARA A SEMANA: ${semana.label || semana.header}`.toUpperCase();
+        titleCell.value = labelFull;
+        titleCell.font  = { name: 'Calibri', size: 16, bold: true, color: { argb: 'FF000000' } };
+        titleCell.fill  = fill('FFFF00');
+        titleCell.alignment = centerAlign;
+        titleCell.border = border;
+        ws.getRow(1).height = 30;
 
-        ws.mergeCells('B2:I2');
-        const subCell = ws.getCell('B2');
-        subCell.value = `${mesLabel || ''} — Semana: ${semana.label || semana.header}`;
-        subCell.font  = { name: 'Segoe UI', size: 10, italic: true, color: { argb: 'FF555555' } };
-        subCell.alignment = leftAlign;
-        ws.getRow(2).height = 18;
-
-        // ── Cabeçalho da Tabela (linha 4) ──
-        ws.getRow(4).height = 24;
-        const hdrRow = ws.getRow(4);
+        ws.getRow(2).height = 10; // Espaço
+        
+        // ── Cabeçalho da Tabela (linha 3) ──
+        ws.getRow(3).height = 20;
+        const hdrRow = ws.getRow(3);
         hdrRow.getCell(2).value = 'DATA';
-        hdrRow.getCell(2).fill  = fill('7F7F7F');
-        hdrRow.getCell(2).font  = { ...bold, color: { argb: 'FFFFFFFF' } };
+        hdrRow.getCell(2).fill  = fill('000000');
+        hdrRow.getCell(2).font  = boldWhite;
         hdrRow.getCell(2).alignment = centerAlign;
         hdrRow.getCell(2).border = border;
 
@@ -816,16 +810,16 @@ app.post('/api/lme/gerar-excel', async (req, res) => {
             const c = hdrRow.getCell(i + 3);
             c.value     = METAL_LABELS[i];
             c.fill      = fill(HDR_COLORS[i]);
-            c.font      = { ...bold, color: { argb: 'FFFFFFFF' } };
+            c.font      = bold;
             c.alignment = centerAlign;
             c.border    = border;
         });
 
-        // ── Dias (linhas 5–9) ──
+        // ── Dias (linhas 4–8) ──
         const days = semana.days || [];
         for (let i = 0; i < 5; i++) {
-            const rowNum = 5 + i;
-            ws.getRow(rowNum).height = 20;
+            const rowNum = 4 + i;
+            ws.getRow(rowNum).height = 18;
             const r = ws.getRow(rowNum);
             const day = days[i] || {};
             r.getCell(2).value     = day.data || '—';
@@ -837,36 +831,47 @@ app.post('/api/lme/gerar-excel', async (req, res) => {
                 const c = r.getCell(mi + 3);
                 const v = day[m];
                 c.value     = (v !== null && v !== undefined) ? v : '—';
-                c.fill      = fill(CELL_COLORS[mi]);
-                c.font      = { ...fontBase };
+                c.font      = fontBase;
                 c.alignment = centerAlign;
                 c.border    = border;
                 if (typeof v === 'number') {
-                    c.numFmt = m === 'dolar' ? '0.0000' : '#,##0.00';
+                    c.numFmt = m === 'dolar' ? '0.0000' : 'R$ #,##0.00';
                 }
             });
         }
+        
+        ws.getRow(9).height = 10; // Espaço
 
-        // ── Linhas Computadas (10–16) ──
+        // ── Linhas Computadas (10–19) ──
         const comp = semana.computed || {};
         const COMP_ROWS = [
-            { lbl: 'MÉDIA SEMANAL',                   key: 'MEDIA SEMANAL',                    bg: 'F2F2F2', fmt: '#,##0.00',   dolFmt: '0.0000'    },
-            { lbl: '100% LME (R$)',                   key: '100% LME',                         bg: 'FFF2CC', fmt: 'R$ #,##0.000', dolFmt: '0.0000'   },
-            { lbl: 'SEMANA ANTERIOR',                 key: 'SEMANA ANTERIOR',                  bg: 'D9E1F2', fmt: 'R$ #,##0.000', dolFmt: 'R$ #,##0.0000' },
-            { lbl: 'FECHAMENTO % (SEMANA ANTERIOR)',  key: 'FECHAMENTO % ( SEMANA ANTERIOR )', bg: 'E2EFDA', fmt: '0.000%',      dolFmt: '0.000%'    },
-            { lbl: 'OSCILAÇÃO %',                     key: 'OSCILAÇÃO %',                      bg: 'FFF2CC', fmt: '0.000%',      dolFmt: '0.000%'    },
-            { lbl: 'OSCILAÇÃO R$',                    key: 'OSCILAÇÃO R$',                     bg: 'F2F2F2', fmt: 'R$ #,##0.0000', dolFmt: 'R$ #,##0.0000' },
-            { lbl: 'MÉDIA MENSAL',                    key: 'MEDIA MENSAL',                     bg: 'D9D9D9', fmt: 'R$ #,##0.00',  dolFmt: 'R$ #,##0.0000' },
+            { lbl: 'MEDIA SEMANAL',                   key: 'MEDIA SEMANAL',                    bg: 'E7E6E6', lblFont: bold, fmt: 'R$ #,##0.00',   dolFmt: 'R$ 0.0000'    },
+            { space: true },
+            { lbl: '100% LME',                        key: '100% LME',                         bg: 'FFFF00', lblFont: bold, fmt: 'R$ #,##0.00', dolFmt: 'R$ 0.0000'   },
+            { space: true },
+            { lbl: 'SEMANA ANTERIOR',                 key: 'SEMANA ANTERIOR',                  bg: '000000', lblFont: boldWhite, fmt: 'R$ #,##0.00', dolFmt: 'R$ #,##0.0000' },
+            { lbl: 'FECHAMENTO % ( SEMANA ANTERIOR )',  key: 'FECHAMENTO % ( SEMANA ANTERIOR )', bg: 'FFFFFF', lblFont: { ...bold, color: {argb:'FF00B050'} }, fmt: '0.00%', dolFmt: '0.00%'    },
+            { space: true },
+            { lbl: 'OSCILAÇÃO %',                     key: 'OSCILAÇÃO %',                      bg: '00B0F0', lblFont: bold, fmt: '0.00%',      dolFmt: '0.00%'    },
+            { space: true },
+            { lbl: 'OSCILAÇÃO R$',                    key: 'OSCILAÇÃO R$',                     bg: 'E2EFDA', lblFont: bold, fmt: 'R$ #,##0.0000', dolFmt: 'R$ #,##0.0000' },
+            { space: true },
+            { lbl: 'MEDIA MENSAL',                    key: 'MEDIA MENSAL',                     bg: 'A6A6A6', lblFont: bold, fmt: 'R$ #,##0.00',  dolFmt: 'R$ #,##0.00' },
         ];
 
-        COMP_ROWS.forEach((row, idx) => {
-            const rowNum = 10 + idx;
-            ws.getRow(rowNum).height = 22;
-            const r = ws.getRow(rowNum);
+        let curRow = 10;
+        COMP_ROWS.forEach((row) => {
+            if (row.space) {
+                ws.getRow(curRow).height = 8;
+                curRow++;
+                return;
+            }
+            ws.getRow(curRow).height = 20;
+            const r = ws.getRow(curRow);
             r.getCell(2).value     = row.lbl;
-            r.getCell(2).font      = bold;
+            r.getCell(2).font      = row.lblFont;
             r.getCell(2).fill      = fill(row.bg);
-            r.getCell(2).alignment = leftAlign;
+            r.getCell(2).alignment = centerAlign;
             r.getCell(2).border    = border;
 
             const vals = comp[row.key] || {};
@@ -877,47 +882,58 @@ app.post('/api/lme/gerar-excel', async (req, res) => {
                 c.font      = bold;
                 c.alignment = centerAlign;
                 c.border    = border;
-                if (v !== null && v !== undefined) {
+                
+                if (row.key === 'FECHAMENTO % ( SEMANA ANTERIOR )' || row.key === 'OSCILAÇÃO %' || row.key === 'OSCILAÇÃO R$') {
+                    if (v !== null && v !== undefined) {
+                        c.font = { ...bold, color: { argb: v >= 0 ? 'FF00B050' : 'FFFF0000' } };
+                    }
+                }
+                
+                if (row.key === 'OSCILAÇÃO R$' && v !== null && v !== undefined) {
+                    const arrow = v >= 0 ? '⬆ ' : '⬇ ';
+                    const pre = 'R$ ';
+                    c.value = `${arrow}${v < 0 ? '-' : ''}${pre}${Math.abs(v).toFixed(4).replace('.', ',')}`;
+                    c.numFmt = '@'; 
+                } else if (v !== null && v !== undefined) {
                     c.value  = v;
                     c.numFmt = m === 'dolar' ? row.dolFmt : row.fmt;
                 } else {
                     c.value = '—';
                 }
             });
+            curRow++;
         });
 
-        // ── Espaço ──
-        ws.getRow(18).height = 12;
-
-        // ── Tabela Resumo (19–22) ──
-        ws.getRow(19).height = 24;
-        const sumHdr = ws.getRow(19);
+        // ── Tabela Resumo ──
+        curRow += 2;
+        ws.getRow(curRow).height = 20;
+        const sumHdr = ws.getRow(curRow);
         sumHdr.getCell(2).value = 'TIPO';
-        sumHdr.getCell(2).fill  = fill('7F7F7F');
-        sumHdr.getCell(2).font  = { ...bold, color: { argb: 'FFFFFFFF' } };
+        sumHdr.getCell(2).fill  = fill('A6A6A6');
+        sumHdr.getCell(2).font  = bold;
         sumHdr.getCell(2).alignment = centerAlign;
         sumHdr.getCell(2).border = border;
         METALS.forEach((_, i) => {
             const c = sumHdr.getCell(i + 3);
             c.value     = METAL_LABELS[i];
-            c.fill      = fill(HDR_COLORS[i]);
-            c.font      = { ...bold, color: { argb: 'FFFFFFFF' } };
+            c.fill      = fill('A6A6A6');
+            c.font      = bold;
             c.alignment = centerAlign;
             c.border    = border;
         });
 
         const SUMMARY_ROWS = [
-            { lbl: 'SEMANA ANTERIOR', key: 'SEMANA ANTERIOR', fmt: 'R$ #,##0.00', dolFmt: 'R$ #,##0.0000', bg: 'D9E1F2' },
-            { lbl: 'LME ATUAL',       key: '100% LME',        fmt: 'R$ #,##0.00', dolFmt: 'R$ #,##0.0000', bg: 'FFF2CC' },
+            { lbl: 'SEMANA ANTERIOR', key: 'SEMANA ANTERIOR', fmt: 'R$ #,##0.00', dolFmt: '0.00', bg: 'D9E1F2' },
+            { lbl: 'LME ATUAL',       key: '100% LME',        fmt: 'R$ #,##0.00', dolFmt: '0.00', bg: 'FFF2CC' },
         ];
-        SUMMARY_ROWS.forEach((row, idx) => {
-            const rowNum = 20 + idx;
-            ws.getRow(rowNum).height = 20;
-            const r = ws.getRow(rowNum);
+        curRow++;
+        SUMMARY_ROWS.forEach((row) => {
+            ws.getRow(curRow).height = 20;
+            const r = ws.getRow(curRow);
             r.getCell(2).value     = row.lbl;
-            r.getCell(2).font      = bold;
+            r.getCell(2).font      = { ...fontBase, italic: true };
             r.getCell(2).fill      = fill(row.bg);
-            r.getCell(2).alignment = centerAlign;
+            r.getCell(2).alignment = leftAlign;
             r.getCell(2).border    = border;
             const vals = comp[row.key] || {};
             METALS.forEach((m, mi) => {
@@ -934,12 +950,13 @@ app.post('/api/lme/gerar-excel', async (req, res) => {
                     c.value = '—';
                 }
             });
+            curRow++;
         });
 
-        // ── Linha Oscilação com setas ──
-        ws.getRow(22).height = 22;
-        const oscRow = ws.getRow(22);
-        oscRow.getCell(2).value     = 'Oscilação';
+        // ── Linha Oscilação com setas (Bottom table) ──
+        ws.getRow(curRow).height = 20;
+        const oscRow = ws.getRow(curRow);
+        oscRow.getCell(2).value     = 'Osilacao';
         oscRow.getCell(2).font      = { ...bold, italic: true };
         oscRow.getCell(2).alignment = leftAlign;
         oscRow.getCell(2).border    = border;
@@ -951,10 +968,10 @@ app.post('/api/lme/gerar-excel', async (req, res) => {
             c.alignment = centerAlign;
             c.border    = border;
             if (v !== null && v !== undefined) {
-                const arrow = v >= 0 ? '▲' : '▼';
-                const colorHex = v >= 0 ? 'FF385723' : 'FFC65911';
-                const prefix = m === 'dolar' ? '' : 'R$ ';
-                c.value = `${arrow} ${prefix}${Math.abs(v).toFixed(4).replace('.', ',')}`;
+                const arrow = v >= 0 ? '⬆' : '⬇';
+                const colorHex = v >= 0 ? 'FF00B050' : 'FFFF0000';
+                const prefix = 'R$ ';
+                c.value = `${arrow} ${v < 0 ? '-' : ''}${prefix}${Math.abs(v).toFixed(2).replace('.', ',')}`;
                 c.font  = { ...bold, color: { argb: colorHex } };
             } else {
                 c.value = '—';
