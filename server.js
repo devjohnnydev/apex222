@@ -500,10 +500,20 @@ app.delete('/api/galeria/:id', async (req, res) => {
 
 function parseNum(str) {
     if (!str || str.trim() === '' || str.trim() === '-') return null;
-    // Remove R$, %, espaços; troca vírgula decimal
+    // Remove R$, %, espaços
     let s = str.replace(/R\$\s*/g, '').replace(/%/g, '').trim();
-    if (s.includes(',') && s.includes('.')) s = s.replace(/\./g, '').replace(',', '.');
-    else if (s.includes(',')) s = s.replace(',', '.');
+    
+    const lastComma = s.lastIndexOf(',');
+    const lastDot = s.lastIndexOf('.');
+    
+    if (lastComma > lastDot) {
+        // Formato BR: 1.234,56 ou apenas 1234,56
+        s = s.replace(/\./g, '').replace(',', '.');
+    } else if (lastDot > lastComma) {
+        // Formato US: 1,234.56 ou apenas 1234.56
+        s = s.replace(/,/g, '');
+    }
+    
     const n = parseFloat(s);
     return isNaN(n) ? null : n;
 }
