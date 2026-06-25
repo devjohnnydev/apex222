@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Sobre Nós - Apex Tech Metais</title>
+    <meta name="description" content="Conheça a história e os valores da Apex Tech Metais - Referência no mercado de reciclagem industrial e sucatas de metais.">
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="https://apextechmetais.com.br/wp-content/uploads/2024/07/logo-apextech.svg">
+    <link rel="shortcut icon" href="https://apextechmetais.com.br/wp-content/uploads/2024/07/logo-apextech.svg">
+    <link rel="apple-touch-icon" href="https://apextechmetais.com.br/wp-content/uploads/2024/07/logo-apextech.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700;800&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css?v=6">
+    <script>window.CURRENT_PAGE = 'sobre';</script>
+    <script src="partials.js"></script>
+</head>
+<body>
+
+<div id="page-content" style="padding-top: var(--header-height);">
+
+    <!-- SOBRE SECTION -->
+    <section id="sobre" class="section_transformando">
+        <div class="container">
+            <div class="transformando-grid">
+                <div class="transformando-img">
+                    <img src="https://apextechmetais.com.br/wp-content/uploads/2024/07/img-transformando-residuos.webp"
+                         alt="Transformando Resíduos" class="img-fluid">
+                </div>
+                <div class="transformando-text">
+                    <h2 class="titulo_section_70">Transformando Resíduos em Oportunidades</h2>
+                    <p>Uma referência no mercado de resíduos, baseada em princípios de honestidade, fidelidade e parcerias sólidas. Há mais de 9 anos no mercado, nossa visão sempre foi clara: possuir todos os documentos necessários para atender ao mercado, sempre preocupados com o &#8220;Por que fazer?&#8221; e com o objetivo maior de trazer profissionalismo ao setor de compra de sucata e promover a evolução constante.</p>
+                    <a href="/contato.html" class="btn_saiba_mais">
+                        <p class="mb-0">Fale Conosco</p>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GALERIA DE FOTOS -->
+    <section id="galeria" class="section-galeria">
+        <div class="container">
+            <div class="galeria-header">
+                <h2 class="titulo_section_solucoes text-center">Galeria de Fotos</h2>
+                <h3 class="titulo_section_40 text-center">Conheça nossa infraestrutura e processos de reciclagem</h3>
+            </div>
+            
+            <div class="galeria-grid" id="galeria-grid">
+                <div class="galeria-loading text-center">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i> Carregando fotos...
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Catalog Product Lightbox Modal (necessary for gallery zoom) -->
+    <div id="catalog-modal" class="catalog-modal" role="dialog" aria-modal="true" aria-label="Foto da Galeria">
+        <div class="catalog-modal-overlay"></div>
+        <div class="catalog-modal-content">
+            <button class="catalog-modal-close" aria-label="Fechar">&times;</button>
+            <div class="catalog-modal-body">
+                <div class="catalog-modal-img-wrap">
+                    <img id="catalog-modal-img" src="" alt="Imagem Ampliada">
+                </div>
+                <div class="catalog-modal-info">
+                    <span class="catalog-modal-badge"><i class="fa-solid fa-camera"></i> Galeria</span>
+                    <h3 id="catalog-modal-title"></h3>
+                    <p id="catalog-modal-desc"></p>
+                    <a href="https://api.whatsapp.com/send?phone=5511940222249" target="_blank" class="catalog-modal-cta" onclick="document.getElementById('catalog-modal').classList.remove('open')">
+                        <i class="fa-brands fa-whatsapp"></i> Falar Conosco
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="script.js?v=6"></script>
+</body>
+</html>

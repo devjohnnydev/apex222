@@ -43,6 +43,10 @@
                     <i class="fa-solid fa-chart-line"></i>
                     <span>Análises LME</span>
                 </a>
+                <a href="#" class="nav-item" data-target="lme-excel-report">
+                    <i class="fa-solid fa-file-excel"></i>
+                    <span>Relatório Excel LME</span>
+                </a>
                 <a href="#" class="nav-item" data-target="home-config">
                     <i class="fa-solid fa-toggle-on"></i>
                     <span>Configurar Home</span>
@@ -292,6 +296,111 @@
                     </div>
 
                 </div><!-- end analysis-content -->
+            </section>
+
+            <!-- ═══════════════════════════════════════════════════════════
+                 RELATÓRIO EXCEL LME
+             ═══════════════════════════════════════════════════════════ -->
+            <section id="lme-excel-report" class="view-section">
+                <header class="section-header">
+                    <div class="section-header-row">
+                        <div>
+                            <h1><i class="fa-solid fa-file-excel"></i> Relatório Excel LME</h1>
+                            <p>Visualize o fechamento semanal · dados automáticos da planilha LME.</p>
+                        </div>
+                        <div class="dashboard-controls">
+                            <button id="btn-refresh-excel" class="btn-refresh" title="Re-ler planilha e atualizar semanas">
+                                <i class="fa-solid fa-rotate-right"></i> Atualizar
+                            </button>
+                            <button id="btn-download-lme-excel" class="btn-excel-download">
+                                <i class="fa-solid fa-file-arrow-down"></i> Baixar Excel (.xlsx)
+                            </button>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- ── PAINEL DE FILTROS ── -->
+                <div class="lme-filter-panel">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label class="filter-label"><i class="fa-solid fa-calendar-days"></i> Ano</label>
+                            <select id="lme-filter-ano" class="filter-select">
+                                <option value="">Todos</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label"><i class="fa-regular fa-calendar"></i> Mês</label>
+                            <select id="lme-filter-mes" class="filter-select">
+                                <option value="">Todos</option>
+                            </select>
+                        </div>
+                        <div class="filter-group filter-group-wide">
+                            <label class="filter-label"><i class="fa-solid fa-calendar-week"></i> Semana</label>
+                            <select id="lme-week-selector" class="filter-select filter-select-week"></select>
+                        </div>
+                        <div class="filter-group filter-group-count">
+                            <span id="lme-week-count" class="week-count-badge">
+                                <i class="fa-solid fa-table-list"></i>
+                                <span id="lme-count-num">—</span> semanas
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="filter-row filter-row-metals">
+                        <label class="filter-label"><i class="fa-solid fa-layer-group"></i> Colunas visíveis:</label>
+                        <div class="metal-toggles">
+                            <label class="metal-toggle-chip metal-chip-cobre">
+                                <input type="checkbox" class="metal-toggle-cb" data-metal="cobre" checked>
+                                <span>Cobre</span>
+                            </label>
+                            <label class="metal-toggle-chip metal-chip-zinco">
+                                <input type="checkbox" class="metal-toggle-cb" data-metal="zinco" checked>
+                                <span>Zinco</span>
+                            </label>
+                            <label class="metal-toggle-chip metal-chip-aluminio">
+                                <input type="checkbox" class="metal-toggle-cb" data-metal="aluminio" checked>
+                                <span>Alumínio</span>
+                            </label>
+                            <label class="metal-toggle-chip metal-chip-chumbo">
+                                <input type="checkbox" class="metal-toggle-cb" data-metal="chumbo" checked>
+                                <span>Chumbo</span>
+                            </label>
+                            <label class="metal-toggle-chip metal-chip-estanho">
+                                <input type="checkbox" class="metal-toggle-cb" data-metal="estanho" checked>
+                                <span>Estanho</span>
+                            </label>
+                            <label class="metal-toggle-chip metal-chip-niquel">
+                                <input type="checkbox" class="metal-toggle-cb" data-metal="niquel" checked>
+                                <span>Níquel</span>
+                            </label>
+                            <label class="metal-toggle-chip metal-chip-dolar">
+                                <input type="checkbox" class="metal-toggle-cb" data-metal="dolar" checked>
+                                <span>Dólar</span>
+                            </label>
+                            <button id="btn-toggle-all-metals" class="btn-toggle-all">Todos</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── LOADING / ERROR ── -->
+                <div id="excel-loading" class="loading-state">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i>
+                    <span>Carregando dados da planilha LME...</span>
+                </div>
+                <div id="excel-error" class="error-state" style="display:none;">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span id="excel-error-msg">Erro ao carregar dados do Excel. Verifique se o arquivo existe na pasta assets/excel/.</span>
+                    <button onclick="document.getElementById('btn-refresh-excel').click()" class="btn-secondary" style="width:auto;margin-top:10px;">
+                        <i class="fa-solid fa-rotate-right"></i> Tentar novamente
+                    </button>
+                </div>
+
+                <!-- ── PREVIEW DA TABELA ── -->
+                <div class="excel-preview-container" id="excel-preview-wrapper" style="display:none;">
+                    <div id="excel-table-preview" class="excel-table-card">
+                        <!-- Rendered by JavaScript -->
+                    </div>
+                </div>
             </section>
 
             <!-- ═══════════════════════════════════════════════════════════

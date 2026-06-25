@@ -64,11 +64,353 @@ document.addEventListener('DOMContentLoaded', () => {
     // ─────────────────────────────────────────────────────────────────────────
     function initAdmin() {
         initLMEDashboard();
+        initLMEExcelReport();
         initSettings();
         initGaleria();
         initMateriais();
         initSolucoes();
         initNoticias();
+    }
+
+    // =========================================================================
+    // LME EXCEL REPORT
+    // =========================================================================
+    async function initLMEExcelReport() {
+        const filterAno     = document.getElementById('lme-filter-ano');
+        const filterMes     = document.getElementById('lme-filter-mes');
+        const selector      = document.getElementById('lme-week-selector');
+        const preview       = document.getElementById('excel-table-preview');
+        const previewWrap   = document.getElementById('excel-preview-wrapper');
+        const btnDownload   = document.getElementById('btn-download-lme-excel');
+        const btnRefresh    = document.getElementById('btn-refresh-excel');
+        const loadingDiv    = document.getElementById('excel-loading');
+        const errorDiv      = document.getElementById('excel-error');
+        const errorMsg      = document.getElementById('excel-error-msg');
+        const countNum      = document.getElementById('lme-count-num');
+        const metalCbs      = document.querySelectorAll('.metal-toggle-cb');
+        const btnToggleAll  = document.getElementById('btn-toggle-all-metals');
+
+        if (!selector || !preview) return;
+
+        const MONTH_NAMES = ['','Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+        let excelWeeks = [];
+        let activeMetals = new Set(['cobre','zinco','aluminio','chumbo','estanho','niquel','dolar']);
+        let allMetalsOn = true;
+
+        // ─── HELPERS ────────────────────────────────────────────────────
+        function showLoading() {
+            if (loadingDiv)  { loadingDiv.style.display  = 'flex'; }
+            if (errorDiv)    { errorDiv.style.display    = 'none'; }
+            if (previewWrap) { previewWrap.style.display = 'none'; }
+        }
+        function showError(msg) {
+            if (loadingDiv)  { loadingDiv.style.display  = 'none'; }
+            if (errorDiv)    { errorDiv.style.display    = 'flex'; }
+            if (errorMsg)    { errorMsg.textContent      = msg;    }
+            if (previewWrap) { previewWrap.style.display = 'none'; }
+        }
+        function showTable() {
+            if (loadingDiv)  { loadingDiv.style.display  = 'none'; }
+            if (errorDiv)    { errorDiv.style.display    = 'none'; }
+            if (previewWrap) { previewWrap.style.display = 'block'; }
+        }
+
+        // Parse "dd/mm/yyyy" → { day, month, year }
+        function parseDateParts(dateStr) {
+            if (!dateStr || typeof dateStr !== 'string') return null;
+            const parts = dateStr.split('/');
+            if (parts.length < 3) return null;
+            return { day: parseInt(parts[0]), month: parseInt(parts[1]), year: parseInt(parts[2]) };
+        }
+
+        // ─── LOAD DATA ──────────────────────────────────────────────────
+        async function loadWeeks() {
+            showLoading();
+            try {
+                const res = await fetch('/api/lme/excel-weeks');
+                if (!res.ok) throw new Error(`Servidor respondeu com erro ${res.status}`);
+                excelWeeks = await res.json();
+                if (!Array.isArray(excelWeeks) || excelWeeks.length === 0) {
+                    throw new Error('Nenhuma semana encontrada na planilha LME.');
+                }
+                buildFilters();
+                applyFilters();
+            } catch(e) {
+                console.error('Error loading LME Excel weeks:', e);
+                showError(`Erro ao carregar planilha: ${e.message}. Verifique se o arquivo "assets/excel/LME (version 1) (version 1).xlsx" existe.`);
+            }
+        }
+
+        // ─── BUILD YEAR / MONTH FILTERS ─────────────────────────────────
+        function buildFilters() {
+            const years  = new Set();
+            excelWeeks.forEach(w => {
+                const p = parseDateParts(w.header);
+                if (p) years.add(p.year);
+            });
+            const sortedYears = [...years].sort((a, b) => b - a);
+
+            filterAno.innerHTML = '<option value="">Todos os anos</option>' +
+                sortedYears.map(y => `<option value="${y}">${y}</option>`).join('');
+
+            updateMonthFilter('');
+        }
+
+        function updateMonthFilter(selectedYear) {
+            const months = new Set();
+            excelWeeks.forEach(w => {
+                const p = parseDateParts(w.header);
+                if (!p) return;
+                if (selectedYear === '' || p.year === parseInt(selectedYear)) {
+                    months.add(p.month);
+                }
+            });
+            const sortedMonths = [...months].sort((a, b) => a - b);
+            filterMes.innerHTML = '<option value="">Todos os meses</option>' +
+                sortedMonths.map(m => `<option value="${m}">${MONTH_NAMES[m]}</option>`).join('');
+        }
+
+        // ─── APPLY FILTERS → POPULATE WEEK SELECTOR ─────────────────────
+        function applyFilters() {
+            const ano = filterAno.value;
+            const mes = filterMes.value;
+
+            const filtered = [...excelWeeks].reverse().filter(w => {
+                const p = parseDateParts(w.header);
+                if (!p) return false;
+                if (ano && p.year !== parseInt(ano)) return false;
+                if (mes && p.month !== parseInt(mes)) return false;
+                return true;
+            });
+
+            if (countNum) countNum.textContent = filtered.length;
+
+            if (filtered.length === 0) {
+                selector.innerHTML = '<option value="">Nenhuma semana encontrada</option>';
+                showError('Nenhuma semana encontrada para os filtros selecionados.');
+                return;
+            }
+
+            selector.innerHTML = filtered.map(w => {
+                const lastDay = w.days && w.days.length > 0 ? w.days[w.days.length - 1]?.data : '—';
+                return `<option value="${w.header}">Semana ${w.header} → ${lastDay}</option>`;
+            }).join('');
+
+            renderPreview(filtered[0].header);
+        }
+
+        // ─── RENDER PREVIEW TABLE ────────────────────────────────────────
+        const formatVal = (v, formatType) => {
+            if (v === null || v === undefined) return '—';
+            if (v === 'feriado') return '<span class="excel-feriado">feriado</span>';
+            if (typeof v === 'string') return v;
+
+            if (formatType === 'percent') {
+                const pct = (v * 100).toFixed(3);
+                const cls = v >= 0 ? 'excel-up' : 'excel-down';
+                return `<span class="${cls}">${pct}%</span>`;
+            }
+            if (formatType === 'currency3') {
+                return `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}`;
+            }
+            if (formatType === 'currency4') {
+                return `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 4, maximumFractionDigits: 4 })}`;
+            }
+            if (formatType === 'dolar') {
+                return v.toLocaleString('pt-BR', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+            }
+            return v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        };
+
+        const renderOscilacao = (v, isDolar) => {
+            if (v === null || v === undefined || typeof v === 'string') return '—';
+            const isUp = v >= 0;
+            const arrow = isUp ? '▲' : '▼';
+            const cls = isUp ? 'excel-up' : 'excel-down';
+            const formatted = Math.abs(v).toLocaleString('pt-BR', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+            return `<span class="${cls}">${arrow} ${isDolar ? '' : 'R$ '}${formatted}</span>`;
+        };
+
+        // Metal column config: key, header text, header CSS class, cell CSS class, default format, dollar format
+        const COLS = [
+            { k: 'cobre',    lbl: 'COBRE',    hcls: 'excel-hdr-cobre',    ccls: 'excel-col-cobre',    fmt: 'normal',    dolFmt: null       },
+            { k: 'zinco',    lbl: 'ZINCO',    hcls: 'excel-hdr-zinco',    ccls: 'excel-col-zinco',    fmt: 'normal',    dolFmt: null       },
+            { k: 'aluminio', lbl: 'ALUMÍNIO', hcls: 'excel-hdr-aluminio', ccls: 'excel-col-aluminio', fmt: 'normal',    dolFmt: null       },
+            { k: 'chumbo',   lbl: 'CHUMBO',   hcls: 'excel-hdr-chumbo',   ccls: 'excel-col-chumbo',   fmt: 'normal',    dolFmt: null       },
+            { k: 'estanho',  lbl: 'ESTANHO',  hcls: 'excel-hdr-estanho',  ccls: 'excel-col-estanho',  fmt: 'normal',    dolFmt: null       },
+            { k: 'niquel',   lbl: 'NÍQUEL',   hcls: 'excel-hdr-niquel',   ccls: 'excel-col-niquel',   fmt: 'normal',    dolFmt: null       },
+            { k: 'dolar',    lbl: 'DÓLAR',    hcls: 'excel-hdr-dolar',    ccls: 'excel-col-dolar',    fmt: 'dolar',     dolFmt: 'dolar'    },
+        ];
+
+        function visibleCols() {
+            return COLS.filter(c => activeMetals.has(c.k));
+        }
+
+        function renderPreview(headerVal) {
+            const block = excelWeeks.find(b => b.header === headerVal);
+            if (!block) return;
+
+            const vc = visibleCols();
+            const colSpan = 1 + vc.length;
+            const d = block.days || [];
+            const comp = block.computed || {};
+
+            const thHeaders = vc.map(c => `<th class="${c.hcls}">${c.lbl}</th>`).join('');
+            const thSummary = vc.map(c => `<th class="${c.hcls}">${c.lbl}</th>`).join('');
+
+            // Date range subtitle
+            const firstDate = d[0]?.data || headerVal;
+            const lastDate  = d[d.length - 1]?.data || '—';
+            const p = parseDateParts(headerVal);
+            const monthName = p ? MONTH_NAMES[p.month] : '';
+
+            let html = `
+            <div class="excel-title-row">
+                <span class="excel-company">APEXTECH METAIS</span>
+                <span class="excel-week-label">${monthName} ${p ? p.year : ''} &mdash; Semana de ${firstDate} a ${lastDate}</span>
+            </div>
+            <table class="excel-table">
+                <thead>
+                    <tr>
+                        <th class="excel-hdr-date">DATA</th>${thHeaders}
+                    </tr>
+                </thead>
+                <tbody>
+            `;
+
+            // Daily rows
+            for (let i = 0; i < 5; i++) {
+                const day = d[i] || {};
+                const isFeriado = vc.every(c => day[c.k] === 'feriado' || day[c.k] === null);
+                const rowCls = isFeriado ? ' class="excel-row-feriado"' : '';
+                const dateTd = `<td class="excel-date-cell">${day.data || '—'}</td>`;
+                const valTds = vc.map(c => `<td class="${c.ccls}">${formatVal(day[c.k], c.fmt)}</td>`).join('');
+                html += `<tr${rowCls}>${dateTd}${valTds}</tr>`;
+            }
+
+            // Computed rows config
+            const COMP_ROWS = [
+                { lbl: 'MÉDIA SEMANAL',                    key: 'MEDIA SEMANAL',                    cls: 'excel-row-media',         fmt: 'normal',    dolFmt: 'dolar'     },
+                { lbl: '100% LME (R$)',                    key: '100% LME',                         cls: 'excel-row-lme100',        fmt: 'currency3', dolFmt: 'dolar'     },
+                { lbl: 'SEMANA ANTERIOR',                  key: 'SEMANA ANTERIOR',                  cls: 'excel-row-anterior',      fmt: 'currency3', dolFmt: 'currency4' },
+                { lbl: 'FECHAMENTO % (SEMANA ANTERIOR)',   key: 'FECHAMENTO % ( SEMANA ANTERIOR )', cls: 'excel-row-fechamento',    fmt: 'percent',   dolFmt: 'percent'   },
+                { lbl: 'OSCILAÇÃO %',                      key: 'OSCILAÇÃO %',                      cls: 'excel-row-oscilacao-pct', fmt: 'percent',   dolFmt: 'percent'   },
+                { lbl: 'OSCILAÇÃO R$',                     key: 'OSCILAÇÃO R$',                     cls: 'excel-row-oscilacao-rs',  fmt: 'currency4', dolFmt: 'currency4' },
+                { lbl: 'MÉDIA MENSAL',                     key: 'MEDIA MENSAL',                     cls: 'excel-row-mensal',        fmt: 'currency3', dolFmt: 'currency4' },
+            ];
+
+            COMP_ROWS.forEach(row => {
+                const vals = comp[row.key] || {};
+                const labelTd = `<td class="excel-label-cell">${row.lbl}</td>`;
+                const valTds = vc.map(c => {
+                    const fmtToUse = c.k === 'dolar' && row.dolFmt ? row.dolFmt : row.fmt;
+                    return `<td>${formatVal(vals[c.k], fmtToUse)}</td>`;
+                }).join('');
+                html += `<tr class="${row.cls}">${labelTd}${valTds}</tr>`;
+            });
+
+            // Spacer
+            html += `<tr class="excel-spacer"><td colspan="${colSpan}"></td></tr>`;
+
+            // Summary mini-table header
+            html += `
+                <tr>
+                    <th class="excel-hdr-date">TIPO</th>${thSummary}
+                </tr>
+            `;
+
+            // Summary rows
+            const SUMMARY_ROWS = [
+                { lbl: 'SEMANA ANTERIOR', key: 'SEMANA ANTERIOR', fmt: 'currency3', dolFmt: 'currency4' },
+                { lbl: 'LME ATUAL',       key: '100% LME',        fmt: 'currency3', dolFmt: 'currency4' },
+            ];
+            SUMMARY_ROWS.forEach(row => {
+                const vals = comp[row.key] || {};
+                const labelTd = `<td class="excel-label-cell">${row.lbl}</td>`;
+                const valTds = vc.map(c => {
+                    const fmtToUse = c.k === 'dolar' && row.dolFmt ? row.dolFmt : row.fmt;
+                    return `<td>${formatVal(vals[c.k], fmtToUse)}</td>`;
+                }).join('');
+                html += `<tr class="excel-row-summary">${labelTd}${valTds}</tr>`;
+            });
+
+            // Oscillation row (with arrows)
+            const osc = comp['OSCILAÇÃO R$'] || {};
+            const oscTds = vc.map(c => `<td>${renderOscilacao(osc[c.k], c.k === 'dolar')}</td>`).join('');
+            html += `
+                <tr class="excel-row-oscilacao-arrow">
+                    <td class="excel-label-cell" style="font-style:italic;">Oscilação</td>
+                    ${oscTds}
+                </tr>
+            `;
+
+            html += '</tbody></table>';
+            preview.innerHTML = html;
+            showTable();
+        }
+
+        // ─── EVENT LISTENERS ─────────────────────────────────────────────
+        filterAno.addEventListener('change', () => {
+            updateMonthFilter(filterAno.value);
+            filterMes.value = '';
+            applyFilters();
+        });
+
+        filterMes.addEventListener('change', () => {
+            applyFilters();
+        });
+
+        selector.addEventListener('change', () => {
+            if (selector.value) renderPreview(selector.value);
+        });
+
+        btnDownload.addEventListener('click', () => {
+            const val = selector.value;
+            if (!val) return;
+            // Flash button to indicate download started
+            btnDownload.classList.add('downloading');
+            setTimeout(() => btnDownload.classList.remove('downloading'), 2000);
+            window.location.href = `/api/lme/download-excel/${encodeURIComponent(val)}`;
+        });
+
+        btnRefresh.addEventListener('click', async () => {
+            btnRefresh.classList.add('spinning');
+            btnRefresh.disabled = true;
+            await loadWeeks();
+            btnRefresh.classList.remove('spinning');
+            btnRefresh.disabled = false;
+        });
+
+        // Metal column toggles
+        metalCbs.forEach(cb => {
+            cb.addEventListener('change', () => {
+                if (cb.checked) {
+                    activeMetals.add(cb.dataset.metal);
+                } else {
+                    activeMetals.delete(cb.dataset.metal);
+                }
+                if (selector.value) renderPreview(selector.value);
+                // Update "Todos" button label
+                allMetalsOn = activeMetals.size === 7;
+                if (btnToggleAll) btnToggleAll.textContent = allMetalsOn ? 'Nenhum' : 'Todos';
+            });
+        });
+
+        if (btnToggleAll) {
+            btnToggleAll.addEventListener('click', () => {
+                allMetalsOn = !allMetalsOn;
+                metalCbs.forEach(cb => {
+                    cb.checked = allMetalsOn;
+                    if (allMetalsOn) activeMetals.add(cb.dataset.metal);
+                    else activeMetals.delete(cb.dataset.metal);
+                });
+                btnToggleAll.textContent = allMetalsOn ? 'Nenhum' : 'Todos';
+                if (selector.value) renderPreview(selector.value);
+            });
+        }
+
+        // ─── INITIAL LOAD ────────────────────────────────────────────────
+        await loadWeeks();
     }
 
     // =========================================================================

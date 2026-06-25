@@ -905,3 +905,83 @@ input:checked + .toggle-slider:before { transform: translateX(24px); background-
     .kpi-grid { grid-template-columns: repeat(2, 1fr); }
     .section-header-row { flex-direction: column; }
 }
+
+/* ─── EXCEL TABLE PREVIEW STYLING ─── */
+.excel-preview-container {
+    width: 100%;
+    overflow-x: auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    border: 1px solid #ccc;
+    margin-top: 20px;
+}
+
+.excel-table-card {
+    padding: 24px;
+    background-color: #ffffff;
+    color: #333333;
+    font-family: 'Segoe UI', Calibri, Arial, sans-serif;
+    font-size: 11pt;
+}
+
+.excel-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border: 1px solid #d3d3d3;
+    margin-top: 15px;
+}
+
+.excel-table th, .excel-table td {
+    border: 1px solid #d3d3d3;
+    padding: 8px 12px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 10pt;
+}
+
+.excel-table th {
+    background-color: #f3f3f3;
+    color: #333;
+    font-weight: bold;
+}
+
+.excel-title-row {
+    font-size: 18pt;
+    font-weight: bold;
+    color: #1F4E78;
+    text-align: left;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #1F4E78;
+    padding-bottom: 8px;
+}
+
+/* Metal columns and cells styling */
+.excel-col-cobre { background-color: #FCE4D6; }
+.excel-hdr-cobre { background-color: #C65911; color: white !important; font-weight: bold; }
+.excel-col-zinco { background-color: #FFF2CC; }
+.excel-hdr-zinco { background-color: #806000; color: white !important; font-weight: bold; }
+.excel-col-aluminio { background-color: #F2F2F2; }
+.excel-hdr-aluminio { background-color: #5B5B5B; color: white !important; font-weight: bold; }
+.excel-col-chumbo { background-color: #D9E1F2; }
+.excel-hdr-chumbo { background-color: #2F5597; color: white !important; font-weight: bold; }
+.excel-col-estanho { background-color: #FFF2CC; }
+.excel-hdr-estanho { background-color: #7F6000; color: white !important; font-weight: bold; }
+.excel-col-niquel { background-color: #F2F2F2; }
+.excel-hdr-niquel { background-color: #333333; color: white !important; font-weight: bold; }
+.excel-col-dolar { background-color: #E2EFDA; }
+.excel-hdr-dolar { background-color: #375623; color: white !important; font-weight: bold; }
+
+/* Special computed rows */
+.excel-row-media { background-color: #F2F2F2; font-weight: bold; color: #333; }
+.excel-row-lme100 { background-color: #FFF2CC; font-weight: bold; }
+.excel-row-anterior { background-color: #D9E1F2; font-weight: bold; }
+.excel-row-fechamento { background-color: #E2EFDA; font-weight: bold; }
+.excel-row-oscilacao-pct { background-color: #FFF2CC; font-weight: bold; }
+.excel-row-oscilacao-rs { background-color: #F2F2F2; font-weight: bold; }
+.excel-row-mensal { background-color: #D9D9D9; font-weight: bold; }
+
+/* Up/Down Arrow Styling */
+.excel-up { color: #375623; font-weight: bold; }
+.excel-down { color: #C65911; font-weight: bold; }

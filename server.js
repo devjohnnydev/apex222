@@ -495,6 +495,57 @@ app.delete('/api/galeria/:id', async (req, res) => {
     }
 });
 
+// ─── API: LME Excel Parser and Generator ─────────────────────────────────────
+const { exec } = require('child_process');
+const fs = require('fs');
+
+app.get('/api/lme/excel-weeks', async (req, res) => {
+    const pythonScript = path.join(__dirname, 'parse_lme.py');
+    exec(`python "${pythonScript}"`, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`Error running parse_lme.py: ${error.message}`);
+        }
+        
+        const jsonPath = path.join(__dirname, 'assets', 'excel', 'lme_parsed.json');
+        fs.readFile(jsonPath, 'utf8', (err, data) => {
+            if (err) {
+                console.error(`Error reading lme_parsed.json: ${err.message}`);
+                return res.status(500).json({ error: 'Erro ao carregar dados do Excel.' });
+            }
+            try {
+                const parsed = JSON.parse(data);
+                res.json(parsed);
+            } catch (e) {
+                res.status(500).json({ error: 'Erro ao parsear dados do Excel.' });
+            }
+        });
+    });
+});
+
+app.get('/api/lme/download-excel/:header', (req, res) => {
+    const header = req.params.header.replace(/\//g, '-');
+    const rawHeader = req.params.header;
+    const jsonPath = path.join(__dirname, 'assets', 'excel', 'lme_parsed.json');
+    const generatorScript = path.join(__dirname, 'generate_lme_excel.py');
+    const tempFile = path.join(__dirname, 'assets', 'excel', `temp_report_${header}.xlsx`);
+    
+    exec(`python "${generatorScript}" "${jsonPath}" "${tempFile}" "${rawHeader}"`, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`Error running generate_lme_excel.py: ${error.message}`);
+            return res.status(500).send('Erro ao gerar planilha Excel.');
+        }
+        
+        res.download(tempFile, `LME-Relatorio-${header}.xlsx`, (err) => {
+            if (err) {
+                console.error('Error sending file:', err);
+            }
+            fs.unlink(tempFile, (unlinkErr) => {
+                if (unlinkErr) console.error('Error deleting temp file:', unlinkErr);
+            });
+        });
+    });
+});
+
 // ─── API: LME (Scraping e Proxy) ──────────────────────────────────────────────
 app.get('/api/lme/tabela/:mes', async (req, res) => {
     try {

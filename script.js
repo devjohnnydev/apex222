@@ -13,14 +13,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const overlay = document.getElementById('drawer-overlay');
 
     function openMenu() {
-        if(drawer) drawer.style.left = '0';
-        if(overlay) overlay.style.display = 'block';
+        drawer.classList.add('open');
+        overlay.classList.add('active');
         document.body.style.overflow = 'hidden';
     }
 
     function closeMenu() {
-        if(drawer) drawer.style.left = '-320px';
-        if(overlay) overlay.style.display = 'none';
+        drawer.classList.remove('open');
+        overlay.classList.remove('active');
         document.body.style.overflow = '';
     }
 
@@ -409,13 +409,13 @@ document.addEventListener('DOMContentLoaded', function () {
         solModalTitle.textContent = data.nome;
         // A API retorna o campo como "descricao"
         solModalDesc.textContent = data.descricao || data.desc || '';
-        solModal.style.display = 'flex';
+        solModal.classList.add('open');
         document.body.style.overflow = 'hidden';
     }
 
     function closeSolucaoModal() {
         if (!solModal) return;
-        solModal.style.display = 'none';
+        solModal.classList.remove('open');
         document.body.style.overflow = '';
     }
 
@@ -431,7 +431,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 solucoesContainer.innerHTML = '';
                 items.forEach(data => {
                     const div = document.createElement('div');
-                    div.className = 'product-card';
+                    div.className = 'solucao_item';
                     div.setAttribute('role', 'button');
                     div.setAttribute('tabindex', '0');
                     div.style.cursor = 'pointer';
@@ -440,13 +440,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     const resumo = texto.length > 160 ? texto.substring(0, 160) + '...' : texto;
 
                     div.innerHTML = `
-                        <div class="product-img-wrap">
-                            <img src="${data.img}" alt="${data.nome}" style="max-height: 120px; filter: invert(0) !important;">
-                        </div>
-                        <span class="product-category">MATERIAL</span>
-                        <h3 class="product-title">${data.nome}</h3>
-                        <p class="product-desc">${resumo}</p>
-                        <span style="color: var(--apex-yellow); font-weight: bold; font-size: 0.85rem; margin-top: auto;">Ver mais detalhes &rarr;</span>
+                        <article>
+                            <div class="solucoes_header">
+                                <img src="${data.img}" alt="${data.nome}" class="img-fluid solucao-icon">
+                                <h2>${data.nome}</h2>
+                            </div>
+                            <div class="solucoes_conteudo">
+                                <p>${resumo}</p>
+                            </div>
+                        </article>
                     `;
 
                     div.addEventListener('click', (e) => {
@@ -604,16 +606,23 @@ Responda de forma curta, amigável e profissional. Use o português do Brasil. N
 
             sorted.forEach(n => {
                 const card = document.createElement('div');
-                card.className = 'news-item';
+                card.className = 'noticia-card';
+
+                const rawDate = n.data_pub || n.data || '';
+                const dataFormatada = rawDate
+                    ? new Date(rawDate + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })
+                    : '';
 
                 card.innerHTML = `
-                    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=150&q=80" alt="News" class="news-item-img">
-                    <div class="news-item-content">
-                        ${n.categoria ? `<span class="news-badge" style="font-size: 0.6rem;">${n.categoria}</span>` : ''}
-                        <h4>${n.titulo}</h4>
-                        ${n.resumo ? `<p>${n.resumo}</p>` : ''}
-                        ${n.url ? `<a href="${n.url}" target="_blank" rel="noopener noreferrer" style="color: var(--apex-yellow); font-size: 0.8rem; font-weight: bold; margin-top: 5px; display: inline-block;">Leia mais &rarr;</a>` : ''}
+                    <div class="noticia-meta">
+                        ${n.categoria ? `<span class="noticia-categoria">${n.categoria}</span>` : ''}
+                        ${dataFormatada ? `<span class="noticia-data"><i class="fa-regular fa-calendar"></i> ${dataFormatada}</span>` : ''}
                     </div>
+                    <h3 class="noticia-titulo">${n.titulo}</h3>
+                    ${n.resumo ? `<p class="noticia-resumo">${n.resumo}</p>` : ''}
+                    ${n.url ? `<a href="${n.url}" target="_blank" rel="noopener noreferrer" class="noticia-link">
+                        Leia a matéria completa <i class="fa-solid fa-arrow-right"></i>
+                    </a>` : ''}
                 `;
                 grid.appendChild(card);
             });
@@ -819,14 +828,14 @@ Responda de forma curta, amigável e profissional. Use o português do Brasil. N
                 lmeCharts[tipoGraf].destroy();
             }
 
-            // Aplicar identidade visual da Apex Tech Metais (amarelo brilhante)
+            // Aplicar identidade visual da Apex Tech Metais (verde brilhante em vez de vermelho do original)
             if (data.datasets && data.datasets[0]) {
-                data.datasets[0].borderColor = '#FDC82F';
-                data.datasets[0].backgroundColor = 'rgba(253, 200, 47, 0.04)';
-                data.datasets[0].pointBackgroundColor = '#FDC82F';
-                data.datasets[0].pointBorderColor = '#212529';
+                data.datasets[0].borderColor = '#2AD07A';
+                data.datasets[0].backgroundColor = 'rgba(42, 208, 122, 0.04)';
+                data.datasets[0].pointBackgroundColor = '#2AD07A';
+                data.datasets[0].pointBorderColor = '#0E291B';
                 data.datasets[0].pointHoverBackgroundColor = '#FFFFFF';
-                data.datasets[0].pointHoverBorderColor = '#FDC82F';
+                data.datasets[0].pointHoverBorderColor = '#2AD07A';
                 data.datasets[0].borderWidth = 3;
                 data.datasets[0].pointRadius = 4;
             }
@@ -847,11 +856,14 @@ Responda de forma curta, amigável e profissional. Use o português do Brasil. N
                         display: false
                     },
                     tooltips: {
-                        backgroundColor: '#212529',
-                        titleFontColor: '#FDC82F',
+                        backgroundColor: '#0E291B',
+                        titleFontFamily: 'Raleway',
+                        bodyFontFamily: 'Lato',
+                        titleFontColor: '#2AD07A',
                         bodyFontColor: '#FFFFFF',
-                        borderColor: '#FDC82F',
-                        borderWidth: 1
+                        borderColor: 'rgba(42, 208, 122, 0.25)',
+                        borderWidth: 1,
+                        displayColors: false
                     },
                     scales: {
                         yAxes: [{
