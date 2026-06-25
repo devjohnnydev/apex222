@@ -247,21 +247,47 @@
     // Injetar Page Top Banner (se não for Home nem Admin)
     if (currentPage && currentPage !== 'home' && currentPage !== 'admin') {
       const bannerData = {
-        'sobre': { title: 'Sobre Nós', desc: 'Apex Tech Metais - Tradição e Inovação na Gestão de Resíduos' },
-        'servicos': { title: 'Soluções e Serviços', desc: 'Gestão inteligente e sustentável de resíduos metálicos' },
-        'produtos': { title: 'Catálogo de Produtos', desc: 'Conheça os materiais e ligas que processamos' },
-        'onde-comprar': { title: 'Compra e Venda', desc: 'Coletamos sucatas e resíduos de diversos segmentos' },
-        'cotacoes': { title: 'Cotações LME', desc: 'Acompanhe o mercado global de metais em tempo real' },
-        'noticias': { title: 'Notícias', desc: 'Novidades, sustentabilidade e mercado de metais' },
-        'contato': { title: 'Fale Conosco', desc: 'Entre em contato para cotações, parcerias e dúvidas' }
+        'sobre': { 
+            title: 'Sobre Nós', 
+            desc: 'Apex Tech Metais - Tradição e Inovação na Gestão de Resíduos',
+            img: 'https://images.unsplash.com/photo-1518557984649-7b161c230cfa?auto=format&fit=crop&w=1920&q=80'
+        },
+        'servicos': { 
+            title: 'Soluções e Serviços', 
+            desc: 'Gestão inteligente e sustentável de resíduos metálicos',
+            img: 'https://images.unsplash.com/photo-1530982011887-3cc11cc85693?auto=format&fit=crop&w=1920&q=80'
+        },
+        'produtos': { 
+            title: 'Catálogo de Produtos', 
+            desc: 'Conheça os materiais e ligas que processamos',
+            img: 'https://images.unsplash.com/photo-1605647540924-852290f6b0d5?auto=format&fit=crop&w=1920&q=80'
+        },
+        'onde-comprar': { 
+            title: 'Compra e Venda', 
+            desc: 'Coletamos sucatas e resíduos de diversos segmentos',
+            img: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1920&q=80'
+        },
+        'cotacoes': { 
+            title: 'Cotações LME', 
+            desc: 'Acompanhe o mercado global de metais em tempo real',
+            img: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1920&q=80'
+        },
+        'noticias': { 
+            title: 'Notícias', 
+            desc: 'Novidades, sustentabilidade e mercado de metais',
+            img: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1920&q=80'
+        },
+        'contato': { 
+            title: 'Fale Conosco', 
+            desc: 'Entre em contato para cotações, parcerias e dúvidas',
+            img: 'https://images.unsplash.com/photo-1516328314061-1c15c90ce915?auto=format&fit=crop&w=1920&q=80'
+        }
       };
 
       if (bannerData[currentPage]) {
         const bd = bannerData[currentPage];
-        // Imagem industrial moderna para o banner de fundo
-        const bgImg = "https://images.unsplash.com/photo-1518557984649-7b161c230cfa?auto=format&fit=crop&w=1920&q=80";
         const bannerHTML = `
-        <section class="page-top-banner" style="background-image: url('${bgImg}');">
+        <section class="page-top-banner" style="background-image: url('${bd.img}');">
             <div class="page-top-banner-overlay"></div>
             <div class="container">
                 <h1>${bd.title}</h1>
