@@ -80,8 +80,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const selector      = document.getElementById('lme-week-selector');
         const preview       = document.getElementById('excel-table-preview');
         const previewWrap   = document.getElementById('excel-preview-wrapper');
-        const btnDownload   = document.getElementById('btn-download-lme-excel');
-        const btnRefresh    = document.getElementById('btn-refresh-excel');
+        const btnDownload    = document.getElementById('btn-download-lme-excel');
+        const btnDownloadPdf = document.getElementById('btn-download-lme-pdf');
+        const btnRefresh     = document.getElementById('btn-refresh-excel');
         const loadingDiv    = document.getElementById('excel-loading');
         const errorDiv      = document.getElementById('excel-error');
         const errorMsg      = document.getElementById('excel-error-msg');
@@ -308,7 +309,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
 
             html += '</tbody></table>';
-            preview.innerHTML = html;
+            preview.innerHTML = '<div id="pdf-print-area">' + html + '</div>';
             showTable();
         }
 
@@ -354,6 +355,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 btnDownload.classList.remove('downloading');
             }
         });
+
+        // ── PDF Download ──
+        if (btnDownloadPdf) {
+            btnDownloadPdf.addEventListener('click', () => {
+                const val = selector.value;
+                if (!val) { alert('Selecione uma semana primeiro.'); return; }
+                const block = excelWeeks.find(b => b.header === val);
+                if (!block) return;
+
+                // Inject/update timestamp into the print area
+                const area = document.getElementById('pdf-print-area');
+                if (!area) { alert('Visualize o relatório antes de baixar o PDF.'); return; }
+
+                const now = new Date();
+                const ts = now.toLocaleString('pt-BR', {
+                    day: '2-digit', month: '2-digit', year: 'numeric',
+                    hour: '2-digit', minute: '2-digit', second: '2-digit'
+                });
+
+                let tsEl = area.querySelector('.pdf-timestamp');
+                if (!tsEl) {
+                    tsEl = document.createElement('div');
+                    tsEl.className = 'pdf-timestamp';
+                    tsEl.style.cssText = 'font-size:9pt;color:#555;margin-bottom:8px;text-align:right;font-family:Calibri,sans-serif;border-bottom:1px solid #ccc;padding-bottom:6px;';
+                    area.insertBefore(tsEl, area.firstChild);
+                }
+                tsEl.textContent = `Relatório gerado em: ${ts} — Apex Tech Metais`;
+
+                window.print();
+            });
+        }
 
         btnRefresh.addEventListener('click', async () => {
             btnRefresh.classList.add('spinning');
