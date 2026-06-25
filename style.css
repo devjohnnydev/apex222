@@ -3112,3 +3112,161 @@ p.mb-0 { margin-bottom: 0; }
     font-size: 1.2rem;
     font-weight: 600;
 }
+
+/* -----------------------------------------------------
+   COTAÇÕES LME - PUBLIC PAGE STYLES
+----------------------------------------------------- */
+.section-lme {
+    background-color: var(--cor-fundo);
+    color: #fff;
+}
+
+.lme-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    background: rgba(255, 255, 255, 0.02);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.lme-metals-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.lme-metal-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #ccc;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.lme-metal-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.lme-metal-btn.active {
+    background: var(--cor-verde);
+    color: var(--cor-escuro);
+    border-color: var(--cor-verde);
+    box-shadow: 0 0 10px rgba(42, 208, 122, 0.3);
+}
+
+.lme-select-month select {
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 10px 15px;
+    border-radius: 4px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    cursor: pointer;
+}
+
+.lme-select-month select option {
+    background: var(--cor-escuro);
+    color: #fff;
+}
+
+.lme-chart-box {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.lme-chart-box h4 {
+    color: var(--cor-verde);
+    font-size: 1.2rem;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-family: 'Raleway', sans-serif;
+}
+
+/* LME Table Styles */
+#boxtabela table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    font-family: 'Lato', sans-serif;
+}
+
+#boxtabela th {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--cor-verde);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 12px 10px;
+    border-bottom: 2px solid rgba(42, 208, 122, 0.25);
+    text-align: center;
+}
+
+#boxtabela th small {
+    display: block;
+    font-weight: 400;
+    opacity: 0.7;
+    margin-top: 2px;
+}
+
+#boxtabela td {
+    padding: 10px;
+    font-size: 0.9rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.85);
+    text-align: center;
+}
+
+#boxtabela tbody tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.01);
+}
+
+#boxtabela tbody tr:hover {
+    background-color: rgba(42, 208, 122, 0.05);
+}
+
+#boxtabela tr .lmemedia {
+    color: #7eb3d5;
+    font-weight: 700;
+}
+
+#boxtabela tr .lmemensal {
+    color: var(--cor-verde);
+    font-weight: 700;
+}
+
+#boxtabela tr .lmeferiado {
+    color: #e07b39;
+    font-style: italic;
+}
+
+#boxtabela tbody tr.row-semanal {
+    background-color: rgba(126, 179, 213, 0.08) !important;
+}
+
+#boxtabela tbody tr.row-mensal {
+    background-color: rgba(42, 208, 122, 0.1) !important;
+}
+
+.lme-variation-loading {
+    padding: 20px;
+    text-align: center;
+    color: rgba(255,255,255,0.6);
+    font-style: italic;
+}
