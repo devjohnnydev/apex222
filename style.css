@@ -1019,6 +1019,27 @@ p.mb-0 { margin-bottom: 0; }
     border-top: 1px solid rgba(42, 208, 122, 0.1);
 }
 
+.lme-chart-box {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 24px;
+    position: relative;
+    width: 100%;
+}
+.lme-chart-box canvas {
+    width: 100% !important;
+    height: 350px !important;
+    display: block;
+}
+.lme-chart-box h4 {
+    color: #fff;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-family: 'Raleway', sans-serif;
+}
+
 .lme-header {
     margin-bottom: 50px;
 }
