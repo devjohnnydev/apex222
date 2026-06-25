@@ -194,6 +194,22 @@
             </div>
         </div>
     </div>
+
+    <!-- Copyright -->
+    <div class="copyright">
+        <div class="container">
+            <div class="copyright-row">
+                <div class="copyright-text">
+                    <p>Copyright 2026 - APEXTECH - INDUSTRIA DE <br>COMÉRCIO DE RESÍDUOS LTDA</p>
+                </div>
+                <div class="copyright-logo" style="text-align: right;">
+                    <a href="/admin.html" class="admin-access-btn" title="Acesso Restrito Admin">
+                        <i class="fa-solid fa-gear" style="font-size: 1.8rem; color: rgba(255,255,255,0.4); transition: color 0.3s ease;"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </footer>
 `;
 
