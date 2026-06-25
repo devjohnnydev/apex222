@@ -244,6 +244,37 @@
       document.body.insertAdjacentHTML('afterbegin', headerHTML);
     }
 
+    // Injetar Page Top Banner (se não for Home nem Admin)
+    if (currentPage && currentPage !== 'home' && currentPage !== 'admin') {
+      const bannerData = {
+        'sobre': { title: 'Sobre Nós', desc: 'Apex Tech Metais - Tradição e Inovação na Gestão de Resíduos' },
+        'servicos': { title: 'Soluções e Serviços', desc: 'Gestão inteligente e sustentável de resíduos metálicos' },
+        'produtos': { title: 'Catálogo de Produtos', desc: 'Conheça os materiais e ligas que processamos' },
+        'onde-comprar': { title: 'Compra e Venda', desc: 'Coletamos sucatas e resíduos de diversos segmentos' },
+        'cotacoes': { title: 'Cotações LME', desc: 'Acompanhe o mercado global de metais em tempo real' },
+        'noticias': { title: 'Notícias', desc: 'Novidades, sustentabilidade e mercado de metais' },
+        'contato': { title: 'Fale Conosco', desc: 'Entre em contato para cotações, parcerias e dúvidas' }
+      };
+
+      if (bannerData[currentPage]) {
+        const bd = bannerData[currentPage];
+        // Imagem industrial moderna para o banner de fundo
+        const bgImg = "https://images.unsplash.com/photo-1518557984649-7b161c230cfa?auto=format&fit=crop&w=1920&q=80";
+        const bannerHTML = `
+        <section class="page-top-banner" style="background-image: url('${bgImg}');">
+            <div class="page-top-banner-overlay"></div>
+            <div class="container">
+                <h1>${bd.title}</h1>
+                <p>${bd.desc}</p>
+            </div>
+        </section>
+        `;
+        if (pageContent) {
+           pageContent.insertAdjacentHTML('afterbegin', bannerHTML);
+        }
+      }
+    }
+
     // Injetar footer
     document.body.insertAdjacentHTML('beforeend', footerHTML);
 

@@ -285,6 +285,58 @@ p.mb-0 { margin-bottom: 0; }
     color: var(--cor-escuro);
 }
 
+.btn-secondary-apex {
+    background: transparent;
+    border: 1px solid var(--apex-yellow);
+    color: var(--apex-yellow);
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.btn-secondary-apex:hover {
+    background: var(--apex-yellow);
+    color: var(--apex-dark);
+}
+
+/* ============================================================
+   PAGE TOP BANNER (Automático nas páginas internas)
+   ============================================================ */
+.page-top-banner {
+    position: relative;
+    background: url('https://images.unsplash.com/photo-1518557984649-7b161c230cfa?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+    padding: 120px 0 90px;
+    text-align: left;
+    margin-bottom: 50px;
+}
+.page-top-banner-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(13,36,22,0.92) 0%, rgba(13,36,22,0.6) 100%);
+    z-index: 1;
+}
+.page-top-banner .container {
+    position: relative;
+    z-index: 2;
+}
+.page-top-banner h1 {
+    color: #fff;
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: 900;
+    margin: 0 0 15px;
+    font-family: 'Raleway', sans-serif;
+    letter-spacing: -0.5px;
+}
+.page-top-banner p {
+    color: #2ad07a;
+    font-size: clamp(1.1rem, 2vw, 1.3rem);
+    font-weight: 600;
+    margin: 0;
+    max-width: 700px;
+    line-height: 1.5;
+}
+
 /* ============================================================
    MOBILE DRAWER
    ============================================================ */
