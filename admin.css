@@ -262,13 +262,127 @@ h1, h2, h3, h4 { font-family: 'Raleway', sans-serif; }
     flex-shrink: 0;
 }
 .analysis-desc {
-    color: #888;
-    font-size: 0.88rem;
-    line-height: 1.5;
-    margin-bottom: 22px;
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 5px;
 }
 
-/* ─── KPI CARDS ─────────────────────────────────────────────────────────────── */
+/* Filter Bar */
+#analysis-filter-bar {
+    background: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+.analysis-filter-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.filter-label {
+    font-weight: bold;
+    color: #333;
+    margin-right: 10px;
+}
+.analysis-filter-btn {
+    background: #f0f0f0;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #555;
+    transition: all 0.2s;
+}
+.analysis-filter-btn:hover { background: #e0e0e0; }
+.analysis-filter-btn.active { background: #0070c0; color: #fff; }
+
+/* Fullscreen Button & Header Layout */
+.analysis-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+.btn-fullscreen {
+    background: #f0f0f0;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    color: #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+.btn-fullscreen:hover {
+    background: #0070c0;
+    color: #fff;
+    transform: scale(1.1);
+}
+
+/* Fullscreen Overlay Modal */
+.fullscreen-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.9);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.fullscreen-modal {
+    background: #fff;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.fullscreen-header {
+    background: #111;
+    color: #fff;
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+.btn-close-fs {
+    background: #e74c3c;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+.btn-close-fs:hover { background: #c0392b; }
+.fullscreen-body {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+/* When inside fullscreen, make charts bigger */
+.fullscreen-body .chart-container {
+    flex: 1;
+    min-height: 500px;
+}
+.fullscreen-body canvas {
+    height: 100% !important;
+}
+
+/* KPI CARDS ─────────────────────────────────────────────────────────────── */
 .kpi-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));

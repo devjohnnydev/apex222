@@ -86,7 +86,7 @@
         <main class="main-content">
 
             <!-- ═══════════════════════════════════════════════════════════
-                 DASHBOARD — ANÁLISES LME (20 análises)
+                 DASHBOARD — ANÁLISES LME (9 análises)
             ═══════════════════════════════════════════════════════════ -->
             <section id="dashboard" class="view-section active">
                 <header class="section-header">
@@ -115,50 +115,58 @@
                     <button onclick="document.getElementById('btn-refresh-lme').click()" class="btn-secondary" style="width:auto;margin-top:10px;">Tentar novamente</button>
                 </div>
 
+                <!-- Filter Bar -->
+                <div id="analysis-filter-bar" style="display:none;">
+                    <div class="analysis-filter-wrap">
+                        <span class="filter-label"><i class="fa-solid fa-filter"></i> Filtrar Análise:</span>
+                        <button class="analysis-filter-btn active" data-filter="all">Todas</button>
+                        <button class="analysis-filter-btn" data-filter="01">01</button>
+                        <button class="analysis-filter-btn" data-filter="02">02</button>
+                        <button class="analysis-filter-btn" data-filter="03">03</button>
+                        <button class="analysis-filter-btn" data-filter="04">04</button>
+                        <button class="analysis-filter-btn" data-filter="05">05</button>
+                        <button class="analysis-filter-btn" data-filter="06">06</button>
+                        <button class="analysis-filter-btn" data-filter="07">07</button>
+                        <button class="analysis-filter-btn" data-filter="08">08</button>
+                        <button class="analysis-filter-btn" data-filter="09">09</button>
+                    </div>
+                </div>
+
+                <!-- Fullscreen Modal Overlay -->
+                <div id="fullscreen-overlay" class="fullscreen-overlay" style="display:none;">
+                    <div class="fullscreen-modal">
+                        <div class="fullscreen-header">
+                            <span id="fullscreen-title">Análise</span>
+                            <button id="btn-close-fullscreen" class="btn-close-fs"><i class="fa-solid fa-xmark"></i> Fechar</button>
+                        </div>
+                        <div id="fullscreen-body" class="fullscreen-body"></div>
+                    </div>
+                </div>
+
                 <!-- Analysis Content -->
                 <div id="analysis-content" style="display:none;">
 
-                    <!-- ── ANÁLISE 01 + 04: KPI Cards + Sinalizadores ── -->
-                    <div class="analysis-block">
+                    <!-- ── ANÁLISE 01: Cotação Atual + Sinalizador de Venda ── -->
+                    <div class="analysis-block" data-aid="01">
                         <div class="analysis-header">
                             <div>
                                 <h2 class="analysis-title"><span class="analysis-num">01</span> Cotação Atual + Sinalizador de Venda</h2>
-                                <p class="analysis-desc">Preço atual de cada metal com recomendação baseada na posição dentro do canal de preços do mês (Mínima → Máxima).</p>
+                                <p class="analysis-desc">Preço atual de cada metal com recomendação baseada na posição dentro do canal de preços do mês.</p>
                             </div>
+                            <button class="btn-fullscreen" data-aid="01" title="Tela Cheia"><i class="fa-solid fa-expand"></i></button>
                         </div>
                         <div id="kpi-cards" class="kpi-grid"></div>
                     </div>
 
-                    <!-- ── ANÁLISE 02: Noble Basket Index ── -->
-                    <div class="analysis-block">
-                        <h2 class="analysis-title"><span class="analysis-num">02</span> Noble Basket Index — Índice de Sucata Eletrônica</h2>
-                        <p class="analysis-desc">Índice ponderado simulando o valor de uma tonelada de sucata eletrônica mista. Composição: <strong style="color:#e07b39;">Cobre 45%</strong>, <strong style="color:#7eb3d5;">Alumínio 20%</strong>, <strong style="color:#b0a0c0;">Chumbo 15%</strong>, <strong style="color:#d4b896;">Estanho 10%</strong>, <strong style="color:#a8c5a0;">Zinco 10%</strong>.</p>
-                        <div class="noble-basket-card">
-                            <div class="nbi-main">
-                                <div class="nbi-value-wrap">
-                                    <span class="nbi-label">Índice Hoje</span>
-                                    <span id="nbi-value" class="nbi-value">—</span>
-                                    <span id="nbi-change" class="nbi-change">calculando...</span>
-                                </div>
-                                <div id="nbi-bars" class="nbi-bars"></div>
+                    <!-- ── ANÁLISE 02: Tendência de Preços do Mês ── -->
+                    <div class="analysis-block" data-aid="02">
+                        <div class="analysis-header">
+                            <div>
+                                <h2 class="analysis-title"><span class="analysis-num">02</span> Tendência de Preços do Mês</h2>
+                                <p class="analysis-desc">Evolução diária dos preços. Selecione o metal para focar a análise.</p>
                             </div>
-                            <div class="nbi-chart-wrap">
-                                <canvas id="nbiChart"></canvas>
-                            </div>
+                            <button class="btn-fullscreen" data-aid="02" title="Tela Cheia"><i class="fa-solid fa-expand"></i></button>
                         </div>
-                    </div>
-
-                    <!-- ── ANÁLISE 03: Posição no Canal ── -->
-                    <div class="analysis-block">
-                        <h2 class="analysis-title"><span class="analysis-num">03</span> Posição no Canal de Preços (Min–Max do Mês)</h2>
-                        <p class="analysis-desc">Onde o preço atual está em relação à mínima e máxima do mês. <span style="color:#ff4d4d;">Perto do topo (≥85%)</span> = melhor momento de vender. <span style="color:#2AD07A;">Perto da base (&lt;30%)</span> = momento de acumular.</p>
-                        <div id="canal-bars" class="canal-container"></div>
-                    </div>
-
-                    <!-- ── ANÁLISE 05: Tendência de Preços ── -->
-                    <div class="analysis-block">
-                        <h2 class="analysis-title"><span class="analysis-num">05</span> Tendência de Preços do Mês</h2>
-                        <p class="analysis-desc">Evolução diária dos preços. Selecione o metal para focar a análise.</p>
                         <div class="metal-filter-row" id="metal-filters">
                             <button class="btn-metal-filter active" data-metal="cobre" style="--mc:#e07b39;">Cobre</button>
                             <button class="btn-metal-filter" data-metal="aluminio" style="--mc:#7eb3d5;">Alumínio</button>
@@ -172,38 +180,27 @@
                         </div>
                     </div>
 
-                    <!-- ── ANÁLISE 06: Variação Diária ── -->
-                    <div class="analysis-block">
-                        <h2 class="analysis-title"><span class="analysis-num">06</span> Variação Diária dos Metais</h2>
-                        <p class="analysis-desc">Variação percentual do preço de hoje em relação ao dia anterior de negociação.</p>
-                        <div class="charts-grid-2">
-                            <div class="chart-container">
-                                <canvas id="varDiariaChart"></canvas>
+                    <!-- ── ANÁLISE 03: Ranking de Performance Mensal ── -->
+                    <div class="analysis-block" data-aid="03">
+                        <div class="analysis-header">
+                            <div>
+                                <h2 class="analysis-title"><span class="analysis-num">03</span> Ranking de Performance Mensal</h2>
+                                <p class="analysis-desc">Classificação dos metais pela variação do primeiro ao último dia com preço registrado no mês.</p>
                             </div>
-                            <div id="var-diaria-list" class="var-list"></div>
+                            <button class="btn-fullscreen" data-aid="03" title="Tela Cheia"><i class="fa-solid fa-expand"></i></button>
                         </div>
-                    </div>
-
-                    <!-- ── ANÁLISE 07: Volatilidade ── -->
-                    <div class="analysis-block">
-                        <h2 class="analysis-title"><span class="analysis-num">07</span> Volatilidade do Mês (Amplitude Máx–Mín)</h2>
-                        <p class="analysis-desc">Qual metal oscilou mais em valor absoluto e percentual. Alta volatilidade = maior risco E maior oportunidade de lucro.</p>
-                        <div class="chart-container">
-                            <canvas id="volatChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- ── ANÁLISE 08: Ranking de Performance ── -->
-                    <div class="analysis-block">
-                        <h2 class="analysis-title"><span class="analysis-num">08</span> Ranking de Performance Mensal</h2>
-                        <p class="analysis-desc">Classificação dos metais pela variação do primeiro ao último dia com preço registrado no mês.</p>
                         <div id="ranking-container" class="ranking-container"></div>
                     </div>
 
-                    <!-- ── ANÁLISE 09: Score de Oportunidade ── -->
-                    <div class="analysis-block">
-                        <h2 class="analysis-title"><span class="analysis-num">09</span> Score de Oportunidade Composto (0–100)</h2>
-                        <p class="analysis-desc">Pontuação calculada: <strong>Posição no Canal (40%) + Momentum 5d (30%) + Variação do Dia (30%)</strong>. Quanto maior, melhor o momento para vender.</p>
+                    <!-- ── ANÁLISE 04: Score de Oportunidade ── -->
+                    <div class="analysis-block" data-aid="04">
+                        <div class="analysis-header">
+                            <div>
+                                <h2 class="analysis-title"><span class="analysis-num">04</span> Score de Oportunidade Composto (0–100)</h2>
+                                <p class="analysis-desc">Pontuação: <strong>Posição no Canal (40%) + Momentum 5d (30%) + Variação do Dia (30%)</strong>. Quanto maior, melhor o momento para vender.</p>
+                            </div>
+                            <button class="btn-fullscreen" data-aid="04" title="Tela Cheia"><i class="fa-solid fa-expand"></i></button>
+                        </div>
                         <div class="charts-grid-2">
                             <div class="chart-container">
                                 <canvas id="scoreChart"></canvas>
@@ -212,96 +209,73 @@
                         </div>
                     </div>
 
-                    <!-- ── ANÁLISE 10: Semana Atual vs Anterior ── -->
-                    <div class="analysis-block">
-                        <h2 class="analysis-title"><span class="analysis-num">10</span> Semana Atual vs. Semana Anterior</h2>
-                        <p class="analysis-desc">Compara a média dos últimos 5 dias úteis com os 5 dias úteis anteriores para todos os metais.</p>
+                    <!-- ── ANÁLISE 05: Semana Atual vs Anterior ── -->
+                    <div class="analysis-block" data-aid="05">
+                        <div class="analysis-header">
+                            <div>
+                                <h2 class="analysis-title"><span class="analysis-num">05</span> Semana Atual vs. Semana Anterior</h2>
+                                <p class="analysis-desc">Compara a média dos últimos 5 dias úteis com os 5 dias úteis anteriores para todos os metais.</p>
+                            </div>
+                            <button class="btn-fullscreen" data-aid="05" title="Tela Cheia"><i class="fa-solid fa-expand"></i></button>
+                        </div>
                         <div class="chart-container">
                             <canvas id="semanaChart"></canvas>
                         </div>
                     </div>
 
-                    <!-- ── ANÁLISE 11: Melhor Dia da Semana ── -->
-                    <div class="analysis-block">
-                        <h2 class="analysis-title"><span class="analysis-num">11</span> Melhor Dia da Semana para Vender</h2>
-                        <p class="analysis-desc">Média de preços do Cobre por dia da semana no mês. O dia com <span style="color:#2AD07A;">barra verde intensa</span> é historicamente o mais lucrativo para negociar.</p>
-                        <div class="chart-container">
-                            <canvas id="diaSemanaChart"></canvas>
+                    <!-- ── ANÁLISE 06: Momentum de Mercado ── -->
+                    <div class="analysis-block" data-aid="06">
+                        <div class="analysis-header">
+                            <div>
+                                <h2 class="analysis-title"><span class="analysis-num">06</span> Momentum de Mercado (Últimos 5 Dias)</h2>
+                                <p class="analysis-desc">Compara a média dos últimos 5 pregões com os 5 anteriores. <span style="color:#2AD07A;">Verde = acelerando para cima</span> · <span style="color:#ff4d4d;">Vermelho = tendência de queda</span>.</p>
+                            </div>
+                            <button class="btn-fullscreen" data-aid="06" title="Tela Cheia"><i class="fa-solid fa-expand"></i></button>
                         </div>
-                    </div>
-
-                    <!-- ── ANÁLISE 12: Momentum ── -->
-                    <div class="analysis-block">
-                        <h2 class="analysis-title"><span class="analysis-num">12</span> Momentum de Mercado (Últimos 5 Dias)</h2>
-                        <p class="analysis-desc">Compara a média dos últimos 5 pregões com os 5 anteriores. <span style="color:#2AD07A;">Verde = acelerando para cima</span> · <span style="color:#ff4d4d;">Vermelho = tendência de queda</span>.</p>
                         <div id="momentum-grid" class="momentum-grid"></div>
                     </div>
 
-                    <!-- ── ANÁLISE 13: Impacto do Dólar ── -->
-                    <div class="analysis-block">
-                        <h2 class="analysis-title"><span class="analysis-num">13</span> Evolução do Dólar (BRL/USD) no Mês</h2>
-                        <p class="analysis-desc">O câmbio impacta diretamente no valor recebido ao vender metais para exportação. Dólar alto = melhor margem em reais.</p>
-                        <div class="chart-container">
-                            <canvas id="dolarChart"></canvas>
+                    <!-- ── ANÁLISE 07: SMA-5 Preço vs Média Móvel ── -->
+                    <div class="analysis-block" data-aid="07">
+                        <div class="analysis-header">
+                            <div>
+                                <h2 class="analysis-title"><span class="analysis-num">07</span> Preço vs. Média Móvel SMA-5 (Cobre)</h2>
+                                <p class="analysis-desc">Quando o preço cruza <strong>acima</strong> da SMA-5 (linha branca pontilhada), indica tendência de alta. Quando cruza <strong>abaixo</strong>, indica cautela.</p>
+                            </div>
+                            <button class="btn-fullscreen" data-aid="07" title="Tela Cheia"><i class="fa-solid fa-expand"></i></button>
                         </div>
-                    </div>
-
-                    <!-- ── ANÁLISE 14: SMA-5 ── -->
-                    <div class="analysis-block">
-                        <h2 class="analysis-title"><span class="analysis-num">14</span> Preço vs. Média Móvel SMA-5 (Cobre)</h2>
-                        <p class="analysis-desc">Quando o preço cruza <strong>acima</strong> da SMA-5 (linha branca pontilhada), indica tendência de alta. Quando cruza <strong>abaixo</strong>, indica cautela.</p>
                         <div class="chart-container">
                             <canvas id="smaChart"></canvas>
                         </div>
                     </div>
 
-                    <!-- ── ANÁLISE 15: Preço Atual vs. Média ── -->
-                    <div class="analysis-block">
-                        <h2 class="analysis-title"><span class="analysis-num">15</span> Preço Atual vs. Média Mensal</h2>
-                        <p class="analysis-desc">Compara o preço de hoje com a média aritmética do mês. <span style="color:#2AD07A;">Acima da média = bom momento de venda</span> · <span style="color:#ff9900;">Abaixo = aguardar recuperação</span>.</p>
-                        <div class="chart-container">
-                            <canvas id="vsMediaChart"></canvas>
+                    <!-- ── ANÁLISE 08: Alertas de Preço ── -->
+                    <div class="analysis-block" data-aid="08">
+                        <div class="analysis-header">
+                            <div>
+                                <h2 class="analysis-title"><span class="analysis-num">08</span> Alertas de Preço Personalizados</h2>
+                                <p class="analysis-desc">Configure um preço-alvo para cada metal. Quando o preço atingir ou superar seu alvo, o card acende um alerta visual. Os alertas ficam salvos no navegador.</p>
+                            </div>
+                            <button class="btn-fullscreen" data-aid="08" title="Tela Cheia"><i class="fa-solid fa-expand"></i></button>
                         </div>
-                    </div>
-
-                    <!-- ── ANÁLISE 16: Índice de Risco ── -->
-                    <div class="analysis-block">
-                        <h2 class="analysis-title"><span class="analysis-num">16</span> Índice de Risco por Metal (Coeficiente de Variação)</h2>
-                        <p class="analysis-desc">Calculado como (Desvio Padrão / Média) × 100. Maior índice = maior volatilidade. Metais com alto CV oferecem mais oportunidades mas exigem atenção.</p>
-                        <div class="chart-container" style="max-width: 500px; margin: 0 auto;">
-                            <canvas id="riscoChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- ── ANÁLISE 17: Radar Multi-metal ── -->
-                    <div class="analysis-block">
-                        <h2 class="analysis-title"><span class="analysis-num">17</span> Radar de Desempenho Comparativo</h2>
-                        <p class="analysis-desc">Visualização multidimensional comparando todos os metais em: Posição no Canal, Momentum, Variação do Dia, Score de Oportunidade e Volatilidade.</p>
-                        <div class="chart-container" style="max-width: 520px; margin: 0 auto;">
-                            <canvas id="radarChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- ── ANÁLISE 18: Comparativo Histórico ── -->
-                    <div class="analysis-block">
-                        <h2 class="analysis-title"><span class="analysis-num">18</span> Análise de Desvio da Média (Zscore Simplificado)</h2>
-                        <p class="analysis-desc">Quantos desvios padrão o preço atual está acima ou abaixo da média. Valores acima de +1.0 indicam preço elevado (bom para vender). Abaixo de -1.0 indica desconto.</p>
-                        <div id="zscore-container" class="zscore-container"></div>
-                    </div>
-
-                    <!-- ── ANÁLISE 19: Alertas de Preço ── -->
-                    <div class="analysis-block">
-                        <h2 class="analysis-title"><span class="analysis-num">19</span> Alertas de Preço Personalizados</h2>
-                        <p class="analysis-desc">Configure um preço-alvo para cada metal. Quando o preço atingir ou superar seu alvo, o card acende um alerta visual. Os alertas ficam salvos no navegador.</p>
                         <div id="alertas-grid" class="alertas-grid"></div>
                     </div>
 
-                    <!-- ── ANÁLISE 20: Resumo Executivo ── -->
-                    <div class="analysis-block resumo-block">
-                        <h2 class="analysis-title"><span class="analysis-num">20</span> Resumo Executivo — Melhor Ação Hoje</h2>
-                        <p class="analysis-desc">Síntese de todas as análises. Visão rápida: qual metal vender, qual observar e qual acumular agora.</p>
-                        <div id="resumo-executivo" class="resumo-grid"></div>
+                    <!-- ── ANÁLISE 09: Canal de Preços (Min-Max do Mês) ── -->
+                    <div class="analysis-block" data-aid="09">
+                        <div class="analysis-header">
+                            <div>
+                                <h2 class="analysis-title"><span class="analysis-num">09</span> Posição no Canal de Preços (Min–Max do Mês)</h2>
+                                <p class="analysis-desc">Onde o preço atual está em relação à mínima e máxima do mês. <span style="color:#ff4d4d;">Perto do topo (≥85%)</span> = melhor momento de vender. <span style="color:#2AD07A;">Perto da base (&lt;30%)</span> = momento de acumular.</p>
+                            </div>
+                            <button class="btn-fullscreen" data-aid="09" title="Tela Cheia"><i class="fa-solid fa-expand"></i></button>
+                        </div>
+                        <div id="canal-bars" class="canal-container"></div>
                     </div>
+
+                </div><!-- end analysis-content -->
+            </section>
+
 
                 </div><!-- end analysis-content -->
             </section>

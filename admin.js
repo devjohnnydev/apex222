@@ -517,10 +517,91 @@ document.addEventListener('DOMContentLoaded', () => {
             mesSel.innerHTML = `<option value="${currentMes}">Mês atual</option>`;
         }
 
+        // Setup filter bar and fullscreen events
+        setupAnalysisControls();
+
         await loadAndRenderLME(mesSel.value || currentMes);
 
         mesSel.addEventListener('change', () => loadAndRenderLME(mesSel.value));
         btnRefresh.addEventListener('click', () => loadAndRenderLME(mesSel.value));
+    }
+
+    function setupAnalysisControls() {
+        const filterBtns = document.querySelectorAll('.analysis-filter-btn');
+        const blocks = document.querySelectorAll('.analysis-block');
+        const overlay = document.getElementById('fullscreen-overlay');
+        const fsBody = document.getElementById('fullscreen-body');
+        const fsTitle = document.getElementById('fullscreen-title');
+        const btnCloseFs = document.getElementById('btn-close-fullscreen');
+        const filterBar = document.getElementById('analysis-filter-bar');
+
+        if (filterBar) filterBar.style.display = 'block';
+
+        // Filters
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const filter = btn.dataset.filter;
+                blocks.forEach(block => {
+                    // Ignora a block do relatorio executivo se tivermos removido, 
+                    // mas os que restaram usam data-aid
+                    if (!block.dataset.aid) return; 
+                    if (filter === 'all' || block.dataset.aid === filter) {
+                        block.style.display = 'block';
+                    } else {
+                        block.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Fullscreen
+        document.querySelectorAll('.btn-fullscreen').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const aid = btn.dataset.aid;
+                const block = document.querySelector(`.analysis-block[data-aid="${aid}"]`);
+                if (!block) return;
+                
+                // Set title
+                const titleEl = block.querySelector('.analysis-title');
+                fsTitle.innerHTML = titleEl ? titleEl.innerHTML : `Análise ${aid}`;
+                
+                // Clone the chart container / content
+                const contentToClone = block.querySelector('.chart-container, .charts-grid-2, .kpi-grid, .ranking-container, .momentum-grid, .alertas-grid, .canal-container');
+                if (contentToClone) {
+                    fsBody.innerHTML = '';
+                    // We move the actual canvas/elements to the modal so the chart stays interactive,
+                    // but wait, chart.js canvas cannot be easily moved without redrawing. 
+                    // Since it's easier, we just temporarily move the elements.
+                    
+                    // Salva a referência original
+                    const originalParent = contentToClone.parentNode;
+                    const originalNextSibling = contentToClone.nextSibling;
+                    
+                    btn.dataset.originalParentId = 'temp-fs-storage'; // just a flag
+                    
+                    // Mover
+                    fsBody.appendChild(contentToClone);
+                    overlay.style.display = 'flex';
+                    
+                    // Ajustar tamanho se for grafico
+                    window.dispatchEvent(new Event('resize'));
+                    
+                    btnCloseFs.onclick = () => {
+                        overlay.style.display = 'none';
+                        // Retornar ao lugar original
+                        if (originalNextSibling) {
+                            originalParent.insertBefore(contentToClone, originalNextSibling);
+                        } else {
+                            originalParent.appendChild(contentToClone);
+                        }
+                        fsBody.innerHTML = '';
+                        window.dispatchEvent(new Event('resize'));
+                    };
+                }
+            });
+        });
     }
 
     async function loadAndRenderLME(mes) {
@@ -637,26 +718,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ─── Render All ────────────────────────────────────────────────────────────
     function renderAllAnalyses(data, stats) {
-        renderKPICards(stats);                         // 01
-        renderNobleBasket(data, stats);                // 02
-        renderChannelBars(stats);                      // 03
-        renderTrendChart(data, activeMetalFilter);     // 05
+        renderKPICards(stats);                         // Nova 01 (Antiga 01)
+        renderTrendChart(data, activeMetalFilter);     // Nova 02 (Antiga 05)
         setupMetalFilters(data);
-        renderDailyVariation(stats);                   // 06
-        renderVolatility(stats);                       // 07
-        renderRanking(stats);                          // 08
-        renderOpportunityScore(stats);                 // 09
-        renderWeekComparison(stats);                   // 10
-        renderBestDayOfWeek(data);                     // 11
-        renderMomentum(stats);                         // 12
-        renderDolarChart(data);                        // 13
-        renderSMAChart(data, stats);                   // 14
-        renderVsMedia(stats);                          // 15
-        renderRiskChart(stats);                        // 16
-        renderRadar(stats);                            // 17
-        renderZscore(stats);                           // 18
-        renderAlerts(stats);                           // 19
-        renderResumo(stats);                           // 20
+        renderRanking(stats);                          // Nova 03 (Antiga 08)
+        renderOpportunityScore(stats);                 // Nova 04 (Antiga 09)
+        renderWeekComparison(stats);                   // Nova 05 (Antiga 10)
+        renderMomentum(stats);                         // Nova 06 (Antiga 12)
+        renderSMAChart(data, stats);                   // Nova 07 (Antiga 14)
+        renderAlerts(stats);                           // Nova 08 (Antiga 19)
+        renderChannelBars(stats);                      // Nova 09 (Antiga 03)
     }
 
     function setupMetalFilters(data) {
