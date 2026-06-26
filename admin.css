@@ -1174,7 +1174,7 @@ input:checked + .toggle-slider:before { transform: translateX(24px); background-
 }
 .rel-logo {
     width: 160px;
-    background: #111;
+    background: transparent;
     padding: 12px 10px;
     display: flex;
     justify-content: center;
@@ -1302,11 +1302,13 @@ input:checked + .toggle-slider:before { transform: translateX(24px); background-
 
 /* ── PDF / Print color fidelity ── */
 @media print {
-    .capture-area { background: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .capture-area, .capture-area * { 
+        -webkit-print-color-adjust: exact !important; 
+        print-color-adjust: exact !important; 
+    }
+    .capture-area { background: #fff !important; }
     .rel-logo img { filter: none !important; }
-    .rel-charts-container { background: #1a1a2e !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .rel-base-table td, .rel-base-table th,
-    .rel-table td, .rel-table th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .rel-charts-container { background: #1a1a2e !important; }
 }
 
 .rel-chart-section-title {
