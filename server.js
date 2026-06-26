@@ -855,18 +855,18 @@ app.post('/api/lme/gerar-excel', async (req, res) => {
         // ── Linhas Computadas (10–19) ──
         const comp = semana.computed || {};
         const COMP_ROWS = [
-            { lbl: 'MEDIA SEMANAL',                   key: 'MEDIA SEMANAL',                    bg: 'E7E6E6', lblFont: bold, fmt: 'R$ #,##0.00',   dolFmt: 'R$ 0.0000'    },
+            { lbl: 'MEDIA SEMANAL',                   key: 'MEDIA SEMANAL',                    bg: 'E7E6E6', lblFont: bold, fmt: 'R$ #,##0.00',   dolFmt: '$ 0.0000'    },
             { space: true },
-            { lbl: '100% LME',                        key: '100% LME',                         bg: 'FFFF00', lblFont: bold, fmt: 'R$ #,##0.00', dolFmt: 'R$ 0.0000'   },
+            { lbl: '100% LME',                        key: '100% LME',                         bg: 'FFFF00', lblFont: bold, fmt: 'R$ #,##0.00', dolFmt: '$ 0.0000'   },
             { space: true },
-            { lbl: 'SEMANA ANTERIOR',                 key: 'SEMANA ANTERIOR',                  bg: '000000', lblFont: boldWhite, fmt: 'R$ #,##0.00', dolFmt: 'R$ #,##0.0000' },
+            { lbl: 'SEMANA ANTERIOR',                 key: 'SEMANA ANTERIOR',                  bg: '000000', lblFont: boldWhite, fmt: 'R$ #,##0.00', dolFmt: '$ #,##0.0000' },
             { lbl: 'FECHAMENTO % ( SEMANA ANTERIOR )',  key: 'FECHAMENTO % ( SEMANA ANTERIOR )', bg: 'FFFFFF', lblFont: { ...bold, color: {argb:'FF00B050'} }, fmt: '0.00%', dolFmt: '0.00%'    },
             { space: true },
             { lbl: 'OSCILAÇÃO %',                     key: 'OSCILAÇÃO %',                      bg: '00B0F0', lblFont: bold, fmt: '0.00%',      dolFmt: '0.00%'    },
             { space: true },
-            { lbl: 'OSCILAÇÃO R$',                    key: 'OSCILAÇÃO R$',                     bg: 'E2EFDA', lblFont: bold, fmt: 'R$ #,##0.0000', dolFmt: 'R$ #,##0.0000' },
+            { lbl: 'OSCILAÇÃO R$',                    key: 'OSCILAÇÃO R$',                     bg: 'E2EFDA', lblFont: bold, fmt: 'R$ #,##0.0000', dolFmt: '$ #,##0.0000' },
             { space: true },
-            { lbl: 'MEDIA MENSAL',                    key: 'MEDIA MENSAL',                     bg: 'A6A6A6', lblFont: bold, fmt: 'R$ #,##0.00',  dolFmt: 'R$ #,##0.00' },
+            { lbl: 'MEDIA MENSAL',                    key: 'MEDIA MENSAL',                     bg: 'A6A6A6', lblFont: bold, fmt: 'R$ #,##0.00',  dolFmt: '$ #,##0.00' },
         ];
 
         let curRow = 10;
@@ -901,7 +901,7 @@ app.post('/api/lme/gerar-excel', async (req, res) => {
                 
                 if (row.key === 'OSCILAÇÃO R$' && v !== null && v !== undefined) {
                     const arrow = v >= 0 ? '⬆ ' : '⬇ ';
-                    const pre = 'R$ ';
+                    const pre = m === 'dolar' ? '$ ' : 'R$ ';
                     c.value = `${arrow}${v < 0 ? '-' : ''}${pre}${Math.abs(v).toFixed(4).replace('.', ',')}`;
                     c.numFmt = '@'; 
                 } else if (v !== null && v !== undefined) {
@@ -980,8 +980,9 @@ app.post('/api/lme/gerar-excel', async (req, res) => {
             if (v !== null && v !== undefined) {
                 const arrow = v >= 0 ? '⬆' : '⬇';
                 const colorHex = v >= 0 ? 'FF00B050' : 'FFFF0000';
-                const prefix = 'R$ ';
-                c.value = `${arrow} ${v < 0 ? '-' : ''}${prefix}${Math.abs(v).toFixed(2).replace('.', ',')}`;
+                const prefix = m === 'dolar' ? '$ ' : 'R$ ';
+                const decimals = m === 'dolar' ? 4 : 4; // Use 4 decimals since oscillation requires precision
+                c.value = `${arrow} ${v < 0 ? '-' : ''}${prefix}${Math.abs(v).toFixed(decimals).replace('.', ',')}`;
                 c.font  = { ...bold, color: { argb: colorHex } };
             } else {
                 c.value = '—';

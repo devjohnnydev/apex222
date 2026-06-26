@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 4, maximumFractionDigits: 4 })}`;
             }
             if (formatType === 'dolar') {
-                return v.toLocaleString('pt-BR', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+                return `$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 4, maximumFractionDigits: 4 })}`;
             }
             return v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         };
@@ -194,8 +194,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const isUp = v >= 0;
             const arrow = isUp ? '▲' : '▼';
             const cls = isUp ? 'excel-up' : 'excel-down';
+            const prefix = isDolar ? '$ ' : 'R$ ';
             const formatted = Math.abs(v).toLocaleString('pt-BR', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
-            return `<span class="${cls}">${arrow} ${isDolar ? '' : 'R$ '}${formatted}</span>`;
+            return `<span class="${cls}">${arrow} ${prefix}${formatted}</span>`;
         };
 
         // Metal column config: key, header text, header CSS class, cell CSS class, default format, dollar format
@@ -257,11 +258,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const COMP_ROWS = [
                 { lbl: 'MÉDIA SEMANAL',                    key: 'MEDIA SEMANAL',                    cls: 'excel-row-media',         fmt: 'normal',    dolFmt: 'dolar'     },
                 { lbl: '100% LME (R$)',                    key: '100% LME',                         cls: 'excel-row-lme100',        fmt: 'currency3', dolFmt: 'dolar'     },
-                { lbl: 'SEMANA ANTERIOR',                  key: 'SEMANA ANTERIOR',                  cls: 'excel-row-anterior',      fmt: 'currency3', dolFmt: 'currency4' },
+                { lbl: 'SEMANA ANTERIOR',                  key: 'SEMANA ANTERIOR',                  cls: 'excel-row-anterior',      fmt: 'currency3', dolFmt: 'dolar' },
                 { lbl: 'FECHAMENTO % (SEMANA ANTERIOR)',   key: 'FECHAMENTO % ( SEMANA ANTERIOR )', cls: 'excel-row-fechamento',    fmt: 'percent',   dolFmt: 'percent'   },
                 { lbl: 'OSCILAÇÃO %',                      key: 'OSCILAÇÃO %',                      cls: 'excel-row-oscilacao-pct', fmt: 'percent',   dolFmt: 'percent'   },
-                { lbl: 'OSCILAÇÃO R$',                     key: 'OSCILAÇÃO R$',                     cls: 'excel-row-oscilacao-rs',  fmt: 'currency4', dolFmt: 'currency4' },
-                { lbl: 'MÉDIA MENSAL',                     key: 'MEDIA MENSAL',                     cls: 'excel-row-mensal',        fmt: 'currency3', dolFmt: 'currency4' },
+                { lbl: 'OSCILAÇÃO R$',                     key: 'OSCILAÇÃO R$',                     cls: 'excel-row-oscilacao-rs',  fmt: 'currency4', dolFmt: 'dolar' },
+                { lbl: 'MÉDIA MENSAL',                     key: 'MEDIA MENSAL',                     cls: 'excel-row-mensal',        fmt: 'currency3', dolFmt: 'dolar' },
             ];
 
             COMP_ROWS.forEach(row => {
@@ -286,8 +287,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Summary rows
             const SUMMARY_ROWS = [
-                { lbl: 'SEMANA ANTERIOR', key: 'SEMANA ANTERIOR', fmt: 'currency3', dolFmt: 'currency4' },
-                { lbl: 'LME ATUAL',       key: '100% LME',        fmt: 'currency3', dolFmt: 'currency4' },
+                { lbl: 'SEMANA ANTERIOR', key: 'SEMANA ANTERIOR', fmt: 'currency3', dolFmt: 'dolar' },
+                { lbl: 'LME ATUAL',       key: '100% LME',        fmt: 'currency3', dolFmt: 'dolar' },
             ];
             SUMMARY_ROWS.forEach(row => {
                 const vals = comp[row.key] || {};
@@ -1902,13 +1903,13 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const metals = ['cobre', 'zinco', 'aluminio', 'chumbo', 'estanho', 'niquel'];
             metals.forEach(m => {
-                const osc = comp['oscilacaoRs_'+m] || 0;
+                const osc = comp['OSCILAÇÃO R$']?.[m] ?? 0;
                 const setinha = osc >= 0 ? '⬆' : '⬇';
                 const money = 'R$ ' + Math.abs(osc).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                 txt += `- ${m.toUpperCase()}: ${setinha} ${money}\n`;
             });
-            
-            const dolarOsc = comp['oscilacaoRs_dolar'] || 0;
+
+            const dolarOsc = comp['OSCILAÇÃO R$']?.['dolar'] ?? 0;
             const dSetinha = dolarOsc >= 0 ? '⬆' : '⬇';
             const dMoney = '$ ' + Math.abs(dolarOsc).toLocaleString('pt-BR', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
             txt += `- DÓLAR: ${dSetinha} ${dMoney}\n`;
@@ -1992,10 +1993,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const metals = ['cobre', 'zinco', 'aluminio', 'chumbo', 'estanho', 'niquel', 'dolar'];
         
         const formatMoney = (val, isDolar) => {
-            if (!val || val === 'feriado' || val === 0 || isNaN(val)) return '-';
+            if (val === null || val === undefined || val === 'feriado' || isNaN(val)) return '-';
             const prefix = isDolar ? '$ ' : 'R$ ';
             const maxF = isDolar ? 4 : 2;
-            return prefix + val.toLocaleString('pt-BR', { minimumFractionDigits: maxF, maximumFractionDigits: maxF });
+            return prefix + Number(val).toLocaleString('pt-BR', { minimumFractionDigits: maxF, maximumFractionDigits: maxF });
         };
         const formatPct = (val) => {
             if (val === null || val === undefined || isNaN(val)) return '-';
@@ -2015,23 +2016,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
         metals.forEach(m => {
             const isDolar = (m === 'dolar');
-            document.getElementById('rel-media-' + m).textContent = formatMoney(comp['MEDIA SEMANAL']?.[m], isDolar);
-            if(m !== 'dolar') {
-                document.getElementById('rel-lme-' + m).textContent = formatMoney(comp['100% LME']?.[m], isDolar);
+            const elMedia = document.getElementById('rel-media-' + m);
+            if (elMedia) elMedia.textContent = formatMoney(comp['MEDIA SEMANAL']?.[m], isDolar);
+            if (m !== 'dolar') {
+                const elLme = document.getElementById('rel-lme-' + m);
+                if (elLme) elLme.textContent = formatMoney(comp['100% LME']?.[m], isDolar);
             }
-            document.getElementById('rel-ant-' + m).textContent = formatMoney(comp['SEMANA ANTERIOR']?.[m], isDolar);
-            document.getElementById('rel-fech-' + m).textContent = formatPct(comp['FECHAMENTO % ( SEMANA ANTERIOR )']?.[m]);
-            document.getElementById('rel-osc-pct-' + m).textContent = formatPct(comp['OSCILAÇÃO %']?.[m]);
-            
-            const oscRs = comp['OSCILAÇÃO R$']?.[m] || 0;
-            const arrowIcon = oscRs >= 0 ? '<i class="fa-solid fa-arrow-up"></i>' : '<i class="fa-solid fa-arrow-down"></i>';
-            document.getElementById('rel-osc-rs-' + m).innerHTML = `${arrowIcon} ${formatMoney(Math.abs(oscRs), isDolar)}`;
+            const elAnt = document.getElementById('rel-ant-' + m);
+            if (elAnt) elAnt.textContent = formatMoney(comp['SEMANA ANTERIOR']?.[m], isDolar);
+            const elFech = document.getElementById('rel-fech-' + m);
+            if (elFech) elFech.textContent = formatPct(comp['FECHAMENTO % ( SEMANA ANTERIOR )']?.[m]);
+            const elOscPct = document.getElementById('rel-osc-pct-' + m);
+            if (elOscPct) elOscPct.textContent = formatPct(comp['OSCILAÇÃO %']?.[m]);
 
-            document.getElementById('rel-mensal-' + m).textContent = formatMoney(comp['MEDIA MENSAL']?.[m], isDolar);
+            const oscRs = comp['OSCILAÇÃO R$']?.[m] ?? 0;
+            const isUp = oscRs >= 0;
+            const arrowIcon = isUp ? '<i class="fa-solid fa-arrow-up" style="color:#2ecc71"></i>' : '<i class="fa-solid fa-arrow-down" style="color:#e74c3c"></i>';
+            const elOscRs = document.getElementById('rel-osc-rs-' + m);
+            if (elOscRs) elOscRs.innerHTML = `${arrowIcon} ${formatMoney(Math.abs(oscRs), isDolar)}`;
 
-            document.getElementById('rel-comp-ant-' + m).textContent = formatMoney(comp['SEMANA ANTERIOR']?.[m], isDolar);
-            document.getElementById('rel-comp-atu-' + m).textContent = formatMoney(comp['MEDIA SEMANAL']?.[m], isDolar);
-            document.getElementById('rel-comp-osc-' + m).innerHTML = `${arrowIcon} ${formatMoney(Math.abs(oscRs), isDolar)}`;
+            const elMensal = document.getElementById('rel-mensal-' + m);
+            if (elMensal) elMensal.textContent = formatMoney(comp['MEDIA MENSAL']?.[m], isDolar);
+
+            const elCompAnt = document.getElementById('rel-comp-ant-' + m);
+            if (elCompAnt) elCompAnt.textContent = formatMoney(comp['SEMANA ANTERIOR']?.[m], isDolar);
+            const elCompAtu = document.getElementById('rel-comp-atu-' + m);
+            if (elCompAtu) elCompAtu.textContent = formatMoney(comp['MEDIA SEMANAL']?.[m], isDolar);
+            const elCompOsc = document.getElementById('rel-comp-osc-' + m);
+            if (elCompOsc) elCompOsc.innerHTML = `${arrowIcon} ${formatMoney(Math.abs(oscRs), isDolar)}`;
         });
 
         renderRelatorioCharts(week);
