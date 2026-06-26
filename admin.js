@@ -1970,70 +1970,126 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderRelatorioCharts(week) {
         const comp = week.computed || {};
         const metals = ['cobre', 'zinco', 'aluminio', 'chumbo', 'estanho', 'niquel'];
-        
         const labels = ['COBRE', 'ZINCO', 'ALUMÍNIO', 'CHUMBO', 'ESTANHO', 'NÍQUEL'];
-        const dataAtu = metals.map(m => comp['mediaSemanal_'+m] || 0);
-        const dataAnt = metals.map(m => comp['semanaAnterior_'+m] || 0);
-        const dataOsc = metals.map(m => comp['oscilacaoRs_'+m] || 0);
+        const dataAtu = metals.map(m => comp['mediaSemanal_' + m] || 0);
+        const dataAnt = metals.map(m => comp['semanaAnterior_' + m] || 0);
+        const dataOsc = metals.map(m => comp['oscilacaoRs_' + m] || 0);
 
+        const fmtR = v => 'R$ ' + Math.abs(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+        // Plugin for datalabels (inline, no external lib needed via canvas drawing)
+        const datalabelPlugin = {
+            id: 'datalabels',
+            afterDatasetsDraw(chart) {
+                const { ctx } = chart;
+                chart.data.datasets.forEach((dataset, i) => {
+                    const meta = chart.getDatasetMeta(i);
+                    if (meta.hidden) return;
+                    meta.data.forEach((point, idx) => {
+                        const val = dataset.data[idx];
+                        if (val === 0) return;
+                        const label = 'R$ ' + Math.abs(val).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                        ctx.save();
+                        ctx.font = 'bold 10px Arial';
+                        ctx.fillStyle = dataset.borderColor || '#fff';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(label, point.x, point.y - 8);
+                        ctx.restore();
+                    });
+                });
+            }
+        };
+
+        // Chart 1: Semana Anterior x Semana Atual
         const ctx1 = document.getElementById('relChartLines');
-        if(window.relChart1) window.relChart1.destroy();
+        if (window.relChart1) window.relChart1.destroy();
         window.relChart1 = new Chart(ctx1, {
             type: 'line',
+            plugins: [datalabelPlugin],
             data: {
                 labels: labels,
                 datasets: [
                     {
                         label: 'MEDIA SEMANA',
                         data: dataAtu,
-                        borderColor: '#2980b9',
-                        borderDash: [5, 5],
-                        tension: 0.4
+                        borderColor: '#4fc3f7',
+                        backgroundColor: 'rgba(79,195,247,0.08)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        pointBackgroundColor: '#4fc3f7',
+                        pointRadius: 5
                     },
                     {
                         label: 'MEDIA SEMANA ANTERIOR',
                         data: dataAnt,
-                        borderColor: '#d35400',
-                        borderDash: [5, 5],
-                        tension: 0.4
+                        borderColor: '#ff8c42',
+                        backgroundColor: 'rgba(255,140,66,0.05)',
+                        borderWidth: 2,
+                        borderDash: [6, 4],
+                        tension: 0.3,
+                        pointBackgroundColor: '#ff8c42',
+                        pointRadius: 5
                     }
                 ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { position: 'bottom', labels: { color: '#fff' } } },
+                layout: { padding: { top: 20 } },
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: '#ccc', font: { size: 11 }, boxWidth: 30 }
+                    }
+                },
                 scales: {
-                    x: { ticks: { color: '#fff' } },
-                    y: { ticks: { color: '#fff' }, grid: { color: '#444' } }
+                    x: { ticks: { color: '#aaa', font: { size: 10 } }, grid: { color: '#2a2a3e' } },
+                    y: {
+                        ticks: { color: '#aaa', font: { size: 10 }, callback: v => 'R$ ' + v.toLocaleString('pt-BR') },
+                        grid: { color: '#2a2a3e' }
+                    }
                 }
             }
         });
 
+        // Chart 2: Variação R$
         const ctx2 = document.getElementById('relChartOsc');
-        if(window.relChart2) window.relChart2.destroy();
+        if (window.relChart2) window.relChart2.destroy();
         window.relChart2 = new Chart(ctx2, {
             type: 'line',
+            plugins: [datalabelPlugin],
             data: {
                 labels: labels,
                 datasets: [
                     {
                         label: 'VARIAÇÃO',
                         data: dataOsc,
-                        borderColor: '#3498db',
-                        tension: 0.4,
+                        borderColor: '#4fc3f7',
+                        backgroundColor: 'rgba(79,195,247,0.05)',
+                        borderWidth: 2,
+                        tension: 0.3,
                         pointBackgroundColor: dataOsc.map(v => v >= 0 ? '#2ecc71' : '#e74c3c'),
-                        pointRadius: 6
+                        pointRadius: 8,
+                        pointStyle: 'circle'
                     }
                 ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { position: 'bottom', labels: { color: '#fff' } } },
+                layout: { padding: { top: 20 } },
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: '#ccc', font: { size: 11 } }
+                    }
+                },
                 scales: {
-                    x: { ticks: { color: '#fff' } },
-                    y: { ticks: { color: '#fff' }, grid: { color: '#444' } }
+                    x: { ticks: { color: '#aaa', font: { size: 10 } }, grid: { color: '#2a2a3e' } },
+                    y: {
+                        ticks: { color: '#aaa', font: { size: 10 }, callback: v => 'R$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) },
+                        grid: { color: '#2a2a3e' }
+                    }
                 }
             }
         });
@@ -2044,17 +2100,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const tbody = document.getElementById('rel-base-tbody');
         tbody.innerHTML = '';
         const metals = ['cobre', 'zinco', 'aluminio', 'chumbo', 'estanho', 'niquel'];
-        
+
         for (let p = 90; p <= 110; p++) {
             const tr = document.createElement('tr');
-            let colsHtml = `<td style="background:#e0f7fa; color:#000;">${p}%</td>`;
-            
+            if (p < 100) tr.className = 'row-below';
+            else if (p === 100) tr.className = 'row-100pct';
+            else tr.className = 'row-above';
+
+            const pLabel = p === 100 ? '<strong>100%</strong>' : p + '%';
+            let colsHtml = `<td>${pLabel}</td>`;
+
             metals.forEach(m => {
-                const lme = comp['mediaLME_'+m] || 0;
-                let baseVal = lme * (p / 100);
-                colsHtml += `<td>${lme === 0 ? '-' : 'R$ ' + baseVal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>`;
+                const lme = comp['semanaAnterior_' + m] || comp['mediaLME_' + m] || 0;
+                const baseVal = lme * (p / 100);
+                const fmt = lme === 0 ? '-' : 'R$ ' + baseVal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                colsHtml += `<td>${fmt}</td>`;
             });
-            
+
             tr.innerHTML = colsHtml;
             tbody.appendChild(tr);
         }
