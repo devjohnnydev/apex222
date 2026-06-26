@@ -2015,22 +2015,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
         metals.forEach(m => {
             const isDolar = (m === 'dolar');
-            document.getElementById('rel-media-' + m).textContent = formatMoney(comp['mediaSemanal_'+m], isDolar);
+            document.getElementById('rel-media-' + m).textContent = formatMoney(comp['MEDIA SEMANAL']?.[m], isDolar);
             if(m !== 'dolar') {
-                document.getElementById('rel-lme-' + m).textContent = formatMoney(comp['mediaLME_'+m], isDolar);
+                document.getElementById('rel-lme-' + m).textContent = formatMoney(comp['100% LME']?.[m], isDolar);
             }
-            document.getElementById('rel-ant-' + m).textContent = formatMoney(comp['semanaAnterior_'+m], isDolar);
-            document.getElementById('rel-fech-' + m).textContent = formatPct(comp['fechamento_'+m]);
-            document.getElementById('rel-osc-pct-' + m).textContent = formatPct(comp['oscilacaoPct_'+m]);
+            document.getElementById('rel-ant-' + m).textContent = formatMoney(comp['SEMANA ANTERIOR']?.[m], isDolar);
+            document.getElementById('rel-fech-' + m).textContent = formatPct(comp['FECHAMENTO % ( SEMANA ANTERIOR )']?.[m]);
+            document.getElementById('rel-osc-pct-' + m).textContent = formatPct(comp['OSCILAÇÃO %']?.[m]);
             
-            const oscRs = comp['oscilacaoRs_'+m] || 0;
+            const oscRs = comp['OSCILAÇÃO R$']?.[m] || 0;
             const arrowIcon = oscRs >= 0 ? '<i class="fa-solid fa-arrow-up"></i>' : '<i class="fa-solid fa-arrow-down"></i>';
             document.getElementById('rel-osc-rs-' + m).innerHTML = `${arrowIcon} ${formatMoney(Math.abs(oscRs), isDolar)}`;
 
-            document.getElementById('rel-mensal-' + m).textContent = formatMoney(comp['mediaMensal_'+m], isDolar);
+            document.getElementById('rel-mensal-' + m).textContent = formatMoney(comp['MEDIA MENSAL']?.[m], isDolar);
 
-            document.getElementById('rel-comp-ant-' + m).textContent = formatMoney(comp['semanaAnterior_'+m], isDolar);
-            document.getElementById('rel-comp-atu-' + m).textContent = formatMoney(comp['mediaSemanal_'+m], isDolar);
+            document.getElementById('rel-comp-ant-' + m).textContent = formatMoney(comp['SEMANA ANTERIOR']?.[m], isDolar);
+            document.getElementById('rel-comp-atu-' + m).textContent = formatMoney(comp['MEDIA SEMANAL']?.[m], isDolar);
             document.getElementById('rel-comp-osc-' + m).innerHTML = `${arrowIcon} ${formatMoney(Math.abs(oscRs), isDolar)}`;
         });
 
@@ -2042,9 +2042,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const comp = week.computed || {};
         const metals = ['cobre', 'zinco', 'aluminio', 'chumbo', 'estanho', 'niquel'];
         const labels = ['COBRE', 'ZINCO', 'ALUMÍNIO', 'CHUMBO', 'ESTANHO', 'NÍQUEL'];
-        const dataAtu = metals.map(m => comp['mediaSemanal_' + m] || 0);
-        const dataAnt = metals.map(m => comp['semanaAnterior_' + m] || 0);
-        const dataOsc = metals.map(m => comp['oscilacaoRs_' + m] || 0);
+        const dataAtu = metals.map(m => comp['100% LME']?.[m] || 0);
+        const dataAnt = metals.map(m => comp['SEMANA ANTERIOR']?.[m] || 0);
+        const dataOsc = metals.map(m => comp['OSCILAÇÃO R$']?.[m] || 0);
 
         const fmtR = v => 'R$ ' + Math.abs(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
@@ -2182,7 +2182,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let colsHtml = `<td>${pLabel}</td>`;
 
             metals.forEach(m => {
-                const lme = comp['semanaAnterior_' + m] || comp['mediaLME_' + m] || 0;
+                const lme = comp['SEMANA ANTERIOR']?.[m] || comp['100% LME']?.[m] || 0;
                 const baseVal = lme * (p / 100);
                 const fmt = lme === 0 ? '-' : 'R$ ' + baseVal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                 colsHtml += `<td>${fmt}</td>`;
