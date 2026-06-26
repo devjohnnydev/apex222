@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="admin.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <!-- Login Overlay -->
@@ -48,6 +50,10 @@
                 <a href="#" class="nav-item" data-target="lme-excel-report">
                     <i class="fa-solid fa-file-excel"></i>
                     <span>Relatório Excel LME</span>
+                </a>
+                <a href="#" class="nav-item" data-target="relatorio-diario">
+                    <i class="fa-brands fa-whatsapp"></i>
+                    <span>Relatório Diário LME</span>
                 </a>
                 <a href="#" class="nav-item" data-target="home-config">
                     <i class="fa-solid fa-toggle-on"></i>
@@ -398,6 +404,167 @@
                 <div class="excel-preview-container" id="excel-preview-wrapper" style="display:none;">
                     <div id="excel-table-preview" class="excel-table-card">
                         <!-- Rendered by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════════════════════
+                 RELATÓRIO DIÁRIO (WHATSAPP/EMAIL)
+             ═══════════════════════════════════════════════════════════ -->
+            <section id="relatorio-diario" class="view-section">
+                <header class="section-header">
+                    <div class="section-header-row">
+                        <div>
+                            <h1><i class="fa-brands fa-whatsapp"></i> Relatório Diário Compartilhável</h1>
+                            <p>Visualização formatada para compartilhar no WhatsApp e por Email.</p>
+                        </div>
+                        <div class="dashboard-controls">
+                            <button id="btn-gerar-imagem-wpp" class="btn-primary" title="Copiar Imagem p/ WhatsApp">
+                                <i class="fa-solid fa-image"></i> Imagem
+                            </button>
+                            <button id="btn-copiar-texto" class="btn-secondary" title="Copiar Texto p/ WhatsApp">
+                                <i class="fa-solid fa-copy"></i> Texto
+                            </button>
+                            <button id="btn-relatorio-pdf" class="btn-pdf-download" title="Baixar PDF">
+                                <i class="fa-solid fa-file-pdf"></i> PDF
+                            </button>
+                            <button id="btn-relatorio-excel" class="btn-excel-download" title="Baixar Excel">
+                                <i class="fa-solid fa-file-excel"></i> Excel
+                            </button>
+                        </div>
+                    </div>
+                </header>
+
+                <div id="capture-area" class="capture-area">
+                    <div class="relatorio-header">
+                        <div class="rel-logo">
+                            <img src="https://apextechmetais.com.br/wp-content/uploads/2024/07/logo-apextech.svg" alt="Apex Tech Metais">
+                        </div>
+                        <div class="rel-title-wrap">
+                            <h2 class="rel-title">COTAÇÃO VALIDA PARA A SEMANA DO DIA <span id="rel-date-range">...</span></h2>
+                        </div>
+                    </div>
+                    
+                    <div class="rel-info-row">
+                        <div class="rel-col-black">DATA</div>
+                        <div class="rel-numbers">Os números de análises: 01- 05- 08-09-10-12-14-19-03  Variação diária de metais no grupo 6 subida e decida</div>
+                    </div>
+
+                    <div class="rel-table-container">
+                        <table class="rel-table">
+                            <thead>
+                                <tr class="header-colors">
+                                    <th style="background:#000; color:#fff; width: 120px;"></th>
+                                    <th style="background:#ff0000; color:#fff;">COBRE</th>
+                                    <th style="background:#ffb6c1; color:#000;">ZINCO</th>
+                                    <th style="background:#a6a6a6; color:#fff;">ALUMÍNIO</th>
+                                    <th style="background:#d9d9d9; color:#000;">CHUMBO</th>
+                                    <th style="background:#808000; color:#fff;">ESTANHO</th>
+                                    <th style="background:#e6e6e6; color:#000;">NÍQUEL</th>
+                                    <th style="background:#528040; color:#fff;">DÓLAR</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rel-tbody">
+                                <!-- Preenchido via JS com as datas da semana -->
+                            </tbody>
+                            <tbody class="rel-summary-body">
+                                <tr class="bg-gray">
+                                    <td class="font-bold rel-label-col">MÉDIA SEMANAL</td>
+                                    <td id="rel-media-cobre"></td><td id="rel-media-zinco"></td><td id="rel-media-aluminio"></td>
+                                    <td id="rel-media-chumbo"></td><td id="rel-media-estanho"></td><td id="rel-media-niquel"></td><td id="rel-media-dolar"></td>
+                                </tr>
+                                <tr class="bg-yellow font-bold">
+                                    <td class="rel-label-col">100% LME</td>
+                                    <td id="rel-lme-cobre"></td><td id="rel-lme-zinco"></td><td id="rel-lme-aluminio"></td>
+                                    <td id="rel-lme-chumbo"></td><td id="rel-lme-estanho"></td><td id="rel-lme-niquel"></td><td class="bg-white"></td>
+                                </tr>
+                                <tr class="bg-black text-white font-bold">
+                                    <td class="rel-label-col">SEMANA ANTERIOR</td>
+                                    <td id="rel-ant-cobre"></td><td id="rel-ant-zinco"></td><td id="rel-ant-aluminio"></td>
+                                    <td id="rel-ant-chumbo"></td><td id="rel-ant-estanho"></td><td id="rel-ant-niquel"></td><td id="rel-ant-dolar"></td>
+                                </tr>
+                                <tr class="bg-lightgreen text-xs">
+                                    <td class="rel-label-col">FECHAMENTO % <span style="font-size:0.6rem">(SEMANA ANTERIOR)</span></td>
+                                    <td id="rel-fech-cobre" class="text-red"></td><td id="rel-fech-zinco" class="text-red"></td><td id="rel-fech-aluminio" class="text-red"></td>
+                                    <td id="rel-fech-chumbo" class="text-red"></td><td id="rel-fech-estanho" class="text-green"></td><td id="rel-fech-niquel" class="text-red"></td><td id="rel-fech-dolar" class="text-red"></td>
+                                </tr>
+                                <tr class="bg-blue text-xs text-white">
+                                    <td class="rel-label-col">OSCILAÇÃO %</td>
+                                    <td id="rel-osc-pct-cobre"></td><td id="rel-osc-pct-zinco"></td><td id="rel-osc-pct-aluminio"></td>
+                                    <td id="rel-osc-pct-chumbo"></td><td id="rel-osc-pct-estanho"></td><td id="rel-osc-pct-niquel"></td><td id="rel-osc-pct-dolar"></td>
+                                </tr>
+                                <tr class="bg-green text-xs text-black font-bold">
+                                    <td class="rel-label-col">OSCILAÇÃO R$</td>
+                                    <td id="rel-osc-rs-cobre"></td><td id="rel-osc-rs-zinco"></td><td id="rel-osc-rs-aluminio"></td>
+                                    <td id="rel-osc-rs-chumbo"></td><td id="rel-osc-rs-estanho"></td><td id="rel-osc-rs-niquel"></td><td id="rel-osc-rs-dolar"></td>
+                                </tr>
+                                <tr class="bg-darkgray text-black font-bold">
+                                    <td class="rel-label-col">MÉDIA MENSAL</td>
+                                    <td id="rel-mensal-cobre"></td><td id="rel-mensal-zinco"></td><td id="rel-mensal-aluminio"></td>
+                                    <td id="rel-mensal-chumbo"></td><td id="rel-mensal-estanho"></td><td id="rel-mensal-niquel"></td><td id="rel-mensal-dolar"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pequena tabela comparativa (TIPO) -->
+                    <div class="rel-comparativo-container">
+                        <table class="rel-table rel-comparativo">
+                            <thead>
+                                <tr class="bg-darkgray text-black">
+                                    <th style="width: 120px;">TIPO</th>
+                                    <th>COBRE</th><th>ZINCO</th><th>ALUMÍNIO</th><th>CHUMBO</th><th>ESTANHO</th><th>NÍQUEL</th><th>DÓLAR</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="text-xs text-blue">
+                                    <td>SEMANA ANTERIOR</td>
+                                    <td id="rel-comp-ant-cobre"></td><td id="rel-comp-ant-zinco"></td><td id="rel-comp-ant-aluminio"></td>
+                                    <td id="rel-comp-ant-chumbo"></td><td id="rel-comp-ant-estanho"></td><td id="rel-comp-ant-niquel"></td><td id="rel-comp-ant-dolar"></td>
+                                </tr>
+                                <tr class="font-bold">
+                                    <td>LME ATUAL</td>
+                                    <td id="rel-comp-atu-cobre"></td><td id="rel-comp-atu-zinco"></td><td id="rel-comp-atu-aluminio"></td>
+                                    <td id="rel-comp-atu-chumbo"></td><td id="rel-comp-atu-estanho"></td><td id="rel-comp-atu-niquel"></td><td id="rel-comp-atu-dolar"></td>
+                                </tr>
+                                <tr class="font-bold">
+                                    <td>Osilaçao</td>
+                                    <td id="rel-comp-osc-cobre"></td><td id="rel-comp-osc-zinco"></td><td id="rel-comp-osc-aluminio"></td>
+                                    <td id="rel-comp-osc-chumbo"></td><td id="rel-comp-osc-estanho"></td><td id="rel-comp-osc-niquel"></td><td id="rel-comp-osc-dolar"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Gráficos -->
+                    <div class="rel-charts-container">
+                        <div class="rel-chart-wrap">
+                            <canvas id="relChartLines"></canvas>
+                        </div>
+                        <div class="rel-chart-wrap rel-chart-wrap-small">
+                            <canvas id="relChartOsc"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Tabela de Base 90% a 110% -->
+                    <div class="rel-base-container">
+                        <h3 class="rel-base-title">VALORES BASE DE 90% A 110% X LME DA SEMA X DOLAR</h3>
+                        <table class="rel-table rel-base-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:50px;">%</th>
+                                    <th style="background:#ff0000; color:#fff;">COBRE</th>
+                                    <th style="background:#ffb6c1; color:#000;">ZINCO</th>
+                                    <th style="background:#d9d9d9; color:#000;">ALUMÍNIO</th>
+                                    <th style="background:#e6e6e6; color:#000;">CHUMBO</th>
+                                    <th style="background:#808000; color:#fff;">ESTANHO</th>
+                                    <th style="background:#f2f2f2; color:#000;">NÍQUEL</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rel-base-tbody">
+                                <!-- Preenchido via JS -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </section>
