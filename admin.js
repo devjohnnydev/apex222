@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ─────────────────────────────────────────────────────────────────────────
     // LOGIN
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ─────────────────────────────────────────────────────────────────────────
     const loginOverlay       = document.getElementById('login-overlay');
     const dashboardContainer = document.getElementById('admin-dashboard-container');
     const loginForm          = document.getElementById('admin-login-form');
@@ -42,9 +42,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    // NAVEGAÃ‡ÃƒO
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ─────────────────────────────────────────────────────────────────────────
+    // NAVEGAÇÃO
+    // ─────────────────────────────────────────────────────────────────────────
     const navItems = document.querySelectorAll('.nav-item[data-target]');
     const sections = document.querySelectorAll('.view-section');
 
@@ -59,9 +59,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ─────────────────────────────────────────────────────────────────────────
     // INIT ADMIN
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ─────────────────────────────────────────────────────────────────────────
     function initAdmin() {
         initLMEDashboard();
         initLMEExcelReport();
@@ -93,12 +93,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!selector || !preview) return;
 
-        const MONTH_NAMES = ['','Janeiro','Fevereiro','MarÃ§o','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+        const MONTH_NAMES = ['','Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
         let excelWeeks = [];
         let activeMetals = new Set(['cobre','zinco','aluminio','chumbo','estanho','niquel','dolar']);
         let allMetalsOn = true;
 
-        // â”€â”€â”€ HELPERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        // ─── HELPERS ────────────────────────────────────────────────────
         function showLoading() {
             if (loadingDiv)  { loadingDiv.style.display  = 'flex'; }
             if (errorDiv)    { errorDiv.style.display    = 'none'; }
@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (previewWrap) { previewWrap.style.display = 'block'; }
         }
 
-        // â”€â”€â”€ LOAD DATA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        // ─── LOAD DATA ──────────────────────────────────────────────────
         async function loadWeeks(mesOverride = null) {
             showLoading();
             try {
@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         mesToFetch = mesesDisponiveis[0].valor;
                         filterMes.value = mesToFetch;
                     } else {
-                        throw new Error('Nenhum mÃªs disponÃ­vel na LME.');
+                        throw new Error('Nenhum mês disponível na LME.');
                     }
                 }
 
@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 if (excelWeeks.length === 0) {
                     selector.innerHTML = '<option value="">Nenhuma semana encontrada</option>';
-                    showError('Nenhuma semana encontrada neste mÃªs.');
+                    showError('Nenhuma semana encontrada neste mês.');
                     if (countNum) countNum.textContent = '0';
                     return;
                 }
@@ -155,8 +155,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (countNum) countNum.textContent = excelWeeks.length;
                 
                 selector.innerHTML = excelWeeks.map(w => {
-                    const lastDay = w.days && w.days.length > 0 ? w.days[w.days.length - 1]?.data : 'â€”';
-                    return `<option value="${w.header}">Semana ${w.header} â†’ ${lastDay}</option>`;
+                    const lastDay = w.days && w.days.length > 0 ? w.days[w.days.length - 1]?.data : '—';
+                    return `<option value="${w.header}">Semana ${w.header} → ${lastDay}</option>`;
                 }).join('');
 
                 renderPreview(excelWeeks[0].header);
@@ -166,9 +166,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // â”€â”€â”€ RENDER PREVIEW TABLE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        // ─── RENDER PREVIEW TABLE ────────────────────────────────────────
         const formatVal = (v, formatType) => {
-            if (v === null || v === undefined) return 'â€”';
+            if (v === null || v === undefined) return '—';
             if (v === 'feriado') return '<span class="excel-feriado">feriado</span>';
             if (typeof v === 'string') return v;
 
@@ -190,9 +190,9 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const renderOscilacao = (v, isDolar) => {
-            if (v === null || v === undefined || typeof v === 'string') return 'â€”';
+            if (v === null || v === undefined || typeof v === 'string') return '—';
             const isUp = v >= 0;
-            const arrow = isUp ? 'â–²' : 'â–¼';
+            const arrow = isUp ? '▲' : '▼';
             const cls = isUp ? 'excel-up' : 'excel-down';
             const formatted = Math.abs(v).toLocaleString('pt-BR', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
             return `<span class="${cls}">${arrow} ${isDolar ? '' : 'R$ '}${formatted}</span>`;
@@ -202,11 +202,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const COLS = [
             { k: 'cobre',    lbl: 'COBRE',    hcls: 'excel-hdr-cobre',    ccls: 'excel-col-cobre',    fmt: 'normal',    dolFmt: null       },
             { k: 'zinco',    lbl: 'ZINCO',    hcls: 'excel-hdr-zinco',    ccls: 'excel-col-zinco',    fmt: 'normal',    dolFmt: null       },
-            { k: 'aluminio', lbl: 'ALUMÃNIO', hcls: 'excel-hdr-aluminio', ccls: 'excel-col-aluminio', fmt: 'normal',    dolFmt: null       },
+            { k: 'aluminio', lbl: 'ALUMÍNIO', hcls: 'excel-hdr-aluminio', ccls: 'excel-col-aluminio', fmt: 'normal',    dolFmt: null       },
             { k: 'chumbo',   lbl: 'CHUMBO',   hcls: 'excel-hdr-chumbo',   ccls: 'excel-col-chumbo',   fmt: 'normal',    dolFmt: null       },
             { k: 'estanho',  lbl: 'ESTANHO',  hcls: 'excel-hdr-estanho',  ccls: 'excel-col-estanho',  fmt: 'normal',    dolFmt: null       },
-            { k: 'niquel',   lbl: 'NÃQUEL',   hcls: 'excel-hdr-niquel',   ccls: 'excel-col-niquel',   fmt: 'normal',    dolFmt: null       },
-            { k: 'dolar',    lbl: 'DÃ“LAR',    hcls: 'excel-hdr-dolar',    ccls: 'excel-col-dolar',    fmt: 'dolar',     dolFmt: 'dolar'    },
+            { k: 'niquel',   lbl: 'NÍQUEL',   hcls: 'excel-hdr-niquel',   ccls: 'excel-col-niquel',   fmt: 'normal',    dolFmt: null       },
+            { k: 'dolar',    lbl: 'DÓLAR',    hcls: 'excel-hdr-dolar',    ccls: 'excel-col-dolar',    fmt: 'dolar',     dolFmt: 'dolar'    },
         ];
 
         function visibleCols() {
@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const thSummary = vc.map(c => `<th class="${c.hcls}">${c.lbl}</th>`).join('');
 
             const firstDate = d[0]?.data || headerVal;
-            const lastDate  = d[d.length - 1]?.data || 'â€”';
+            const lastDate  = d[d.length - 1]?.data || '—';
             const monthName = filterMes.options[filterMes.selectedIndex]?.text || '';
 
             let html = `
@@ -248,20 +248,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 const day = d[i] || {};
                 const isFeriado = vc.every(c => day[c.k] === 'feriado' || day[c.k] === null);
                 const rowCls = isFeriado ? ' class="excel-row-feriado"' : '';
-                const dateTd = `<td class="excel-date-cell">${day.data || 'â€”'}</td>`;
+                const dateTd = `<td class="excel-date-cell">${day.data || '—'}</td>`;
                 const valTds = vc.map(c => `<td class="${c.ccls}">${formatVal(day[c.k], c.fmt)}</td>`).join('');
                 html += `<tr${rowCls}>${dateTd}${valTds}</tr>`;
             }
 
             // Computed rows config
             const COMP_ROWS = [
-                { lbl: 'MÃ‰DIA SEMANAL',                    key: 'MEDIA SEMANAL',                    cls: 'excel-row-media',         fmt: 'normal',    dolFmt: 'dolar'     },
+                { lbl: 'MÉDIA SEMANAL',                    key: 'MEDIA SEMANAL',                    cls: 'excel-row-media',         fmt: 'normal',    dolFmt: 'dolar'     },
                 { lbl: '100% LME (R$)',                    key: '100% LME',                         cls: 'excel-row-lme100',        fmt: 'currency3', dolFmt: 'dolar'     },
                 { lbl: 'SEMANA ANTERIOR',                  key: 'SEMANA ANTERIOR',                  cls: 'excel-row-anterior',      fmt: 'currency3', dolFmt: 'currency4' },
                 { lbl: 'FECHAMENTO % (SEMANA ANTERIOR)',   key: 'FECHAMENTO % ( SEMANA ANTERIOR )', cls: 'excel-row-fechamento',    fmt: 'percent',   dolFmt: 'percent'   },
-                { lbl: 'OSCILAÃ‡ÃƒO %',                      key: 'OSCILAÃ‡ÃƒO %',                      cls: 'excel-row-oscilacao-pct', fmt: 'percent',   dolFmt: 'percent'   },
-                { lbl: 'OSCILAÃ‡ÃƒO R$',                     key: 'OSCILAÃ‡ÃƒO R$',                     cls: 'excel-row-oscilacao-rs',  fmt: 'currency4', dolFmt: 'currency4' },
-                { lbl: 'MÃ‰DIA MENSAL',                     key: 'MEDIA MENSAL',                     cls: 'excel-row-mensal',        fmt: 'currency3', dolFmt: 'currency4' },
+                { lbl: 'OSCILAÇÃO %',                      key: 'OSCILAÇÃO %',                      cls: 'excel-row-oscilacao-pct', fmt: 'percent',   dolFmt: 'percent'   },
+                { lbl: 'OSCILAÇÃO R$',                     key: 'OSCILAÇÃO R$',                     cls: 'excel-row-oscilacao-rs',  fmt: 'currency4', dolFmt: 'currency4' },
+                { lbl: 'MÉDIA MENSAL',                     key: 'MEDIA MENSAL',                     cls: 'excel-row-mensal',        fmt: 'currency3', dolFmt: 'currency4' },
             ];
 
             COMP_ROWS.forEach(row => {
@@ -300,11 +300,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // Oscillation row (with arrows)
-            const osc = comp['OSCILAÃ‡ÃƒO R$'] || {};
+            const osc = comp['OSCILAÇÃO R$'] || {};
             const oscTds = vc.map(c => `<td>${renderOscilacao(osc[c.k], c.k === 'dolar')}</td>`).join('');
             html += `
                 <tr class="excel-row-oscilacao-arrow">
-                    <td class="excel-label-cell" style="font-style:italic;">OscilaÃ§Ã£o</td>
+                    <td class="excel-label-cell" style="font-style:italic;">Oscilação</td>
                     ${oscTds}
                 </tr>
             `;
@@ -314,7 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
             showTable();
         }
 
-        // â”€â”€â”€ EVENT LISTENERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        // ─── EVENT LISTENERS ─────────────────────────────────────────────
         filterMes.addEventListener('change', () => {
             loadWeeks(filterMes.value);
         });
@@ -357,7 +357,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // â”€â”€ PDF Download â”€â”€
+        // ── PDF Download ──
         if (btnDownloadPdf) {
             btnDownloadPdf.addEventListener('click', () => {
                 const val = selector.value;
@@ -367,7 +367,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Inject/update timestamp into the print area
                 const area = document.getElementById('pdf-print-area');
-                if (!area) { alert('Visualize o relatÃ³rio antes de baixar o PDF.'); return; }
+                if (!area) { alert('Visualize o relatório antes de baixar o PDF.'); return; }
 
                 const now = new Date();
                 const ts = now.toLocaleString('pt-BR', {
@@ -382,7 +382,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     tsEl.style.cssText = 'font-size:9pt;color:#555;margin-bottom:8px;text-align:right;font-family:Calibri,sans-serif;border-bottom:1px solid #ccc;padding-bottom:6px;';
                     area.insertBefore(tsEl, area.firstChild);
                 }
-                tsEl.textContent = `RelatÃ³rio gerado em: ${ts} â€” Apex Tech Metais`;
+                tsEl.textContent = `Relatório gerado em: ${ts} — Apex Tech Metais`;
 
                 window.print();
             });
@@ -424,18 +424,18 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // â”€â”€â”€ INITIAL LOAD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        // ─── INITIAL LOAD ────────────────────────────────────────────────
         await loadWeeks();
     }
 
     // =========================================================================
-    // LME DASHBOARD â€” 20 ANALYSES
+    // LME DASHBOARD — 20 ANALYSES
     // =========================================================================
 
     const METALS = ['cobre', 'aluminio', 'zinco', 'chumbo', 'estanho', 'niquel'];
     const METAL_LABELS = {
-        cobre: 'Cobre', aluminio: 'AlumÃ­nio', zinco: 'Zinco',
-        chumbo: 'Chumbo', estanho: 'Estanho', niquel: 'NÃ­quel'
+        cobre: 'Cobre', aluminio: 'Alumínio', zinco: 'Zinco',
+        chumbo: 'Chumbo', estanho: 'Estanho', niquel: 'Níquel'
     };
     const METAL_COLORS = {
         cobre: '#e07b39', aluminio: '#7eb3d5', zinco: '#a8c5a0',
@@ -449,15 +449,15 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentStats = null;
 
     function parsePrice(str) {
-        if (!str || str === 'â€”' || str === '-' || str.trim() === '') return null;
-        // Brazilian format: "9.234,56" â†’ 9234.56
+        if (!str || str === '—' || str === '-' || str.trim() === '') return null;
+        // Brazilian format: "9.234,56" → 9234.56
         const cleaned = str.replace(/\./g, '').replace(',', '.');
         const val = parseFloat(cleaned);
         return isNaN(val) ? null : val;
     }
 
     function fmtPrice(val, dec = 2) {
-        if (val === null || val === undefined || isNaN(val)) return 'â€”';
+        if (val === null || val === undefined || isNaN(val)) return '—';
         return val.toLocaleString('pt-BR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
     }
 
@@ -492,7 +492,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return output;
     }
 
-    // â”€â”€â”€ Init LME Dashboard â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ─── Init LME Dashboard ────────────────────────────────────────────────────
     async function initLMEDashboard() {
         const mesSel   = document.getElementById('mes-selector');
         const btnRefresh = document.getElementById('btn-refresh-lme');
@@ -514,7 +514,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         } catch(e) {
-            mesSel.innerHTML = `<option value="${currentMes}">MÃªs atual</option>`;
+            mesSel.innerHTML = `<option value="${currentMes}">Mês atual</option>`;
         }
 
         await loadAndRenderLME(mesSel.value || currentMes);
@@ -570,7 +570,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // â”€â”€â”€ Compute Stats â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ─── Compute Stats ─────────────────────────────────────────────────────────
     function computeStats(data) {
         const stats = {};
         const latest = data[data.length - 1];
@@ -612,7 +612,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const avgPrev5  = prev5Vals.length ? prev5Vals.reduce((a, b) => a + b, 0) / prev5Vals.length : avg;
             const momentum  = avgPrev5 ? ((avg5 - avgPrev5) / avgPrev5) * 100 : 0;
 
-            // Opportunity Score (0â€“100)
+            // Opportunity Score (0–100)
             const chanScore = (channelPos / 100) * 40;
             const momScore  = Math.max(0, Math.min(1, (momentum + 5) / 10)) * 30;
             const dayScore  = Math.max(0, Math.min(1, (dayChange + 2) / 4)) * 30;
@@ -621,7 +621,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Signal
             let signal, signalClass;
             if (channelPos >= 85)      { signal = 'VENDER';   signalClass = 'signal-sell';  }
-            else if (channelPos >= 60) { signal = 'ATENÃ‡ÃƒO';  signalClass = 'signal-watch'; }
+            else if (channelPos >= 60) { signal = 'ATENÇÃO';  signalClass = 'signal-watch'; }
             else if (channelPos >= 30) { signal = 'RETER';    signalClass = 'signal-hold';  }
             else                       { signal = 'ACUMULAR'; signalClass = 'signal-buy';   }
 
@@ -635,7 +635,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return stats;
     }
 
-    // â”€â”€â”€ Render All â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ─── Render All ────────────────────────────────────────────────────────────
     function renderAllAnalyses(data, stats) {
         renderKPICards(stats);                         // 01
         renderNobleBasket(data, stats);                // 02
@@ -675,13 +675,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // â”€â”€ ANÃLISE 01: KPI Cards + Sinalizadores â”€â”€
+    // ── ANÁLISE 01: KPI Cards + Sinalizadores ──
     function renderKPICards(stats) {
         const container = document.getElementById('kpi-cards');
         if (!container) return;
 
         const icons = { cobre: 'fa-bolt', aluminio: 'fa-layer-group', zinco: 'fa-atom', chumbo: 'fa-weight-hanging', estanho: 'fa-microchip', niquel: 'fa-gem' };
-        const signalIcons = { 'VENDER': 'fa-arrow-up-right-dots', 'ATENÃ‡ÃƒO': 'fa-eye', 'RETER': 'fa-pause', 'ACUMULAR': 'fa-cart-shopping' };
+        const signalIcons = { 'VENDER': 'fa-arrow-up-right-dots', 'ATENÇÃO': 'fa-eye', 'RETER': 'fa-pause', 'ACUMULAR': 'fa-cart-shopping' };
 
         container.innerHTML = METALS.map(m => {
             const s = stats[m];
@@ -704,15 +704,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     <i class="fa-solid ${upIcon}"></i> ${Math.abs(s.dayChange).toFixed(2)}% hoje
                 </div>
                 <div class="kpi-footer">
-                    <span>â†“ US$ ${fmtPrice(s.min)}</span>
+                    <span>↓ US$ ${fmtPrice(s.min)}</span>
                     <span style="color:#555;">|</span>
-                    <span>â†‘ US$ ${fmtPrice(s.max)}</span>
+                    <span>↑ US$ ${fmtPrice(s.max)}</span>
                 </div>
             </div>`;
         }).join('');
     }
 
-    // â”€â”€ ANÃLISE 02: Noble Basket Index â”€â”€
+    // ── ANÁLISE 02: Noble Basket Index ──
     function renderNobleBasket(data, stats) {
         const nbiVals = data.map(row => {
             let v = 0, ok = true;
@@ -771,7 +771,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // â”€â”€ ANÃLISE 03: Canal de PreÃ§os â”€â”€
+    // ── ANÁLISE 03: Canal de Preços ──
     function renderChannelBars(stats) {
         const el = document.getElementById('canal-bars');
         if (!el) return;
@@ -792,15 +792,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="canal-fill" style="width:${pct}%;background:${color};"></div>
                 </div>
                 <div class="canal-labels">
-                    <span>MÃ­n: US$ ${fmtPrice(s.min)}</span>
+                    <span>Mín: US$ ${fmtPrice(s.min)}</span>
                     <span><strong>Atual: US$ ${fmtPrice(s.current)}</strong></span>
-                    <span>MÃ¡x: US$ ${fmtPrice(s.max)}</span>
+                    <span>Máx: US$ ${fmtPrice(s.max)}</span>
                 </div>
             </div>`;
         }).join('');
     }
 
-    // â”€â”€ ANÃLISE 05: TendÃªncia de PreÃ§os â”€â”€
+    // ── ANÁLISE 05: Tendência de Preços ──
     function renderTrendChart(data, metal) {
         destroyChart('trendChart');
         const ctx = document.getElementById('trendChart');
@@ -829,7 +829,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // â”€â”€ ANÃLISE 06: VariaÃ§Ã£o DiÃ¡ria â”€â”€
+    // ── ANÁLISE 06: Variação Diária ──
     function renderDailyVariation(stats) {
         destroyChart('varDiariaChart');
         const ctx = document.getElementById('varDiariaChart');
@@ -841,7 +841,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: METALS.map(m => METAL_LABELS[m]),
                     datasets: [{
-                        label: 'VariaÃ§Ã£o DiÃ¡ria (%)',
+                        label: 'Variação Diária (%)',
                         data: changes,
                         backgroundColor: colors,
                         borderRadius: 6
@@ -873,7 +873,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // â”€â”€ ANÃLISE 07: Volatilidade â”€â”€
+    // ── ANÁLISE 07: Volatilidade ──
     function renderVolatility(stats) {
         destroyChart('volatChart');
         const ctx = document.getElementById('volatChart');
@@ -906,7 +906,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // â”€â”€ ANÃLISE 08: Ranking de Performance â”€â”€
+    // ── ANÁLISE 08: Ranking de Performance ──
     function renderRanking(stats) {
         const el = document.getElementById('ranking-container');
         if (!el) return;
@@ -916,13 +916,13 @@ document.addEventListener('DOMContentLoaded', () => {
             .map(m => ({ m, chg: stats[m].monthChange, s: stats[m] }))
             .sort((a, b) => b.chg - a.chg);
 
-        const medals = ['ðŸ¥‡', 'ðŸ¥ˆ', 'ðŸ¥‰'];
+        const medals = ['🥇', '🥈', '🥉'];
         el.innerHTML = ranked.map((item, i) => {
             const isPos = item.chg >= 0;
             const barW  = Math.min(100, Math.abs(item.chg) * 10);
             return `
             <div class="rank-item ${i === 0 ? 'rank-first' : ''}">
-                <span class="rank-pos">${medals[i] || (i + 1) + 'Âº'}</span>
+                <span class="rank-pos">${medals[i] || (i + 1) + 'º'}</span>
                 <div class="rank-bar-wrap">
                     <div style="display:flex;justify-content:space-between;margin-bottom:7px;">
                         <strong style="color:${METAL_COLORS[item.m]};font-size:0.95rem;">${METAL_LABELS[item.m]}</strong>
@@ -933,17 +933,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div style="background:rgba(255,255,255,0.05);border-radius:4px;height:7px;overflow:hidden;">
                         <div style="height:100%;width:${barW}%;background:${isPos ? '#2AD07A' : '#ff4d4d'};border-radius:4px;transition:width 1s;"></div>
                     </div>
-                    <small style="color:#555;font-size:0.75rem;margin-top:4px;display:block;">Primeiro dia do mÃªs â†’ Hoje</small>
+                    <small style="color:#555;font-size:0.75rem;margin-top:4px;display:block;">Primeiro dia do mês → Hoje</small>
                 </div>
                 <div style="text-align:right;flex-shrink:0;">
                     <div style="color:#aaa;font-size:0.8rem;">US$ ${fmtPrice(item.s.current)}</div>
-                    <div style="color:#555;font-size:0.72rem;">MÃ©dia: US$ ${fmtPrice(item.s.avg)}</div>
+                    <div style="color:#555;font-size:0.72rem;">Média: US$ ${fmtPrice(item.s.avg)}</div>
                 </div>
             </div>`;
         }).join('');
     }
 
-    // â”€â”€ ANÃLISE 09: Score de Oportunidade â”€â”€
+    // ── ANÁLISE 09: Score de Oportunidade ──
     function renderOpportunityScore(stats) {
         destroyChart('scoreChart');
         const ctx = document.getElementById('scoreChart');
@@ -954,7 +954,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 type: 'bar',
                 data: {
                     labels: METALS.map(m => METAL_LABELS[m]),
-                    datasets: [{ label: 'Score (0â€“100)', data: scores, backgroundColor: colors, borderRadius: 8 }]
+                    datasets: [{ label: 'Score (0–100)', data: scores, backgroundColor: colors, borderRadius: 8 }]
                 },
                 options: deepMerge(baseChartOpts, { scales: { y: { min: 0, max: 100 } } })
             });
@@ -967,7 +967,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const s = stats[m];
                 const sc = s.score;
                 const color = sc >= 75 ? '#ff4d4d' : sc >= 55 ? '#ff9900' : sc >= 35 ? '#ffcc00' : '#2AD07A';
-                const label = sc >= 75 ? 'ðŸ”´ VENDER AGORA' : sc >= 55 ? 'ðŸŸ  ATENÃ‡ÃƒO' : sc >= 35 ? 'ðŸŸ¡ RETER' : 'ðŸŸ¢ ACUMULAR';
+                const label = sc >= 75 ? '🔴 VENDER AGORA' : sc >= 55 ? '🟠 ATENÇÃO' : sc >= 35 ? '🟡 RETER' : '🟢 ACUMULAR';
                 return `
                 <div class="score-item">
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
@@ -983,7 +983,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // â”€â”€ ANÃLISE 10: Semana Atual vs Anterior â”€â”€
+    // ── ANÁLISE 10: Semana Atual vs Anterior ──
     function renderWeekComparison(stats) {
         destroyChart('semanaChart');
         const ctx = document.getElementById('semanaChart');
@@ -998,15 +998,15 @@ document.addEventListener('DOMContentLoaded', () => {
             data: {
                 labels,
                 datasets: [
-                    { label: 'Ult. 5 Dias (MÃ©dia)', data: last5, backgroundColor: 'rgba(42,208,122,0.7)', borderRadius: 5 },
-                    { label: 'Semana Anterior (MÃ©dia)', data: prev5, backgroundColor: 'rgba(255,255,255,0.12)', borderRadius: 5 }
+                    { label: 'Ult. 5 Dias (Média)', data: last5, backgroundColor: 'rgba(42,208,122,0.7)', borderRadius: 5 },
+                    { label: 'Semana Anterior (Média)', data: prev5, backgroundColor: 'rgba(255,255,255,0.12)', borderRadius: 5 }
                 ]
             },
             options: { ...baseChartOpts }
         });
     }
 
-    // â”€â”€ ANÃLISE 11: Melhor Dia da Semana â”€â”€
+    // ── ANÁLISE 11: Melhor Dia da Semana ──
     function renderBestDayOfWeek(data) {
         destroyChart('diaSemanaChart');
         const ctx = document.getElementById('diaSemanaChart');
@@ -1017,7 +1017,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const [mesN, anoN] = mesVal.split('-').map(Number);
 
         const dow = { 'Seg': { sum: 0, cnt: 0 }, 'Ter': { sum: 0, cnt: 0 }, 'Qua': { sum: 0, cnt: 0 }, 'Qui': { sum: 0, cnt: 0 }, 'Sex': { sum: 0, cnt: 0 } };
-        const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'SÃ¡b'];
+        const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
         data.forEach(row => {
             const d = parseInt(row.dia);
@@ -1036,7 +1036,7 @@ document.addEventListener('DOMContentLoaded', () => {
             type: 'bar',
             data: {
                 labels: workDays,
-                datasets: [{ label: 'MÃ©dia do Cobre (US$/t)', data: avgs, backgroundColor: colors, borderRadius: 8 }]
+                datasets: [{ label: 'Média do Cobre (US$/t)', data: avgs, backgroundColor: colors, borderRadius: 8 }]
             },
             options: deepMerge(baseChartOpts, {
                 plugins: { tooltip: { callbacks: { label: ctx => `US$ ${fmtPrice(ctx.raw)}/t` } } }
@@ -1044,7 +1044,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // â”€â”€ ANÃLISE 12: Momentum â”€â”€
+    // ── ANÁLISE 12: Momentum ──
     function renderMomentum(stats) {
         const el = document.getElementById('momentum-grid');
         if (!el) return;
@@ -1056,7 +1056,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const up    = mom >= 0;
             const color = up ? '#2AD07A' : '#ff4d4d';
             const icon  = up ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down';
-            const label = Math.abs(mom) > 2 ? (up ? 'Alta Expressiva' : 'Queda Expressiva') : Math.abs(mom) > 0.5 ? (up ? 'Leve Alta' : 'Leve Queda') : 'EstÃ¡vel';
+            const label = Math.abs(mom) > 2 ? (up ? 'Alta Expressiva' : 'Queda Expressiva') : Math.abs(mom) > 0.5 ? (up ? 'Leve Alta' : 'Leve Queda') : 'Estável';
             return `
             <div class="momentum-card">
                 <div style="color:${METAL_COLORS[m]};font-weight:700;font-size:0.9rem;margin-bottom:10px;">${METAL_LABELS[m]}</div>
@@ -1071,7 +1071,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }).join('');
     }
 
-    // â”€â”€ ANÃLISE 13: DÃ³lar â”€â”€
+    // ── ANÁLISE 13: Dólar ──
     function renderDolarChart(data) {
         destroyChart('dolarChart');
         const ctx = document.getElementById('dolarChart');
@@ -1079,7 +1079,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const dolarRows = data.filter(r => r.dolar !== null);
         if (!dolarRows.length) {
-            ctx.closest('.chart-container').innerHTML = '<p style="color:#666;text-align:center;padding:40px 20px;">Dados do cÃ¢mbio nÃ£o disponÃ­veis neste perÃ­odo.</p>';
+            ctx.closest('.chart-container').innerHTML = '<p style="color:#666;text-align:center;padding:40px 20px;">Dados do câmbio não disponíveis neste período.</p>';
             return;
         }
 
@@ -1088,7 +1088,7 @@ document.addEventListener('DOMContentLoaded', () => {
             data: {
                 labels: dolarRows.map(r => r.dia),
                 datasets: [{
-                    label: 'DÃ³lar (BRL/USD)',
+                    label: 'Dólar (BRL/USD)',
                     data: dolarRows.map(r => r.dolar),
                     borderColor: '#f5c518',
                     backgroundColor: 'rgba(245,197,24,0.08)',
@@ -1101,7 +1101,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // â”€â”€ ANÃLISE 14: SMA-5 â”€â”€
+    // ── ANÁLISE 14: SMA-5 ──
     function renderSMAChart(data, stats) {
         destroyChart('smaChart');
         const ctx = document.getElementById('smaChart');
@@ -1134,7 +1134,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // â”€â”€ ANÃLISE 15: PreÃ§o Atual vs. MÃ©dia Mensal â”€â”€
+    // ── ANÁLISE 15: Preço Atual vs. Média Mensal ──
     function renderVsMedia(stats) {
         destroyChart('vsMediaChart');
         const ctx = document.getElementById('vsMediaChart');
@@ -1150,15 +1150,15 @@ document.addEventListener('DOMContentLoaded', () => {
             data: {
                 labels: METALS.map(m => METAL_LABELS[m]),
                 datasets: [
-                    { label: 'PreÃ§o Atual', data: currents, backgroundColor: curColors, borderRadius: 5 },
-                    { label: 'MÃ©dia Mensal', data: avgs, backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 5, borderColor: 'rgba(255,255,255,0.25)', borderWidth: 1 }
+                    { label: 'Preço Atual', data: currents, backgroundColor: curColors, borderRadius: 5 },
+                    { label: 'Média Mensal', data: avgs, backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 5, borderColor: 'rgba(255,255,255,0.25)', borderWidth: 1 }
                 ]
             },
             options: { ...baseChartOpts }
         });
     }
 
-    // â”€â”€ ANÃLISE 16: Ãndice de Risco (Polar Area) â”€â”€
+    // ── ANÁLISE 16: Índice de Risco (Polar Area) ──
     function renderRiskChart(stats) {
         destroyChart('riscoChart');
         const ctx = document.getElementById('riscoChart');
@@ -1192,7 +1192,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // â”€â”€ ANÃLISE 17: Radar Comparativo â”€â”€
+    // ── ANÁLISE 17: Radar Comparativo ──
     function renderRadar(stats) {
         destroyChart('radarChart');
         const ctx = document.getElementById('radarChart');
@@ -1238,7 +1238,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // â”€â”€ ANÃLISE 18: Z-Score â”€â”€
+    // ── ANÁLISE 18: Z-Score ──
     function renderZscore(stats) {
         const el = document.getElementById('zscore-container');
         if (!el) return;
@@ -1250,7 +1250,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const z = s.zscore;
             const color = z > 1 ? '#ff4d4d' : z > 0 ? '#ffcc00' : z > -1 ? '#ff9900' : '#2AD07A';
             const pct   = Math.max(0, Math.min(100, 50 + z * 25)); // Center=50%, 1 std = 25%
-            const label = z > 1.5 ? 'Muito acima da mÃ©dia â€” VENDER' : z > 0.5 ? 'Acima da mÃ©dia â€” Momento favorÃ¡vel' : z < -1.5 ? 'Muito abaixo da mÃ©dia â€” ACUMULAR' : z < -0.5 ? 'Abaixo da mÃ©dia â€” Aguardar' : 'Na mÃ©dia â€” Neutro';
+            const label = z > 1.5 ? 'Muito acima da média — VENDER' : z > 0.5 ? 'Acima da média — Momento favorável' : z < -1.5 ? 'Muito abaixo da média — ACUMULAR' : z < -0.5 ? 'Abaixo da média — Aguardar' : 'Na média — Neutro';
             return `
             <div class="zscore-item">
                 <div class="zscore-name" style="color:${METAL_COLORS[m]};">${METAL_LABELS[m]}</div>
@@ -1264,12 +1264,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <small style="color:#555;font-size:0.72rem;margin-top:5px;display:block;">${label}</small>
                 </div>
-                <div class="zscore-val" style="color:${color};">${z >= 0 ? '+' : ''}${z.toFixed(2)}Ïƒ</div>
+                <div class="zscore-val" style="color:${color};">${z >= 0 ? '+' : ''}${z.toFixed(2)}σ</div>
             </div>`;
         }).join('');
     }
 
-    // â”€â”€ ANÃLISE 19: Alertas de PreÃ§o â”€â”€
+    // ── ANÁLISE 19: Alertas de Preço ──
     function renderAlerts(stats) {
         const el = document.getElementById('alertas-grid');
         if (!el) return;
@@ -1285,13 +1285,13 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="alerta-card ${triggered ? 'alerta-triggered' : ''}">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
                     <strong style="color:${METAL_COLORS[m]};font-size:0.95rem;">${METAL_LABELS[m]}</strong>
-                    ${triggered ? '<span class="badge-triggered">ðŸ”” ALERTA!</span>' : ''}
+                    ${triggered ? '<span class="badge-triggered">🔔 ALERTA!</span>' : ''}
                 </div>
                 <p style="font-size:0.82rem;color:#888;margin-bottom:10px;">Atual: <strong style="color:#ddd;">US$ ${fmtPrice(s.current)}</strong></p>
                 ${alertVal ? `<p style="font-size:0.78rem;color:#666;margin-bottom:10px;">Alvo: US$ ${fmtPrice(alertVal)} | Gap: ${((s.current - alertVal) / alertVal * 100).toFixed(1)}%</p>` : ''}
                 <div style="display:flex;gap:8px;align-items:center;">
                     <input type="number" class="alert-input" data-metal="${m}"
-                        value="${alertVal || ''}" placeholder="PreÃ§o alvo (US$)" step="10"
+                        value="${alertVal || ''}" placeholder="Preço alvo (US$)" step="10"
                         style="flex:1;padding:8px 10px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#fff;font-family:inherit;">
                     <button class="btn-set-alert" data-metal="${m}"
                         style="padding:8px 12px;background:${METAL_COLORS[m]}33;color:${METAL_COLORS[m]};border:1px solid ${METAL_COLORS[m]}55;border-radius:6px;cursor:pointer;font-weight:700;font-size:0.82rem;white-space:nowrap;transition:all 0.2s;">
@@ -1313,7 +1313,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // â”€â”€ ANÃLISE 20: Resumo Executivo â”€â”€
+    // ── ANÁLISE 20: Resumo Executivo ──
     function renderResumo(stats) {
         const el = document.getElementById('resumo-executivo');
         if (!el) return;
@@ -1322,9 +1322,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const groups = {
             'VENDER':   { items: [], color: '#ff4d4d',  icon: 'fa-arrow-up-right-dots', label: 'VENDER AGORA' },
-            'ATENÃ‡ÃƒO':  { items: [], color: '#ff9900',  icon: 'fa-eye',                 label: 'ATENÃ‡ÃƒO â€” Perto do Topo' },
-            'RETER':    { items: [], color: '#ffcc00',  icon: 'fa-pause',               label: 'RETER â€” Aguardar Alta' },
-            'ACUMULAR': { items: [], color: '#2AD07A',  icon: 'fa-cart-shopping',       label: 'ACUMULAR â€” PreÃ§o em Baixa' }
+            'ATENÇÃO':  { items: [], color: '#ff9900',  icon: 'fa-eye',                 label: 'ATENÇÃO — Perto do Topo' },
+            'RETER':    { items: [], color: '#ffcc00',  icon: 'fa-pause',               label: 'RETER — Aguardar Alta' },
+            'ACUMULAR': { items: [], color: '#2AD07A',  icon: 'fa-cart-shopping',       label: 'ACUMULAR — Preço em Baixa' }
         };
         sorted.forEach(x => { if (groups[x.s.signal]) groups[x.s.signal].items.push(x); });
 
@@ -1345,7 +1345,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <div style="text-align:right;">
                             <div style="color:#ddd;font-size:0.85rem;">US$ ${fmtPrice(x.s.current)}</div>
-                            <div style="color:#555;font-size:0.72rem;">Score: ${x.s.score.toFixed(0)} Â· Canal: ${x.s.channelPos.toFixed(0)}%</div>
+                            <div style="color:#555;font-size:0.72rem;">Score: ${x.s.score.toFixed(0)} · Canal: ${x.s.channelPos.toFixed(0)}%</div>
                         </div>
                     </div>`).join('')}
                 </div>
@@ -1354,7 +1354,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =========================================================================
-    // SETTINGS â€” Configurar Homepage
+    // SETTINGS — Configurar Homepage
     // =========================================================================
     async function initSettings() {
         try {
@@ -1366,7 +1366,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 toggle.checked = settings[key] !== 'false';
             });
         } catch(e) {
-            console.warn('NÃ£o foi possÃ­vel carregar settings:', e);
+            console.warn('Não foi possível carregar settings:', e);
         }
 
         const btnSave = document.getElementById('btn-save-settings');
@@ -1387,7 +1387,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
 
                     if (res.ok) {
-                        msgEl.textContent = 'âœ… ConfiguraÃ§Ãµes salvas! Recarregue o site para ver as mudanÃ§as.';
+                        msgEl.textContent = '✅ Configurações salvas! Recarregue o site para ver as mudanças.';
                         msgEl.style.color = '#2AD07A';
                         msgEl.style.display = 'block';
                         setTimeout(() => msgEl.style.display = 'none', 5000);
@@ -1395,7 +1395,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         throw new Error('API error');
                     }
                 } catch(e) {
-                    msgEl.textContent = 'âŒ Erro ao salvar. Tente novamente.';
+                    msgEl.textContent = '❌ Erro ao salvar. Tente novamente.';
                     msgEl.style.color = '#ff4d4d';
                     msgEl.style.display = 'block';
                 }
@@ -1444,7 +1444,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (preview) preview.style.display = 'none';
                     await renderGaleriaAdmin();
                 } else {
-                    alert('âŒ Erro ao adicionar foto. Verifique os dados.');
+                    alert('❌ Erro ao adicionar foto. Verifique os dados.');
                 }
             });
         }
@@ -1545,8 +1545,8 @@ document.addEventListener('DOMContentLoaded', () => {
             div.className   = 'location-item';
             div.innerHTML   = `
                 <button type="button" class="btn-remove-loc"><i class="fa-solid fa-xmark"></i></button>
-                <div class="form-group"><label>TÃ­tulo do Local</label><input type="text" class="loc-title" required placeholder="Ex: IndÃºstria"></div>
-                <div class="form-group" style="margin-bottom:0;"><label>DescriÃ§Ã£o</label><textarea class="loc-desc" rows="2" required placeholder="DescriÃ§Ã£o detalhada..."></textarea></div>`;
+                <div class="form-group"><label>Título do Local</label><input type="text" class="loc-title" required placeholder="Ex: Indústria"></div>
+                <div class="form-group" style="margin-bottom:0;"><label>Descrição</label><textarea class="loc-desc" rows="2" required placeholder="Descrição detalhada..."></textarea></div>`;
             div.querySelector('.btn-remove-loc').addEventListener('click', () => div.remove());
             if (locationsWrapper) locationsWrapper.appendChild(div);
         }
@@ -1578,9 +1578,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (locationsWrapper) locationsWrapper.innerHTML = '';
                     createLocationField();
                     renderMateriais();
-                    alert('âœ… Material cadastrado com sucesso!');
+                    alert('✅ Material cadastrado com sucesso!');
                 } else {
-                    alert('âŒ Erro ao salvar material.');
+                    alert('❌ Erro ao salvar material.');
                 }
             });
         }
@@ -1589,7 +1589,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =========================================================================
-    // SOLUÃ‡Ã•ES
+    // SOLUÇÕES
     // =========================================================================
     function initSolucoes() {
         const formSolucao      = document.getElementById('form-solucao');
@@ -1609,7 +1609,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 solucoesAdminList.innerHTML = '';
 
                 if (!items.length) {
-                    solucoesAdminList.innerHTML = '<p style="color:#666;padding:10px 0;">Nenhuma soluÃ§Ã£o cadastrada.</p>';
+                    solucoesAdminList.innerHTML = '<p style="color:#666;padding:10px 0;">Nenhuma solução cadastrada.</p>';
                     return;
                 }
 
@@ -1650,13 +1650,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 solucoesAdminList.querySelectorAll('.btn-delete-solucao').forEach(btn => {
                     btn.addEventListener('click', async () => {
-                        if (!confirm('Remover esta soluÃ§Ã£o?')) return;
+                        if (!confirm('Remover esta solução?')) return;
                         await fetch(`/api/solucoes/${btn.dataset.id}`, { method: 'DELETE' });
                         renderSolucoesAdmin();
                     });
                 });
             } catch(err) {
-                solucoesAdminList.innerHTML = '<p style="color:#f55;">Erro ao carregar soluÃ§Ãµes.</p>';
+                solucoesAdminList.innerHTML = '<p style="color:#f55;">Erro ao carregar soluções.</p>';
             }
         }
 
@@ -1681,9 +1681,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     solIdInput.value = '';
                     if (btnCancelSolucao) btnCancelSolucao.style.display = 'none';
                     renderSolucoesAdmin();
-                    alert('âœ… SoluÃ§Ã£o salva com sucesso!');
+                    alert('✅ Solução salva com sucesso!');
                 } else {
-                    alert('âŒ Erro ao salvar a soluÃ§Ã£o.');
+                    alert('❌ Erro ao salvar a solução.');
                 }
             });
         }
@@ -1700,7 +1700,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =========================================================================
-    // NOTÃCIAS
+    // NOTÍCIAS
     // =========================================================================
     function initNoticias() {
         const formNoticia       = document.getElementById('form-noticia');
@@ -1715,14 +1715,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 noticiasAdminList.innerHTML = '';
 
                 if (!items.length) {
-                    noticiasAdminList.innerHTML = '<p style="color:#666;padding:10px 0;">Nenhuma notÃ­cia publicada ainda.</p>';
+                    noticiasAdminList.innerHTML = '<p style="color:#666;padding:10px 0;">Nenhuma notícia publicada ainda.</p>';
                     return;
                 }
 
                 items.forEach(n => {
                     const div   = document.createElement('div');
                     div.className = 'noticia-admin-item';
-                    const dataF = n.data_pub ? new Date(n.data_pub + 'T12:00:00').toLocaleDateString('pt-BR') : 'â€”';
+                    const dataF = n.data_pub ? new Date(n.data_pub + 'T12:00:00').toLocaleDateString('pt-BR') : '—';
                     div.innerHTML = `
                         <div class="noticia-admin-info">
                             ${n.categoria ? `<span class="noticia-admin-cat">${n.categoria}</span>` : ''}
@@ -1736,13 +1736,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 noticiasAdminList.querySelectorAll('.btn-delete-noticia').forEach(btn => {
                     btn.addEventListener('click', async () => {
-                        if (!confirm('Remover esta notÃ­cia?')) return;
+                        if (!confirm('Remover esta notícia?')) return;
                         await fetch(`/api/noticias/${btn.dataset.id}`, { method: 'DELETE' });
                         renderNoticiasAdmin();
                     });
                 });
             } catch(err) {
-                noticiasAdminList.innerHTML = '<p style="color:#f55;">Erro ao carregar notÃ­cias.</p>';
+                noticiasAdminList.innerHTML = '<p style="color:#f55;">Erro ao carregar notícias.</p>';
             }
         }
 
@@ -1769,9 +1769,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     const dEl = document.getElementById('not-data');
                     if (dEl) dEl.value = new Date().toISOString().split('T')[0];
                     renderNoticiasAdmin();
-                    alert('âœ… NotÃ­cia publicada! Atualize a pÃ¡gina inicial para ver.');
+                    alert('✅ Notícia publicada! Atualize a página inicial para ver.');
                 } else {
-                    alert('âŒ Erro ao publicar notÃ­cia.');
+                    alert('❌ Erro ao publicar notícia.');
                 }
             });
         }
@@ -1780,14 +1780,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =========================================================================
-    // RELATÃ“RIO DIÃRIO LME (WHATSAPP/EMAIL)
+    // RELATÓRIO DIÁRIO LME (WHATSAPP/EMAIL)
     // =========================================================================
     async function initRelatorioDiario() {
         const btnGerar = document.getElementById('btn-gerar-imagem-wpp');
         const btnCopiar = document.getElementById('btn-copiar-texto');
         if (!btnGerar) return;
 
-        // Fetch latest LME data
+        let weeksData = [];
+
         try {
             const resMeses = await fetch('/api/lme/meses');
             const mesesDisponiveis = await resMeses.json();
@@ -1800,6 +1801,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const weeks = data.semanas || [];
             if (weeks.length === 0) return;
 
+            weeksData = weeks;
             const week = weeks[0];
             renderRelatorioDiario(week);
         } catch(e) {
@@ -1818,30 +1820,30 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         btnCopiar.addEventListener('click', () => {
-            if (!weeks || weeks.length === 0) return;
-            const week = weeks[0];
+            if (!weeksData || weeksData.length === 0) return;
+            const week = weeksData[0];
             const comp = week.computed || {};
             const d = week.days || [];
             const lastDate = d[d.length - 1]?.data || '';
-            let txt = `*COTAÃ‡ÃƒO LME - APEXTECH METAIS*\n`;
+            let txt = `*COTAÇÃO LME - APEXTECH METAIS*\n`;
             txt += `Semana de ${d[0]?.data} a ${lastDate}\n\n`;
-            txt += `*VariaÃ§Ã£o DiÃ¡ria (Grupo 6):*\n`;
+            txt += `*Variação Diária (Grupo 6):*\n`;
             
             const metals = ['cobre', 'zinco', 'aluminio', 'chumbo', 'estanho', 'niquel'];
             metals.forEach(m => {
                 const osc = comp['oscilacaoRs_'+m] || 0;
-                const setinha = osc >= 0 ? 'â¬†' : 'â¬‡';
+                const setinha = osc >= 0 ? '⬆' : '⬇';
                 const money = 'R$ ' + Math.abs(osc).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                 txt += `- ${m.toUpperCase()}: ${setinha} ${money}\n`;
             });
             
             const dolarOsc = comp['oscilacaoRs_dolar'] || 0;
-            const dSetinha = dolarOsc >= 0 ? 'â¬†' : 'â¬‡';
+            const dSetinha = dolarOsc >= 0 ? '⬆' : '⬇';
             const dMoney = '$ ' + Math.abs(dolarOsc).toLocaleString('pt-BR', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
-            txt += `- DÃ“LAR: ${dSetinha} ${dMoney}\n`;
+            txt += `- DÓLAR: ${dSetinha} ${dMoney}\n`;
 
             navigator.clipboard.writeText(txt).then(() => {
-                alert('Resumo copiado para a Ã¡rea de transferÃªncia!');
+                alert('Resumo copiado para a área de transferência!');
             }).catch(err => {
                 alert('Erro ao copiar texto.');
                 console.error(err);
@@ -1869,8 +1871,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (btnExcel) {
             btnExcel.addEventListener('click', async () => {
-                if (!weeks || weeks.length === 0) return;
-                const block = weeks[0];
+                if (!weeksData || weeksData.length === 0) return;
+                const block = weeksData[0];
                 btnExcel.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gerando...';
                 try {
                     const res = await fetch('/api/lme/gerar-excel', {
@@ -1919,13 +1921,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const metals = ['cobre', 'zinco', 'aluminio', 'chumbo', 'estanho', 'niquel', 'dolar'];
         
         const formatMoney = (val, isDolar) => {
-            if (!val || val === 'feriado') return 'â€”';
+            if (!val || val === 'feriado' || val === 0 || isNaN(val)) return '-';
             const prefix = isDolar ? '$ ' : 'R$ ';
             const maxF = isDolar ? 4 : 2;
             return prefix + val.toLocaleString('pt-BR', { minimumFractionDigits: maxF, maximumFractionDigits: maxF });
         };
         const formatPct = (val) => {
-            if (val === null || val === undefined) return 'â€”';
+            if (val === null || val === undefined || isNaN(val)) return '-';
             return (val * 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%';
         };
 
@@ -1950,15 +1952,15 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('rel-fech-' + m).textContent = formatPct(comp['fechamento_'+m]);
             document.getElementById('rel-osc-pct-' + m).textContent = formatPct(comp['oscilacaoPct_'+m]);
             
-            const oscRs = comp['oscilacaoRs_'+m];
-            const setinha = oscRs >= 0 ? 'â¬†' : 'â¬‡';
-            document.getElementById('rel-osc-rs-' + m).innerHTML = `${setinha} ${formatMoney(Math.abs(oscRs), isDolar)}`;
+            const oscRs = comp['oscilacaoRs_'+m] || 0;
+            const arrowIcon = oscRs >= 0 ? '<i class="fa-solid fa-arrow-up"></i>' : '<i class="fa-solid fa-arrow-down"></i>';
+            document.getElementById('rel-osc-rs-' + m).innerHTML = `${arrowIcon} ${formatMoney(Math.abs(oscRs), isDolar)}`;
 
             document.getElementById('rel-mensal-' + m).textContent = formatMoney(comp['mediaMensal_'+m], isDolar);
 
             document.getElementById('rel-comp-ant-' + m).textContent = formatMoney(comp['semanaAnterior_'+m], isDolar);
             document.getElementById('rel-comp-atu-' + m).textContent = formatMoney(comp['mediaSemanal_'+m], isDolar);
-            document.getElementById('rel-comp-osc-' + m).innerHTML = `${setinha} ${formatMoney(Math.abs(oscRs), isDolar)}`;
+            document.getElementById('rel-comp-osc-' + m).innerHTML = `${arrowIcon} ${formatMoney(Math.abs(oscRs), isDolar)}`;
         });
 
         renderRelatorioCharts(week);
@@ -1969,7 +1971,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const comp = week.computed || {};
         const metals = ['cobre', 'zinco', 'aluminio', 'chumbo', 'estanho', 'niquel'];
         
-        const labels = ['COBRE', 'ZINCO', 'ALUMÃNIO', 'CHUMBO', 'ESTANHO', 'NÃQUEL'];
+        const labels = ['COBRE', 'ZINCO', 'ALUMÍNIO', 'CHUMBO', 'ESTANHO', 'NÍQUEL'];
         const dataAtu = metals.map(m => comp['mediaSemanal_'+m] || 0);
         const dataAnt = metals.map(m => comp['semanaAnterior_'+m] || 0);
         const dataOsc = metals.map(m => comp['oscilacaoRs_'+m] || 0);
@@ -2016,7 +2018,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 labels: labels,
                 datasets: [
                     {
-                        label: 'VARIAÃ‡ÃƒO',
+                        label: 'VARIAÇÃO',
                         data: dataOsc,
                         borderColor: '#3498db',
                         tension: 0.4,
@@ -2049,8 +2051,8 @@ document.addEventListener('DOMContentLoaded', () => {
             
             metals.forEach(m => {
                 const lme = comp['mediaLME_'+m] || 0;
-                const baseVal = lme * (p / 100);
-                colsHtml += `<td>R$ ${baseVal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>`;
+                let baseVal = lme * (p / 100);
+                colsHtml += `<td>${lme === 0 ? '-' : 'R$ ' + baseVal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>`;
             });
             
             tr.innerHTML = colsHtml;
