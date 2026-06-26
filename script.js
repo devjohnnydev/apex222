@@ -753,7 +753,7 @@ Responda de forma curta, amigável e profissional. Use o português do Brasil. N
                         <th>Chumbo <small>U$/t</small></th>
                         <th>Estanho <small>U$/t</small></th>
                         <th>Níquel <small>U$/t</small></th>
-                        <th>Dólar <small>R$/US$</small></th>
+                        <th>Dólar <small>US$</small></th>
                     </tr>
                 </thead>
                 <tbody>
