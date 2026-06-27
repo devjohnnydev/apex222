@@ -1079,9 +1079,48 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
 
+        const customDatalabelsSemana = {
+            id: 'customDatalabelsSemana',
+            afterDatasetsDraw(chart) {
+                const { ctx } = chart;
+                chart.data.datasets.forEach((dataset, i) => {
+                    const meta = chart.getDatasetMeta(i);
+                    if (meta.hidden) return;
+                    meta.data.forEach((point, idx) => {
+                        const val = dataset.data[idx];
+                        if (!val) return;
+                        
+                        if (i === 0) { // Semana Atual
+                            const prevVal = prev5[idx] || 0;
+                            const diff = val - prevVal;
+                            const pct = prevVal ? ((diff / prevVal) * 100).toFixed(1) : '0.0';
+                            const arrow = diff >= 0 ? '\u25b2' : '\u25bc';
+                            const sign = diff >= 0 ? '+' : '';
+                            const color = val >= prevVal ? '#2AD07A' : '#ff4d4d';
+                            
+                            ctx.save();
+                            ctx.font = 'bold 10px Lato, sans-serif';
+                            ctx.fillStyle = color;
+                            ctx.textAlign = 'center';
+                            ctx.fillText(arrow + ' US$ ' + fmtPrice(val), point.x, point.y - 18);
+                            ctx.fillText(sign + pct + '%', point.x, point.y - 6);
+                            ctx.restore();
+                        } else if (i === 1) { // Semana Anterior
+                            ctx.save();
+                            ctx.font = '9px Lato, sans-serif';
+                            ctx.fillStyle = '#aaaaaa';
+                            ctx.textAlign = 'center';
+                            ctx.fillText('US$ ' + fmtPrice(val), point.x, point.y - 6);
+                            ctx.restore();
+                        }
+                    });
+                });
+            }
+        };
+
         chartInstances['semanaChart'] = new Chart(ctx, {
             type: 'bar',
-            plugins: window.ChartDataLabels ? [window.ChartDataLabels] : [],
+            plugins: [customDatalabelsSemana],
             data: {
                 labels,
                 datasets: [
@@ -1092,26 +1131,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         borderColor: currentBorders,
                         borderWidth: 2,
                         borderRadius: 6,
-                        order: 1,
-                        datalabels: {
-                            anchor: 'end',
-                            align: 'end',
-                            offset: 4,
-                            formatter: (value, context) => {
-                                const i = context.dataIndex;
-                                const diff = last5[i] - prev5[i];
-                                const pct  = prev5[i] ? ((diff / prev5[i]) * 100).toFixed(1) : '0.0';
-                                const arrow = diff >= 0 ? '\u25b2' : '\u25bc';
-                                const sign  = diff >= 0 ? '+' : '';
-                                return arrow + ' US$ ' + fmtPrice(value) + '\n' + sign + pct + '%';
-                            },
-                            color: (context) => {
-                                const i = context.dataIndex;
-                                return last5[i] >= prev5[i] ? '#2AD07A' : '#ff4d4d';
-                            },
-                            font: { weight: 'bold', size: 10, family: 'Lato' },
-                            textAlign: 'center'
-                        }
+                        order: 1
                     },
                     {
                         label: 'Semana Anterior (Media 5d)',
@@ -1120,16 +1140,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         borderColor: 'rgba(255,255,255,0.35)',
                         borderWidth: 2,
                         borderRadius: 6,
-                        order: 2,
-                        datalabels: {
-                            anchor: 'end',
-                            align: 'end',
-                            offset: 4,
-                            formatter: (value) => 'US$ ' + fmtPrice(value),
-                            color: '#aaaaaa',
-                            font: { size: 9, family: 'Lato' },
-                            textAlign: 'center'
-                        }
+                        order: 2
                     }
                 ]
             },
@@ -1145,7 +1156,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             pointStyle: 'rectRounded'
                         }
                     },
-                    datalabels: { display: true },
                     tooltip: {
                         callbacks: {
                             label: function(context) {
