@@ -267,10 +267,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             COMP_ROWS.forEach(row => {
                 const vals = comp[row.key] || {};
-                const labelTd = `<td class="excel-label-cell">${row.lbl}</td>`;
+                const isAnterior = row.cls === 'excel-row-anterior';
+                const inlineStyle = isAnterior ? ' style="background-color:#1a1a1a;color:#ffffff;"' : '';
+                const labelTd = `<td class="excel-label-cell"${inlineStyle}>${row.lbl}</td>`;
                 const valTds = vc.map(c => {
                     const fmtToUse = c.k === 'dolar' && row.dolFmt ? row.dolFmt : row.fmt;
-                    return `<td>${formatVal(vals[c.k], fmtToUse)}</td>`;
+                    return `<td${inlineStyle}>${formatVal(vals[c.k], fmtToUse)}</td>`;
                 }).join('');
                 html += `<tr class="${row.cls}">${labelTd}${valTds}</tr>`;
             });

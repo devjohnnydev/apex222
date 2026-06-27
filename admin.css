@@ -1061,6 +1061,14 @@ input:checked + .toggle-slider:before { transform: translateX(24px); background-
     font-weight: bold;
 }
 
+.excel-hdr-date {
+    background-color: #1a1a1a !important;
+    color: #fff !important;
+    font-weight: bold;
+    text-align: left;
+    min-width: 120px;
+}
+
 .excel-title-row {
     font-size: 18pt;
     font-weight: bold;
@@ -1141,6 +1149,12 @@ input:checked + .toggle-slider:before { transform: translateX(24px); background-
         width: 100%;
         background: white;
         color: black;
+    }
+    .excel-row-anterior, .excel-row-anterior td, .excel-row-anterior th {
+        background-color: #1a1a1a !important;
+        color: #ffffff !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
     .excel-table th, .excel-table td {
         border: 1px solid #999 !important;
