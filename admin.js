@@ -1055,27 +1055,130 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ── ANÁLISE 10: Semana Atual vs Anterior ──
+    // ── ANÁLISE 05: Semana Atual vs Anterior ──
     function renderWeekComparison(stats) {
         destroyChart('semanaChart');
         const ctx = document.getElementById('semanaChart');
         if (!ctx) return;
 
-        const labels  = METALS.map(m => METAL_LABELS[m]);
-        const last5   = METALS.map(m => stats[m] ? parseFloat(stats[m].avg5.toFixed(2)) : 0);
-        const prev5   = METALS.map(m => stats[m] ? parseFloat(stats[m].avgPrev5.toFixed(2)) : 0);
+        const labels = METALS.map(m => METAL_LABELS[m]);
+        const last5  = METALS.map(m => stats[m] ? parseFloat(stats[m].avg5.toFixed(2))     : 0);
+        const prev5  = METALS.map(m => stats[m] ? parseFloat(stats[m].avgPrev5.toFixed(2)) : 0);
+
+        // Color each "Semana Atual" bar: green if up, red if down vs prev week
+        const currentColors = METALS.map((m, i) => {
+            if (!stats[m]) return 'rgba(100,100,100,0.5)';
+            return last5[i] >= prev5[i] ? 'rgba(42,208,122,0.85)' : 'rgba(255,77,77,0.85)';
+        });
+        const currentBorders = METALS.map((m, i) => {
+            if (!stats[m]) return 'rgba(100,100,100,0.8)';
+            return last5[i] >= prev5[i] ? 'rgba(42,208,122,1)' : 'rgba(255,77,77,1)';
+        });
 
         chartInstances['semanaChart'] = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels,
                 datasets: [
-                    { label: 'Ult. 5 Dias (Média)', data: last5, backgroundColor: 'rgba(42,208,122,0.7)', borderRadius: 5 },
-                    { label: 'Semana Anterior (Média)', data: prev5, backgroundColor: 'rgba(255,255,255,0.12)', borderRadius: 5 }
+                    {
+                        label: 'Semana Atual (Média 5d)',
+                        data: last5,
+                        backgroundColor: currentColors,
+                        borderColor: currentBorders,
+                        borderWidth: 2,
+                        borderRadius: 6,
+                        order: 1
+                    },
+                    {
+                        label: 'Semana Anterior (Média 5d)',
+                        data: prev5,
+                        backgroundColor: 'rgba(255,255,255,0.08)',
+                        borderColor: 'rgba(255,255,255,0.35)',
+                        borderWidth: 2,
+                        borderRadius: 6,
+                        order: 2
+                    }
                 ]
             },
-            options: { ...baseChartOpts }
+            options: deepMerge(baseChartOpts, {
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#ccc',
+                            font: { family: 'Lato', size: 12 },
+                            padding: 18,
+                            usePointStyle: true,
+                            pointStyle: 'rectRounded'
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const i = context.dataIndex;
+                                const m = METALS[i];
+                                const val = context.raw;
+                                const diff = last5[i] - prev5[i];
+                                const pct  = prev5[i] ? ((diff / prev5[i]) * 100).toFixed(2) : '0.00';
+                                const arrow = diff >= 0 ? '▲' : '▼';
+                                const sign  = diff >= 0 ? '+' : '';
+                                if (context.datasetIndex === 0) {
+                                    return [
+                                        ` Atual: US$ ${fmtPrice(val)}/t`,
+                                        ` ${arrow} ${sign}${pct}% vs semana anterior`
+                                    ];
+                                }
+                                return ` Anterior: US$ ${fmtPrice(val)}/t`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: '#aaa', font: { size: 12, weight: 'bold' } },
+                        grid: { color: 'rgba(255,255,255,0.04)' }
+                    },
+                    y: {
+                        ticks: {
+                            color: '#888',
+                            font: { size: 11 },
+                            callback: v => `US$ ${fmtPrice(v)}`
+                        },
+                        grid: { color: 'rgba(255,255,255,0.06)' }
+                    }
+                }
+            })
         });
+
+        // ── Render directional badges below the chart ──
+        const badges = document.getElementById('semana-badges');
+        if (!badges) return;
+        badges.innerHTML = METALS.map((m, i) => {
+            if (!stats[m]) return '';
+            const diff   = last5[i] - prev5[i];
+            const pct    = prev5[i] ? ((diff / prev5[i]) * 100) : 0;
+            const isUp   = diff >= 0;
+            const arrow  = isUp ? '▲' : '▼';
+            const color  = isUp ? '#2AD07A' : '#ff4d4d';
+            const bgClr  = isUp ? 'rgba(42,208,122,0.12)' : 'rgba(255,77,77,0.12)';
+            const border = isUp ? 'rgba(42,208,122,0.4)' : 'rgba(255,77,77,0.4)';
+            const sign   = isUp ? '+' : '';
+            return `
+            <div style="
+                background:${bgClr};
+                border:1px solid ${border};
+                border-radius:10px;
+                padding:10px 16px;
+                min-width:110px;
+                text-align:center;
+                flex:1 1 110px;
+                max-width:160px;
+            ">
+                <div style="font-size:0.75rem;color:#aaa;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:4px;">${METAL_LABELS[m]}</div>
+                <div style="font-size:1.6rem;color:${color};line-height:1;">${arrow}</div>
+                <div style="font-size:1rem;color:${color};font-weight:700;margin-top:2px;">${sign}${pct.toFixed(2)}%</div>
+                <div style="font-size:0.7rem;color:#666;margin-top:3px;">US$ ${fmtPrice(last5[i])}</div>
+            </div>`;
+        }).join('');
     }
 
     // ── ANÁLISE 11: Melhor Dia da Semana ──
