@@ -1257,6 +1257,16 @@ input:checked + .toggle-slider:before { transform: translateX(24px); background-
 .font-bold   { font-weight: bold; }
 .text-xs     { font-size: 0.75rem; }
 
+/* ── Força fundo azul e texto branco em todos os td da linha azul ── */
+tr.bg-blue td,
+tr.bg-blue .rel-label-col {
+    background-color: #0070c0 !important;
+    color: #ffffff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+
 /* ── Comparative table (TIPO) ── */
 .rel-comparativo-container { margin-bottom: 20px; }
 .rel-comparativo th { background: #808080; color: #fff; }

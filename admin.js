@@ -475,7 +475,8 @@ document.addEventListener('DOMContentLoaded', () => {
         responsive: true,
         maintainAspectRatio: true,
         plugins: {
-            legend: { labels: { color: '#ccc', font: { family: 'Lato', size: 12 }, padding: 16 } }
+            legend: { labels: { color: '#ccc', font: { family: 'Lato', size: 12 }, padding: 16 } },
+            datalabels: { display: false }
         },
         scales: {
             x: { ticks: { color: '#888', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
