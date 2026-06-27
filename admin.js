@@ -1077,32 +1077,66 @@ document.addEventListener('DOMContentLoaded', () => {
             return last5[i] >= prev5[i] ? 'rgba(42,208,122,1)' : 'rgba(255,77,77,1)';
         });
 
+        // Register datalabels plugin if available
+        if (window.ChartDataLabels) {
+            Chart.register(window.ChartDataLabels);
+        }
+
         chartInstances['semanaChart'] = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels,
                 datasets: [
                     {
-                        label: 'Semana Atual (Média 5d)',
+                        label: 'Semana Atual (Media 5d)',
                         data: last5,
                         backgroundColor: currentColors,
                         borderColor: currentBorders,
                         borderWidth: 2,
                         borderRadius: 6,
-                        order: 1
+                        order: 1,
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'end',
+                            offset: 4,
+                            formatter: (value, context) => {
+                                const i = context.dataIndex;
+                                const diff = last5[i] - prev5[i];
+                                const pct  = prev5[i] ? ((diff / prev5[i]) * 100).toFixed(1) : '0.0';
+                                const arrow = diff >= 0 ? '\u25b2' : '\u25bc';
+                                const sign  = diff >= 0 ? '+' : '';
+                                return arrow + ' US$ ' + fmtPrice(value) + '\n' + sign + pct + '%';
+                            },
+                            color: (context) => {
+                                const i = context.dataIndex;
+                                return last5[i] >= prev5[i] ? '#2AD07A' : '#ff4d4d';
+                            },
+                            font: { weight: 'bold', size: 10, family: 'Lato' },
+                            textAlign: 'center'
+                        }
                     },
                     {
-                        label: 'Semana Anterior (Média 5d)',
+                        label: 'Semana Anterior (Media 5d)',
                         data: prev5,
                         backgroundColor: 'rgba(255,255,255,0.08)',
                         borderColor: 'rgba(255,255,255,0.35)',
                         borderWidth: 2,
                         borderRadius: 6,
-                        order: 2
+                        order: 2,
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'end',
+                            offset: 4,
+                            formatter: (value) => 'US$ ' + fmtPrice(value),
+                            color: '#aaaaaa',
+                            font: { size: 9, family: 'Lato' },
+                            textAlign: 'center'
+                        }
                     }
                 ]
             },
             options: deepMerge(baseChartOpts, {
+                layout: { padding: { top: 55 } },
                 plugins: {
                     legend: {
                         labels: {
@@ -1113,23 +1147,23 @@ document.addEventListener('DOMContentLoaded', () => {
                             pointStyle: 'rectRounded'
                         }
                     },
+                    datalabels: { display: true },
                     tooltip: {
                         callbacks: {
                             label: function(context) {
                                 const i = context.dataIndex;
-                                const m = METALS[i];
                                 const val = context.raw;
                                 const diff = last5[i] - prev5[i];
                                 const pct  = prev5[i] ? ((diff / prev5[i]) * 100).toFixed(2) : '0.00';
-                                const arrow = diff >= 0 ? '▲' : '▼';
+                                const arrow = diff >= 0 ? '\u25b2' : '\u25bc';
                                 const sign  = diff >= 0 ? '+' : '';
                                 if (context.datasetIndex === 0) {
                                     return [
-                                        ` Atual: US$ ${fmtPrice(val)}/t`,
-                                        ` ${arrow} ${sign}${pct}% vs semana anterior`
+                                        ' Atual: US$ ' + fmtPrice(val) + '/t',
+                                        ' ' + arrow + ' ' + sign + pct + '% vs semana anterior'
                                     ];
                                 }
-                                return ` Anterior: US$ ${fmtPrice(val)}/t`;
+                                return ' Anterior: US$ ' + fmtPrice(val) + '/t';
                             }
                         }
                     }
@@ -1143,7 +1177,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         ticks: {
                             color: '#888',
                             font: { size: 11 },
-                            callback: v => `US$ ${fmtPrice(v)}`
+                            callback: v => 'US$ ' + fmtPrice(v)
                         },
                         grid: { color: 'rgba(255,255,255,0.06)' }
                     }
