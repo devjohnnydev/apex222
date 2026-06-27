@@ -1081,6 +1081,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         chartInstances['semanaChart'] = new Chart(ctx, {
             type: 'bar',
+            plugins: window.ChartDataLabels ? [window.ChartDataLabels] : [],
             data: {
                 labels,
                 datasets: [
