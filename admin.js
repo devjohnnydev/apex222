@@ -2202,7 +2202,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Plugin for datalabels (inline, no external lib needed via canvas drawing)
         const datalabelPlugin = {
-            id: 'datalabels',
+            id: 'customDatalabels',
             afterDatasetsDraw(chart) {
                 const { ctx } = chart;
                 chart.data.datasets.forEach((dataset, i) => {
@@ -2263,7 +2263,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     legend: {
                         position: 'bottom',
                         labels: { color: '#000', font: { size: 11, weight: 'bold' }, boxWidth: 30 }
-                    }
+                    },
+                    datalabels: { display: false }
                 },
                 scales: {
                     x: { ticks: { color: '#000', font: { size: 10, weight: 'bold' } }, grid: { color: '#e0e0e0' } },
@@ -2305,7 +2306,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     legend: {
                         position: 'bottom',
                         labels: { color: '#000', font: { size: 11, weight: 'bold' } }
-                    }
+                    },
+                    datalabels: { display: false }
                 },
                 scales: {
                     x: { ticks: { color: '#000', font: { size: 10, weight: 'bold' } }, grid: { color: '#e0e0e0' } },
