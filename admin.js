@@ -1078,10 +1078,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return last5[i] >= prev5[i] ? 'rgba(42,208,122,1)' : 'rgba(255,77,77,1)';
         });
 
-        // Register datalabels plugin if available
-        if (window.ChartDataLabels) {
-            Chart.register(window.ChartDataLabels);
-        }
 
         chartInstances['semanaChart'] = new Chart(ctx, {
             type: 'bar',
