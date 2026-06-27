@@ -1098,6 +1098,7 @@ input:checked + .toggle-slider:before { transform: translateX(24px); background-
 .excel-row-media         { background-color: #F2F2F2; font-weight: bold; color: #333; }
 .excel-row-lme100        { background-color: #FFFF00; font-weight: bold; color: #333; }
 .excel-row-anterior      { background-color: #1a1a1a; font-weight: bold; color: #fff; }
+.excel-row-anterior td   { background-color: #1a1a1a !important; color: #fff !important; }
 .excel-row-fechamento    { background-color: #E2EFDA; font-weight: bold; }
 .excel-row-oscilacao-pct { background-color: #00B0F0; font-weight: bold; color: #fff; }
 .excel-row-oscilacao-rs  { background-color: #F2F2F2; font-weight: bold; }
@@ -1154,7 +1155,8 @@ input:checked + .toggle-slider:before { transform: translateX(24px); background-
     .excel-hdr-niquel   { background-color: #FFFFFF !important; color: #000 !important; }
     .excel-hdr-dolar    { background-color: #70AD47 !important; color: #fff !important; }
     .excel-row-lme100   { background-color: #FFFF00 !important; }
-    .excel-row-anterior { background-color: #1a1a1a !important; color: #fff !important; }
+    .excel-row-anterior    { background-color: #1a1a1a !important; color: #fff !important; }
+    .excel-row-anterior td { background-color: #1a1a1a !important; color: #fff !important; }
     .excel-row-oscilacao-pct { background-color: #00B0F0 !important; color: #fff !important; }
     .excel-row-mensal   { background-color: #A6A6A6 !important; }
     .excel-up   { color: #00B050 !important; }
