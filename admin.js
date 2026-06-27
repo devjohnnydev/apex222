@@ -1928,7 +1928,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (btnPdf) {
             btnPdf.addEventListener('click', () => {
                 const captureArea = document.getElementById('capture-area');
-                html2canvas(captureArea, { scale: 2 }).then(canvas => {
+                html2canvas(captureArea, { scale: 3 }).then(canvas => {
                     const imgData = canvas.toDataURL('image/jpeg', 0.95);
                     const { jsPDF } = window.jspdf;
                     const pdf = new jsPDF('p', 'mm', 'a4');
@@ -2073,10 +2073,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (val === 0) return;
                         const label = 'R$ ' + Math.abs(val).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                         ctx.save();
-                        ctx.font = 'bold 10px Arial';
-                        ctx.fillStyle = dataset.borderColor || '#fff';
+                        ctx.font = 'bold 12px Arial';
+                        ctx.fillStyle = '#000000';
                         ctx.textAlign = 'center';
-                        ctx.fillText(label, point.x, point.y - 8);
+                        ctx.fillText(label, point.x, point.y - 12);
                         ctx.restore();
                     });
                 });
@@ -2093,25 +2093,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 labels: labels,
                 datasets: [
                     {
-                        label: 'MEDIA SEMANA',
+                        label: 'MÉDIA SEMANA',
                         data: dataAtu,
-                        borderColor: '#4fc3f7',
-                        backgroundColor: 'rgba(79,195,247,0.08)',
-                        borderWidth: 2,
+                        borderColor: '#1f77b4',
+                        backgroundColor: 'transparent',
+                        borderWidth: 3,
                         tension: 0.3,
-                        pointBackgroundColor: '#4fc3f7',
-                        pointRadius: 5
+                        pointBackgroundColor: '#1f77b4',
+                        pointRadius: 7
                     },
                     {
-                        label: 'MEDIA SEMANA ANTERIOR',
+                        label: 'MÉDIA SEMANA ANTERIOR',
                         data: dataAnt,
-                        borderColor: '#ff8c42',
-                        backgroundColor: 'rgba(255,140,66,0.05)',
-                        borderWidth: 2,
+                        borderColor: '#ff7f0e',
+                        backgroundColor: 'transparent',
+                        borderWidth: 3,
                         borderDash: [6, 4],
                         tension: 0.3,
-                        pointBackgroundColor: '#ff8c42',
-                        pointRadius: 5
+                        pointBackgroundColor: '#ff7f0e',
+                        pointRadius: 7
                     }
                 ]
             },
@@ -2122,14 +2122,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 plugins: {
                     legend: {
                         position: 'bottom',
-                        labels: { color: '#ccc', font: { size: 11 }, boxWidth: 30 }
+                        labels: { color: '#000', font: { size: 11, weight: 'bold' }, boxWidth: 30 }
                     }
                 },
                 scales: {
-                    x: { ticks: { color: '#aaa', font: { size: 10 } }, grid: { color: '#2a2a3e' } },
+                    x: { ticks: { color: '#000', font: { size: 10, weight: 'bold' } }, grid: { color: '#e0e0e0' } },
                     y: {
-                        ticks: { color: '#aaa', font: { size: 10 }, callback: v => 'R$ ' + v.toLocaleString('pt-BR') },
-                        grid: { color: '#2a2a3e' }
+                        ticks: { color: '#000', font: { size: 10, weight: 'bold' }, callback: v => 'R$ ' + v.toLocaleString('pt-BR') },
+                        grid: { color: '#e0e0e0' }
                     }
                 }
             }
@@ -2147,11 +2147,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     {
                         label: 'VARIAÇÃO',
                         data: dataOsc,
-                        borderColor: '#4fc3f7',
-                        backgroundColor: 'rgba(79,195,247,0.05)',
-                        borderWidth: 2,
+                        borderColor: '#1f77b4',
+                        backgroundColor: 'transparent',
+                        borderWidth: 3,
                         tension: 0.3,
-                        pointBackgroundColor: dataOsc.map(v => v >= 0 ? '#2ecc71' : '#e74c3c'),
+                        pointBackgroundColor: dataOsc.map(v => '#e74c3c'),
                         pointRadius: 8,
                         pointStyle: 'circle'
                     }
@@ -2164,14 +2164,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 plugins: {
                     legend: {
                         position: 'bottom',
-                        labels: { color: '#ccc', font: { size: 11 } }
+                        labels: { color: '#000', font: { size: 11, weight: 'bold' } }
                     }
                 },
                 scales: {
-                    x: { ticks: { color: '#aaa', font: { size: 10 } }, grid: { color: '#2a2a3e' } },
+                    x: { ticks: { color: '#000', font: { size: 10, weight: 'bold' } }, grid: { color: '#e0e0e0' } },
                     y: {
-                        ticks: { color: '#aaa', font: { size: 10 }, callback: v => 'R$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) },
-                        grid: { color: '#2a2a3e' }
+                        ticks: { color: '#000', font: { size: 10, weight: 'bold' }, callback: v => 'R$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) },
+                        grid: { color: '#e0e0e0' }
                     }
                 }
             }

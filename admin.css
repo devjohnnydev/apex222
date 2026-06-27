@@ -1446,3 +1446,71 @@ input:checked + .toggle-slider:before { transform: translateX(24px); background-
 .rel-base-table th:nth-child(5) { background: #d9d9d9 !important; color: #000 !important; }
 .rel-base-table th:nth-child(6) { background: #b5b059 !important; color: #fff !important; }
 .rel-base-table th:nth-child(7) { background: #ffffff !important; color: #000 !important; }
+
+/* --- APPLIED FORMATTING FROM PROMPT --- */
+.rel-table-container, .rel-comparativo-container, .rel-base-container {
+    font-family: 'Calibri', 'Arial', sans-serif;
+}
+
+/* Base formatting for tables */
+.rel-table td, .rel-base-table td, .rel-comparativo td {
+    font-weight: bold !important;
+    font-size: 10pt;
+    border: 1px solid rgba(0, 0, 0, 0.2) !important;
+    color: #000 !important; /* ensure good contrast */
+}
+
+.rel-table th, .rel-base-table th, .rel-comparativo th {
+    font-weight: bold !important;
+    font-size: 11pt;
+    border: 1px solid rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Light background for charts for printing */
+.rel-charts-container {
+    background: #ffffff !important;
+    border: 1px solid #eee;
+}
+.rel-chart-section-title {
+    color: #000 !important;
+    border-bottom: 1px solid #ccc !important;
+    font-weight: bold;
+}
+
+/* Remove striped backgrounds from base table */
+.rel-base-table tr:nth-child(even), .rel-base-table tr:nth-child(odd) { background: transparent !important; }
+
+/* PASTEL COLUMN COLORS (approx 20-30% saturation) */
+/* Cobre (Light Red) */
+#rel-tbody td:nth-child(2), .rel-comparativo tbody td:nth-child(2), .rel-base-table tbody td:nth-child(2) { background-color: #ffe6e6 !important; }
+/* Zinco (Light Pink) */
+#rel-tbody td:nth-child(3), .rel-comparativo tbody td:nth-child(3), .rel-base-table tbody td:nth-child(3) { background-color: #f9e6e9 !important; }
+/* Alumínio (Light Gray) */
+#rel-tbody td:nth-child(4), .rel-comparativo tbody td:nth-child(4), .rel-base-table tbody td:nth-child(4) { background-color: #f2f2f2 !important; }
+/* Chumbo (Medium-Light Gray) */
+#rel-tbody td:nth-child(5), .rel-comparativo tbody td:nth-child(5), .rel-base-table tbody td:nth-child(5) { background-color: #e6e6e6 !important; }
+/* Estanho (Light Gold) */
+#rel-tbody td:nth-child(6), .rel-comparativo tbody td:nth-child(6), .rel-base-table tbody td:nth-child(6) { background-color: #f2f0d9 !important; }
+/* Níquel (White/Light Gray) */
+#rel-tbody td:nth-child(7), .rel-comparativo tbody td:nth-child(7), .rel-base-table tbody td:nth-child(7) { background-color: #ffffff !important; }
+/* Dólar (Light Green) - not in base table */
+#rel-tbody td:nth-child(8), .rel-comparativo tbody td:nth-child(8) { background-color: #eaf5e1 !important; }
+
+/* Apply to summary body, EXCLUDING specific colored rows */
+.rel-summary-body tr:not(.bg-lightgreen):not(.bg-blue):not(.bg-black):not(.bg-yellow) td:nth-child(2) { background-color: #ffe6e6 !important; }
+.rel-summary-body tr:not(.bg-lightgreen):not(.bg-blue):not(.bg-black):not(.bg-yellow) td:nth-child(3) { background-color: #f9e6e9 !important; }
+.rel-summary-body tr:not(.bg-lightgreen):not(.bg-blue):not(.bg-black):not(.bg-yellow) td:nth-child(4) { background-color: #f2f2f2 !important; }
+.rel-summary-body tr:not(.bg-lightgreen):not(.bg-blue):not(.bg-black):not(.bg-yellow) td:nth-child(5) { background-color: #e6e6e6 !important; }
+.rel-summary-body tr:not(.bg-lightgreen):not(.bg-blue):not(.bg-black):not(.bg-yellow) td:nth-child(6) { background-color: #f2f0d9 !important; }
+.rel-summary-body tr:not(.bg-lightgreen):not(.bg-blue):not(.bg-black):not(.bg-yellow) td:nth-child(7) { background-color: #ffffff !important; }
+.rel-summary-body tr:not(.bg-lightgreen):not(.bg-blue):not(.bg-black):not(.bg-yellow) td:nth-child(8) { background-color: #eaf5e1 !important; }
+
+/* Ensure text in specific functional rows remains readable (like FECHAMENTO which has text-red / text-green classes) */
+.rel-summary-body tr.bg-lightgreen td, .rel-summary-body tr.bg-blue td {
+    font-weight: bold !important;
+}
+
+/* Re-apply text-red and text-green correctly just in case */
+.rel-table td.text-red, .rel-comparativo td.text-red { color: #ff0000 !important; }
+.rel-table td.text-green, .rel-comparativo td.text-green { color: #00b050 !important; }
+.rel-table td.text-white, .rel-comparativo td.text-white { color: #fff !important; }
