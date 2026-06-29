@@ -1588,6 +1588,29 @@ document.addEventListener('DOMContentLoaded', () => {
             console.warn('Não foi possível carregar settings:', e);
         }
 
+        // Configuração Local - Painel Admin
+        const toggleLME = document.getElementById('toggle-relatorio-lme');
+        const navLME = document.querySelector('a.nav-item[data-target="lme-excel-report"]');
+        
+        if (toggleLME && navLME) {
+            // Load state
+            const showLME = localStorage.getItem('admin_show_relatorio_lme') !== 'false';
+            toggleLME.checked = showLME;
+            navLME.style.display = showLME ? 'flex' : 'none';
+
+            // Change event for immediate feedback
+            toggleLME.addEventListener('change', (e) => {
+                const isVisible = e.target.checked;
+                localStorage.setItem('admin_show_relatorio_lme', isVisible ? 'true' : 'false');
+                navLME.style.display = isVisible ? 'flex' : 'none';
+                
+                // If we hide it while being active, go to dashboard
+                if (!isVisible && navLME.classList.contains('active')) {
+                    document.querySelector('a.nav-item[data-target="home-config"]')?.click();
+                }
+            });
+        }
+
         const btnSave = document.getElementById('btn-save-settings');
         const msgEl   = document.getElementById('settings-msg');
 
@@ -1606,7 +1629,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
 
                     if (res.ok) {
-                        msgEl.textContent = '✅ Configurações salvas! Recarregue o site para ver as mudanças.';
+                        msgEl.textContent = '✅ Configurações salvas!';
                         msgEl.style.color = '#2AD07A';
                         msgEl.style.display = 'block';
                         setTimeout(() => msgEl.style.display = 'none', 5000);
