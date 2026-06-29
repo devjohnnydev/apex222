@@ -3332,11 +3332,6 @@ p.mb-0 { margin-bottom: 0; }
     font-style: italic;
 }
 
-#boxtabela tbody tr.row-semanal td {
-    background-color: #A6A6A6 !important;
-    color: #FFFFFF !important;
-    font-weight: 700 !important;
-}
 
 #boxtabela tbody tr.row-mensal {
     background-color: rgba(42, 208, 122, 0.1) !important;
@@ -3372,3 +3367,10 @@ p.mb-0 { margin-bottom: 0; }
 
 #boxtabela table th:nth-child(8),
 #boxtabela table td:nth-child(8) { background-color: #6AA84F !important; color: #FFFFFF !important; }
+
+/* MÉDIA SEMANAL — cinza total, sobrescreve cores de coluna */
+#boxtabela table tbody tr.row-semanal td:nth-child(n) {
+    background-color: #A6A6A6 !important;
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+}
