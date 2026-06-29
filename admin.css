@@ -1411,7 +1411,8 @@ tr.bg-darkgray .rel-label-col {
 .bg-white { background: #fff; }
 .bg-lightgreen { background: #e2f0d9; }
 .bg-blue { background: #0070c0; }
-.bg-green { background: #c6e0b4; }
+.bg-lightgreen { background: #c6e0b4; }
+.bg-lightgray { background: #d9d9d9; }
 .bg-darkgray { background: #bfbfbf; }
 .text-white { color: #fff; }
 .text-black { color: #000; }
@@ -1544,7 +1545,7 @@ tr.bg-darkgray .rel-label-col {
 /* Cobre (Light Red) */
 #rel-tbody td:nth-child(2), .rel-comparativo tbody td:nth-child(2), .rel-base-table tbody td:nth-child(2) { background-color: #ffe6e6 !important; }
 /* Zinco (Light Pink) */
-#rel-tbody td:nth-child(3), .rel-comparativo tbody td:nth-child(3), .rel-base-table tbody td:nth-child(3) { background-color: #f9e6e9 !important; }
+#rel-tbody td:nth-child(3), .rel-comparativo tbody td:nth-child(3), .rel-base-table tbody td:nth-child(3) { background-color: #f4c0d1 !important; color: #72243E !important; font-weight: bold; }
 /* Alumínio (Light Gray) */
 #rel-tbody td:nth-child(4), .rel-comparativo tbody td:nth-child(4), .rel-base-table tbody td:nth-child(4) { background-color: #f2f2f2 !important; }
 /* Chumbo (Medium-Light Gray) */
@@ -1557,16 +1558,16 @@ tr.bg-darkgray .rel-label-col {
 #rel-tbody td:nth-child(8), .rel-comparativo tbody td:nth-child(8) { background-color: #eaf5e1 !important; }
 
 /* Apply to summary body, EXCLUDING specific colored rows */
-.rel-summary-body tr:not(.bg-lightgreen):not(.bg-blue):not(.bg-black):not(.bg-yellow):not(.bg-darkgray) td:nth-child(2) { background-color: #ffe6e6 !important; }
-.rel-summary-body tr:not(.bg-lightgreen):not(.bg-blue):not(.bg-black):not(.bg-yellow):not(.bg-darkgray) td:nth-child(3) { background-color: #f9e6e9 !important; }
-.rel-summary-body tr:not(.bg-lightgreen):not(.bg-blue):not(.bg-black):not(.bg-yellow):not(.bg-darkgray) td:nth-child(4) { background-color: #f2f2f2 !important; }
-.rel-summary-body tr:not(.bg-lightgreen):not(.bg-blue):not(.bg-black):not(.bg-yellow):not(.bg-darkgray) td:nth-child(5) { background-color: #e6e6e6 !important; }
-.rel-summary-body tr:not(.bg-lightgreen):not(.bg-blue):not(.bg-black):not(.bg-yellow):not(.bg-darkgray) td:nth-child(6) { background-color: #f2f0d9 !important; }
-.rel-summary-body tr:not(.bg-lightgreen):not(.bg-blue):not(.bg-black):not(.bg-yellow):not(.bg-darkgray) td:nth-child(7) { background-color: #ffffff !important; }
-.rel-summary-body tr:not(.bg-lightgreen):not(.bg-blue):not(.bg-black):not(.bg-yellow):not(.bg-darkgray) td:nth-child(8) { background-color: #eaf5e1 !important; }
+.rel-summary-body tr:not(.bg-lightgray):not(.bg-blue):not(.bg-black):not(.bg-yellow):not(.bg-darkgray) td:nth-child(2) { background-color: #ffe6e6 !important; }
+.rel-summary-body tr:not(.bg-lightgray):not(.bg-blue):not(.bg-black):not(.bg-yellow):not(.bg-darkgray) td:nth-child(3) { background-color: #f4c0d1 !important; color: #72243E !important; font-weight: bold; }
+.rel-summary-body tr:not(.bg-lightgray):not(.bg-blue):not(.bg-black):not(.bg-yellow):not(.bg-darkgray) td:nth-child(4) { background-color: #f2f2f2 !important; }
+.rel-summary-body tr:not(.bg-lightgray):not(.bg-blue):not(.bg-black):not(.bg-yellow):not(.bg-darkgray) td:nth-child(5) { background-color: #e6e6e6 !important; }
+.rel-summary-body tr:not(.bg-lightgray):not(.bg-blue):not(.bg-black):not(.bg-yellow):not(.bg-darkgray) td:nth-child(6) { background-color: #f2f0d9 !important; }
+.rel-summary-body tr:not(.bg-lightgray):not(.bg-blue):not(.bg-black):not(.bg-yellow):not(.bg-darkgray) td:nth-child(7) { background-color: #ffffff !important; }
+.rel-summary-body tr:not(.bg-lightgray):not(.bg-blue):not(.bg-black):not(.bg-yellow):not(.bg-darkgray) td:nth-child(8) { background-color: #eaf5e1 !important; }
 
 /* Ensure text in specific functional rows remains readable (like FECHAMENTO which has text-red / text-green classes) */
-.rel-summary-body tr.bg-lightgreen td, .rel-summary-body tr.bg-blue td {
+.rel-summary-body tr.bg-lightgray td, .rel-summary-body tr.bg-blue td {
     font-weight: bold !important;
 }
 
