@@ -742,6 +742,12 @@ Responda de forma curta, amigável e profissional. Use o português do Brasil. N
         const tableBox = document.getElementById('boxtabela');
         if (!tableBox || !cotacoes || cotacoes.length === 0) return;
 
+        // Troca "US$" por "$" nas células dos metais scrapados (mantém valor em dólar)
+        function toDolar(str) {
+            if (!str) return str;
+            return str.replace(/US\$\s*/g, '$ ').replace(/R\$\s*/g, '$ ');
+        }
+
         let tableHtml = `
             <table>
                 <thead>
@@ -772,12 +778,12 @@ Responda de forma curta, amigável e profissional. Use o português do Brasil. N
             tableHtml += `
                 <tr class="${rowClass}">
                     <td class="${cellClass}">${row.dia}</td>
-                    <td class="${cellClass}">${row.cobre}</td>
-                    <td class="${cellClass}">${row.zinco}</td>
-                    <td class="${cellClass}">${row.aluminio}</td>
-                    <td class="${cellClass}">${row.chumbo}</td>
-                    <td class="${cellClass}">${row.estanho}</td>
-                    <td class="${cellClass}">${row.niquel}</td>
+                    <td class="${cellClass}">${toDolar(row.cobre)}</td>
+                    <td class="${cellClass}">${toDolar(row.zinco)}</td>
+                    <td class="${cellClass}">${toDolar(row.aluminio)}</td>
+                    <td class="${cellClass}">${toDolar(row.chumbo)}</td>
+                    <td class="${cellClass}">${toDolar(row.estanho)}</td>
+                    <td class="${cellClass}">${toDolar(row.niquel)}</td>
                     <td class="${dolarCellClass}">${row.dolar}</td>
                 </tr>
             `;
@@ -790,6 +796,7 @@ Responda de forma curta, amigável e profissional. Use o português do Brasil. N
 
         tableBox.innerHTML = tableHtml;
     }
+
 
     function atualizaGraficosLME() {
         if (!lmeMesAtual) return;
