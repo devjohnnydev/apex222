@@ -1266,6 +1266,24 @@ tr.bg-blue .rel-label-col {
     print-color-adjust: exact;
 }
 
+/* ── Força fundo amarelo na linha 100% LME (incluindo 1ª célula) ── */
+tr.bg-yellow td,
+tr.bg-yellow .rel-label-col {
+    background-color: #ffff00 !important;
+    color: #000000 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+/* ── Força fundo cinza na linha MÉDIA MENSAL (incluindo 1ª célula) ── */
+tr.bg-darkgray td,
+tr.bg-darkgray .rel-label-col {
+    background-color: #bfbfbf !important;
+    color: #000000 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
 
 /* ── Comparative table (TIPO) ── */
 .rel-comparativo-container { margin-bottom: 20px; }
@@ -1524,13 +1542,13 @@ tr.bg-blue .rel-label-col {
 #rel-tbody td:nth-child(8), .rel-comparativo tbody td:nth-child(8) { background-color: #eaf5e1 !important; }
 
 /* Apply to summary body, EXCLUDING specific colored rows */
-.rel-summary-body tr:not(.bg-lightgreen):not(.bg-blue):not(.bg-black):not(.bg-yellow) td:nth-child(2) { background-color: #ffe6e6 !important; }
-.rel-summary-body tr:not(.bg-lightgreen):not(.bg-blue):not(.bg-black):not(.bg-yellow) td:nth-child(3) { background-color: #f9e6e9 !important; }
-.rel-summary-body tr:not(.bg-lightgreen):not(.bg-blue):not(.bg-black):not(.bg-yellow) td:nth-child(4) { background-color: #f2f2f2 !important; }
-.rel-summary-body tr:not(.bg-lightgreen):not(.bg-blue):not(.bg-black):not(.bg-yellow) td:nth-child(5) { background-color: #e6e6e6 !important; }
-.rel-summary-body tr:not(.bg-lightgreen):not(.bg-blue):not(.bg-black):not(.bg-yellow) td:nth-child(6) { background-color: #f2f0d9 !important; }
-.rel-summary-body tr:not(.bg-lightgreen):not(.bg-blue):not(.bg-black):not(.bg-yellow) td:nth-child(7) { background-color: #ffffff !important; }
-.rel-summary-body tr:not(.bg-lightgreen):not(.bg-blue):not(.bg-black):not(.bg-yellow) td:nth-child(8) { background-color: #eaf5e1 !important; }
+.rel-summary-body tr:not(.bg-lightgreen):not(.bg-blue):not(.bg-black):not(.bg-yellow):not(.bg-darkgray) td:nth-child(2) { background-color: #ffe6e6 !important; }
+.rel-summary-body tr:not(.bg-lightgreen):not(.bg-blue):not(.bg-black):not(.bg-yellow):not(.bg-darkgray) td:nth-child(3) { background-color: #f9e6e9 !important; }
+.rel-summary-body tr:not(.bg-lightgreen):not(.bg-blue):not(.bg-black):not(.bg-yellow):not(.bg-darkgray) td:nth-child(4) { background-color: #f2f2f2 !important; }
+.rel-summary-body tr:not(.bg-lightgreen):not(.bg-blue):not(.bg-black):not(.bg-yellow):not(.bg-darkgray) td:nth-child(5) { background-color: #e6e6e6 !important; }
+.rel-summary-body tr:not(.bg-lightgreen):not(.bg-blue):not(.bg-black):not(.bg-yellow):not(.bg-darkgray) td:nth-child(6) { background-color: #f2f0d9 !important; }
+.rel-summary-body tr:not(.bg-lightgreen):not(.bg-blue):not(.bg-black):not(.bg-yellow):not(.bg-darkgray) td:nth-child(7) { background-color: #ffffff !important; }
+.rel-summary-body tr:not(.bg-lightgreen):not(.bg-blue):not(.bg-black):not(.bg-yellow):not(.bg-darkgray) td:nth-child(8) { background-color: #eaf5e1 !important; }
 
 /* Ensure text in specific functional rows remains readable (like FECHAMENTO which has text-red / text-green classes) */
 .rel-summary-body tr.bg-lightgreen td, .rel-summary-body tr.bg-blue td {
@@ -1541,3 +1559,53 @@ tr.bg-blue .rel-label-col {
 .rel-table td.text-red, .rel-comparativo td.text-red { color: #ff0000 !important; }
 .rel-table td.text-green, .rel-comparativo td.text-green { color: #00b050 !important; }
 .rel-table td.text-white, .rel-comparativo td.text-white { color: #fff !important; }
+
+/* ── Legenda dos gráficos de barras ── */
+.rel-legend-box {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    vertical-align: middle;
+    margin-right: 3px;
+}
+
+/* ── Cards de comparação por metal ── */
+.rel-compare-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 4px 4px;
+}
+.rel-card-metal {
+    flex: 1 1 130px;
+    min-width: 120px;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    padding: 8px 10px;
+    background: #f9f9f9;
+    text-align: center;
+    font-family: 'Calibri', 'Arial', sans-serif;
+}
+.rel-card-metal-name {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: #444;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+}
+.rel-card-metal-val {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+.rel-card-metal-prev {
+    font-size: 0.7rem;
+    color: #777;
+    margin-bottom: 2px;
+}
+.rel-card-metal-diff {
+    font-size: 0.75rem;
+    font-weight: 600;
+}

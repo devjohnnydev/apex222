@@ -2199,132 +2199,155 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderRelatorioCharts(week) {
         const comp = week.computed || {};
-        const metals = ['cobre', 'zinco', 'aluminio', 'chumbo', 'estanho', 'niquel'];
-        const labels = ['COBRE', 'ZINCO', 'ALUMÍNIO', 'CHUMBO', 'ESTANHO', 'NÍQUEL'];
-        const dataAtu = metals.map(m => comp['100% LME']?.[m] || 0);
-        const dataAnt = metals.map(m => comp['SEMANA ANTERIOR']?.[m] || 0);
-        const dataOsc = metals.map(m => comp['OSCILAÇÃO R$']?.[m] || 0);
 
-        const fmtR = v => 'R$ ' + Math.abs(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        // ── helpers ──────────────────────────────────────────────────────────
+        const fmtR = v =>
+            'R$ ' + Number(Math.abs(v)).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-        // Plugin for datalabels (inline, no external lib needed via canvas drawing)
+        // Plugin inline de rótulos acima das barras
         const datalabelPlugin = {
-            id: 'customDatalabels',
+            id: 'apexBarLabels',
             afterDatasetsDraw(chart) {
                 const { ctx } = chart;
                 chart.data.datasets.forEach((dataset, i) => {
                     const meta = chart.getDatasetMeta(i);
                     if (meta.hidden) return;
-                    meta.data.forEach((point, idx) => {
+                    meta.data.forEach((bar, idx) => {
                         const val = dataset.data[idx];
-                        if (val === 0) return;
-                        const label = 'R$ ' + Math.abs(val).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                        if (val === 0 || val == null) return;
+                        const label = fmtR(val);
                         ctx.save();
-                        ctx.font = 'bold 12px Arial';
-                        ctx.fillStyle = '#000000';
+                        ctx.font = 'bold 10px Arial';
+                        ctx.fillStyle = '#111';
                         ctx.textAlign = 'center';
-                        ctx.fillText(label, point.x, point.y - 12);
+                        ctx.fillText(label, bar.x, bar.y - 5);
                         ctx.restore();
                     });
                 });
             }
         };
 
-        // Chart 1: Semana Anterior x Semana Atual
-        const ctx1 = document.getElementById('relChartLines');
-        if (window.relChart1) window.relChart1.destroy();
-        window.relChart1 = new Chart(ctx1, {
-            type: 'line',
-            plugins: [datalabelPlugin],
-            data: {
-                labels: labels,
-                datasets: [
-                    {
-                        label: 'MÉDIA SEMANA',
-                        data: dataAtu,
-                        borderColor: '#1f77b4',
-                        backgroundColor: 'transparent',
-                        borderWidth: 3,
-                        tension: 0.3,
-                        pointBackgroundColor: '#1f77b4',
-                        pointRadius: 7
-                    },
-                    {
-                        label: 'MÉDIA SEMANA ANTERIOR',
-                        data: dataAnt,
-                        borderColor: '#ff7f0e',
-                        backgroundColor: 'transparent',
-                        borderWidth: 3,
-                        borderDash: [6, 4],
-                        tension: 0.3,
-                        pointBackgroundColor: '#ff7f0e',
-                        pointRadius: 7
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                layout: { padding: { top: 20 } },
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: { color: '#000', font: { size: 11, weight: 'bold' }, boxWidth: 30 }
-                    },
-                    datalabels: { display: false }
+        // ── Configuração comum dos dois gráficos ─────────────────────────────
+        function buildBarChart(canvasId, labels, dataAnt, dataAtu) {
+            const ctx = document.getElementById(canvasId);
+            if (!ctx) return;
+            // Destruir instância anterior se existir
+            const key = '__apexChart_' + canvasId;
+            if (window[key]) { window[key].destroy(); }
+            window[key] = new Chart(ctx, {
+                type: 'bar',
+                plugins: [datalabelPlugin],
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Semana Anterior',
+                            data: dataAnt,
+                            backgroundColor: '#9e9e9e',
+                            borderColor: '#757575',
+                            borderWidth: 1,
+                            borderRadius: 3,
+                            barPercentage: 0.75,
+                            categoryPercentage: 0.8
+                        },
+                        {
+                            label: 'Semana Atual',
+                            data: dataAtu,
+                            backgroundColor: '#0070c0',
+                            borderColor: '#005599',
+                            borderWidth: 1,
+                            borderRadius: 3,
+                            barPercentage: 0.75,
+                            categoryPercentage: 0.8
+                        }
+                    ]
                 },
-                scales: {
-                    x: { ticks: { color: '#000', font: { size: 10, weight: 'bold' } }, grid: { color: '#e0e0e0' } },
-                    y: {
-                        ticks: { color: '#000', font: { size: 10, weight: 'bold' }, callback: v => 'R$ ' + v.toLocaleString('pt-BR') },
-                        grid: { color: '#e0e0e0' }
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: { padding: { top: 24, right: 8, left: 8 } },
+                    plugins: {
+                        legend: { display: false },          // legenda feita no HTML
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => fmtR(ctx.parsed.y)
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#222', font: { size: 10, weight: 'bold' } },
+                            grid: { display: false }
+                        },
+                        y: {
+                            ticks: {
+                                color: '#444',
+                                font: { size: 9 },
+                                callback: v => 'R$ ' + v.toLocaleString('pt-BR', { maximumFractionDigits: 0 })
+                            },
+                            grid: { color: '#e8e8e8' }
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
 
-        // Chart 2: Variação R$
-        const ctx2 = document.getElementById('relChartOsc');
-        if (window.relChart2) window.relChart2.destroy();
-        window.relChart2 = new Chart(ctx2, {
-            type: 'line',
-            plugins: [datalabelPlugin],
-            data: {
-                labels: labels,
-                datasets: [
-                    {
-                        label: 'VARIAÇÃO',
-                        data: dataOsc,
-                        borderColor: '#1f77b4',
-                        backgroundColor: 'transparent',
-                        borderWidth: 3,
-                        tension: 0.3,
-                        pointBackgroundColor: dataOsc.map(v => '#e74c3c'),
-                        pointRadius: 8,
-                        pointStyle: 'circle'
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                layout: { padding: { top: 20 } },
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: { color: '#000', font: { size: 11, weight: 'bold' } }
-                    },
-                    datalabels: { display: false }
-                },
-                scales: {
-                    x: { ticks: { color: '#000', font: { size: 10, weight: 'bold' } }, grid: { color: '#e0e0e0' } },
-                    y: {
-                        ticks: { color: '#000', font: { size: 10, weight: 'bold' }, callback: v => 'R$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) },
-                        grid: { color: '#e0e0e0' }
-                    }
-                }
-            }
-        });
+        // ── Grupo 1: Cobre · Zinco · Alumínio · Chumbo ───────────────────────
+        const group1 = [
+            { key: 'cobre',    label: 'COBRE' },
+            { key: 'zinco',    label: 'ZINCO' },
+            { key: 'aluminio', label: 'ALUMÍNIO' },
+            { key: 'chumbo',   label: 'CHUMBO' }
+        ];
+        buildBarChart(
+            'relChartLines',
+            group1.map(m => m.label),
+            group1.map(m => comp['SEMANA ANTERIOR']?.[m.key] || 0),
+            group1.map(m => comp['100% LME']?.[m.key]        || 0)
+        );
+
+        // ── Grupo 2: Estanho · Níquel ─────────────────────────────────────────
+        const group2 = [
+            { key: 'estanho', label: 'ESTANHO' },
+            { key: 'niquel',  label: 'NÍQUEL' }
+        ];
+        buildBarChart(
+            'relChartOsc',
+            group2.map(m => m.label),
+            group2.map(m => comp['SEMANA ANTERIOR']?.[m.key] || 0),
+            group2.map(m => comp['100% LME']?.[m.key]        || 0)
+        );
+
+        // ── Cards de comparação ───────────────────────────────────────────────
+        function buildCards(containerId, group) {
+            const el = document.getElementById(containerId);
+            if (!el) return;
+            el.innerHTML = group.map(m => {
+                const atual    = comp['100% LME']?.[m.key]        || 0;
+                const anterior = comp['SEMANA ANTERIOR']?.[m.key] || 0;
+                const diff     = atual - anterior;
+                const isUp     = diff > 0;
+                const isDown   = diff < 0;
+                const arrow    = isUp ? '↑' : isDown ? '↓' : '–';
+                const color    = isUp ? '#1a7f4b' : isDown ? '#c0392b' : '#555';
+                const bg       = isUp ? '#e9f7f0' : isDown ? '#fdecea' : '#f5f5f5';
+                const border   = isUp ? '#a8dfc4' : isDown ? '#f5b8b2' : '#ddd';
+                return `
+                <div class="rel-card-metal" style="border-color:${border}; background:${bg};">
+                    <div class="rel-card-metal-name">${m.label}</div>
+                    <div class="rel-card-metal-val" style="color:${color};">
+                        ${arrow} ${fmtR(atual)}
+                    </div>
+                    <div class="rel-card-metal-prev">era ${fmtR(anterior)}</div>
+                    <div class="rel-card-metal-diff" style="color:${color};">
+                        ${isUp ? '+' : isDown ? '' : ''}${fmtR(diff)}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        buildCards('rel-cards-group1', group1);
+        buildCards('rel-cards-group2', group2);
     }
 
     function renderRelatorioBase(week) {
