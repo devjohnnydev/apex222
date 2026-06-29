@@ -3319,7 +3319,6 @@ p.mb-0 { margin-bottom: 0; }
 }
 
 #boxtabela tr .lmemedia {
-    color: #7eb3d5;
     font-weight: 700;
 }
 
@@ -3333,8 +3332,10 @@ p.mb-0 { margin-bottom: 0; }
     font-style: italic;
 }
 
-#boxtabela tbody tr.row-semanal {
-    background-color: rgba(126, 179, 213, 0.08) !important;
+#boxtabela tbody tr.row-semanal td {
+    background-color: #A6A6A6 !important;
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
 }
 
 #boxtabela tbody tr.row-mensal {
