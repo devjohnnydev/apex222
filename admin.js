@@ -2096,10 +2096,28 @@ document.addEventListener('DOMContentLoaded', () => {
         const btnExcel = document.getElementById('btn-relatorio-excel');
         
         if (btnPdf) {
-            btnPdf.addEventListener('click', () => {
+            btnPdf.addEventListener('click', async () => {
                 const captureArea = document.getElementById('capture-area');
-                // Adicionando backgroundColor branco explícito para evitar renderização preta da logo transparente no PDF
-                html2canvas(captureArea, { scale: 3, backgroundColor: '#ffffff' }).then(canvas => {
+                
+                // Correção do Bug do SVG Preto:
+                // O html2canvas não renderiza SVGs complexos corretamente e eles viram blocos pretos.
+                // Solução: Converter a logo para Base64 PNG nativamente via Canvas antes de gerar o PDF.
+                const logoImg = captureArea.querySelector('.rel-logo img');
+                let originalSrc = '';
+                if (logoImg && logoImg.src.endsWith('.svg')) {
+                    originalSrc = logoImg.src;
+                    const tempCanvas = document.createElement('canvas');
+                    tempCanvas.width = logoImg.naturalWidth || 400;
+                    tempCanvas.height = logoImg.naturalHeight || 133;
+                    const tCtx = tempCanvas.getContext('2d');
+                    tCtx.fillStyle = '#ffffff'; // Fundo branco p/ segurança
+                    tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+                    tCtx.drawImage(logoImg, 0, 0, tempCanvas.width, tempCanvas.height);
+                    logoImg.src = tempCanvas.toDataURL('image/png');
+                }
+
+                try {
+                    const canvas = await html2canvas(captureArea, { scale: 3, backgroundColor: '#ffffff' });
                     const imgData = canvas.toDataURL('image/jpeg', 0.95);
                     const { jsPDF } = window.jspdf;
                     const pdf = new jsPDF('p', 'mm', 'a4');
@@ -2108,7 +2126,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
                     pdf.save('Relatorio_LME_ApexTech.pdf');
-                });
+                } finally {
+                    // Restaura o SVG original após gerar o PDF
+                    if (originalSrc) {
+                        logoImg.src = originalSrc;
+                    }
+                }
             });
         }
 
@@ -2167,22 +2190,40 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         let weekNum = '...';
-        if (firstDate) {
-            // firstDate is DD/MM/YYYY
-            const parts = firstDate.split('/');
-            if (parts.length === 3) {
-                const dateObj = new Date(parts[2], parseInt(parts[1]) - 1, parts[0]);
-                weekNum = getISOWeek(dateObj);
-            }
-        }
-        
-        // Formato longo se o mês bater, ou curto (dia/mês)
         let dataTexto = `${firstDate} a ${lastDate}`;
-        if (firstDate && firstDate.split('/').length === 3) {
-             const parts = firstDate.split('/');
-             const dateObj = new Date(parts[2], parseInt(parts[1]) - 1, parts[0]);
-             const monthNames = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
-             dataTexto = `${parseInt(parts[0])} de ${monthNames[dateObj.getMonth()]}`;
+        
+        if (firstDate) {
+            const ptMonths = { 'jan': 0, 'fev': 1, 'mar': 2, 'abr': 3, 'mai': 4, 'jun': 5, 'jul': 6, 'ago': 7, 'set': 8, 'out': 9, 'nov': 10, 'dez': 11 };
+            const monthNames = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+            
+            // Try to get year from filter, otherwise use current year
+            const filterMes = document.getElementById('lme-filter-mes');
+            let year = new Date().getFullYear();
+            if (filterMes && filterMes.value && filterMes.value.includes('-')) {
+                year = parseInt(filterMes.value.split('-')[0]);
+            }
+            
+            const parts = firstDate.split('/');
+            if (parts.length >= 2) {
+                const day = parseInt(parts[0]);
+                const monthPart = parts[1].toLowerCase().trim();
+                let monthIndex = 0;
+                
+                if (isNaN(monthPart)) {
+                    monthIndex = ptMonths[monthPart] !== undefined ? ptMonths[monthPart] : 0;
+                } else {
+                    monthIndex = parseInt(monthPart) - 1;
+                }
+                
+                // If parts has 3, it's DD/MM/YYYY
+                if (parts.length === 3) {
+                    year = parseInt(parts[2]);
+                }
+                
+                const dateObj = new Date(year, monthIndex, day);
+                weekNum = getISOWeek(dateObj);
+                dataTexto = `${day} de ${monthNames[monthIndex]}`;
+            }
         }
         
         document.getElementById('rel-date-range').textContent = dataTexto;
