@@ -2098,7 +2098,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (btnPdf) {
             btnPdf.addEventListener('click', () => {
                 const captureArea = document.getElementById('capture-area');
-                html2canvas(captureArea, { scale: 3 }).then(canvas => {
+                // Adicionando backgroundColor branco explícito para evitar renderização preta da logo transparente no PDF
+                html2canvas(captureArea, { scale: 3, backgroundColor: '#ffffff' }).then(canvas => {
                     const imgData = canvas.toDataURL('image/jpeg', 0.95);
                     const { jsPDF } = window.jspdf;
                     const pdf = new jsPDF('p', 'mm', 'a4');
@@ -2155,7 +2156,37 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const firstDate = d[0]?.data || '';
         const lastDate = d[d.length - 1]?.data || '';
-        document.getElementById('rel-date-range').textContent = firstDate + ' a ' + lastDate;
+        
+        // Helper to get ISO week
+        function getISOWeek(date) {
+            const dObj = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            const dayNum = dObj.getUTCDay() || 7;
+            dObj.setUTCDate(dObj.getUTCDate() + 4 - dayNum);
+            const yearStart = new Date(Date.UTC(dObj.getUTCFullYear(), 0, 1));
+            return Math.ceil((((dObj - yearStart) / 86400000) + 1) / 7);
+        }
+
+        let weekNum = '...';
+        if (firstDate) {
+            // firstDate is DD/MM/YYYY
+            const parts = firstDate.split('/');
+            if (parts.length === 3) {
+                const dateObj = new Date(parts[2], parseInt(parts[1]) - 1, parts[0]);
+                weekNum = getISOWeek(dateObj);
+            }
+        }
+        
+        // Formato longo se o mês bater, ou curto (dia/mês)
+        let dataTexto = `${firstDate} a ${lastDate}`;
+        if (firstDate && firstDate.split('/').length === 3) {
+             const parts = firstDate.split('/');
+             const dateObj = new Date(parts[2], parseInt(parts[1]) - 1, parts[0]);
+             const monthNames = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+             dataTexto = `${parseInt(parts[0])} de ${monthNames[dateObj.getMonth()]}`;
+        }
+        
+        document.getElementById('rel-date-range').textContent = dataTexto;
+        document.getElementById('rel-week-number').textContent = weekNum;
 
         const tbody = document.getElementById('rel-tbody');
         tbody.innerHTML = '';
