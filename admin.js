@@ -2236,7 +2236,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const formatMoney = (val, isDolar) => {
             if (val === null || val === undefined || val === 'feriado' || isNaN(val)) return '-';
-            const prefix = isDolar ? '$ ' : 'US$ ';
+            const prefix = isDolar ? '$ ' : 'R$ ';
             const maxF = isDolar ? 4 : 2;
             return prefix + Number(val).toLocaleString('pt-BR', { minimumFractionDigits: maxF, maximumFractionDigits: maxF });
         };
@@ -2297,7 +2297,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // ── helpers ──────────────────────────────────────────────────────────
         const fmtR = v =>
-            'US$ ' + Number(Math.abs(v)).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            'R$ ' + Number(Math.abs(v)).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
         // Plugin inline de rótulos acima das barras
         const datalabelPlugin = {
@@ -2463,7 +2463,7 @@ document.addEventListener('DOMContentLoaded', () => {
             metals.forEach(m => {
                 const lme = comp['SEMANA ANTERIOR']?.[m] || comp['100% LME']?.[m] || 0;
                 const baseVal = lme * (p / 100);
-                const fmt = lme === 0 ? '-' : 'US$ ' + baseVal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                const fmt = lme === 0 ? '-' : 'R$ ' + baseVal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                 colsHtml += `<td>${fmt}</td>`;
             });
 
